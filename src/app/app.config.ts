@@ -3,7 +3,7 @@ import {
   importProvidersFrom,
   provideZoneChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, RouterModule } from '@angular/router';
 
 import { routes } from './app.routes';
 import { BrowserModule } from '@angular/platform-browser';
@@ -12,6 +12,6 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    importProvidersFrom(BrowserModule),
+    importProvidersFrom(BrowserModule, RouterModule.forRoot(routes)),
   ],
 };
