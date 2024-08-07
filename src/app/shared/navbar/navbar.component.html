@@ -1,0 +1,123 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+  <div class="container-fluid">
+    <a class="navbar-brand d-flex align-items-center" routerLink="/">
+      <div class="rounded-circle p-2 me-2">
+        <img
+          src="assets/logo.png"
+          class="h-8 mr-3"
+          width="40"
+          height="40"
+          alt="Flowbite Logo"
+        />
+      </div>
+      <span class="navbar-text mx-auto fw-bold">Collectify</span>
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+      (click)="toggleMenu()"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div
+      class="collapse navbar-collapse"
+      id="navbarSupportedContent"
+      [class.show]="!isMenuCollapsed"
+    >
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <i class="fa fa-home" aria-hidden="true"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/collections"
+            routerLinkActive="active"
+          >
+            <i class="fa fa-list-alt" aria-hidden="true"></i> Collections
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="isAdmin">
+          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active"
+            >Dashboard</a
+          >
+        </li>
+      </ul>
+
+      <div class="d-flex align-items-center">
+        <div class="search-container me-2">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search..."
+            aria-label="Search"
+          />
+          <button class="search-btn" aria-label="Search button">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+
+        <button
+          (click)="toggleDarkMode()"
+          class="btn btn-icon"
+          type="button"
+          aria-label="Toggle dark mode"
+        >
+          <i [class]="isDarkMode ? 'fas fa-moon' : 'fas fa-sun'"></i>
+        </button>
+
+        <button (click)="toggleLanguage()" class="btn btn-icon" type="button" aria-label="Toggle language">
+          <img *ngIf="currentLanguage === 'en'" src="assets/english.svg" alt="English icon" width="20" height="20">
+          <img *ngIf="currentLanguage === 'bn'" src="assets/bangladesh.svg" alt="Bangladesh icon" width="20" height="20">
+        </button>
+        
+
+        <div
+          *ngIf="userIsLoggedIn"
+          class="dropdown ms-2"
+          (clickOutside)="isProfileDropdownOpen = false"
+        >
+          <button
+            class="btn btn-icon"
+            (click)="toggleProfileDropdown()"
+            aria-label="Profile options"
+          >
+            <i class="fas fa-user-circle fa-lg"></i>
+          </button>
+          <div class="dropdown-menu" [class.show]="isProfileDropdownOpen">
+            <a class="dropdown-item" routerLink="/profile">Profile</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item text-danger" (click)="logout()">Logout</a>
+          </div>
+        </div>
+
+        <div *ngIf="!userIsLoggedIn" class="d-flex align-items-center ms-2">
+          <a
+            routerLink="/login"
+            class="btn btn-outline-primary me-2"
+            routerLinkActive="active"
+            >Sign In</a
+          >
+          <a
+            routerLink="/register"
+            class="btn btn-primary"
+            routerLinkActive="active"
+            >Sign Up</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
