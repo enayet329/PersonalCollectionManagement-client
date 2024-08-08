@@ -1,1 +1,30 @@
-<p>search-results works!</p>
+<section class="items-section">
+  <h2 class="section-title">All Items</h2>
+  <div class="container">
+    <div *ngIf="items.length === 0" class="no-items-message">
+      <p>No items available.</p>
+    </div>
+    <div *ngIf="items.length > 0" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div class="col" *ngFor="let item of items">
+        <div class="card item-card">
+          <img [src]="item.imgUrl" class="card-img-top item-image" [alt]="item.name" />
+          <div class="card-body">
+            <h5 class="card-title item-title">{{ item.name }}</h5>
+            <p class="tags">
+              <ng-container *ngIf="item.tagNames && item.tagNames.length > 0">
+                <span *ngFor="let tag of getLimitedTags(item.tagNames, 3)" class="badge bg-primary tag">{{ tag }}</span>
+              </ng-container>
+              <ng-container *ngIf="!item.tagNames || item.tagNames.length === 0">
+                <span class="badge bg-secondary tag no-tags">No Tags</span>
+              </ng-container>
+            </p>
+            <p class="card-text item-details">
+              <small>Collection: {{ item.collectionName }}</small><br />
+              <small>Date: {{ item.dateAdded | date: 'dd/MM/yyyy' }}</small>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
