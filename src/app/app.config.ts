@@ -6,7 +6,9 @@ import {
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { HttpClientModule } from '@angular/common/http';
-import { CommonModule, NgFor, NgForOf } from '@angular/common';
+import { CommonModule, NgForOf } from '@angular/common';
+import { FormsModule, NgModel } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,6 +16,6 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(NgForOf),
     provideRouter(routes),
     importProvidersFrom(HttpClientModule),
-    importProvidersFrom(CommonModule)
+    importProvidersFrom(CommonModule,NgModel,BrowserModule,FormsModule)
   ],
 };
