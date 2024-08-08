@@ -49,8 +49,7 @@ export class HomeComponent implements OnInit {
     );
   }
 
-    // Method to limit the number of tags displayed
-    getLimitedTags(tags: string[], maxTags: number = 3): string[] {
-      return tags.slice(0, maxTags);
-    }
+  getLimitedTags(tags: string[], limit: 3): string[] {
+    return tags.slice(0, limit);
+  }
 }

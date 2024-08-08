@@ -1,4 +1,4 @@
-<main class="container py-5">
+<main class="container py-5" >
   <section class="row align-items-center mb-5 pb-5 border-bottom">
     <div class="col-md-6">
       <h1 class="display-4 fw-bold mb-3">
@@ -9,7 +9,7 @@
         explore various collections. Create, manage, and get inspired by
         collections from others effortlessly.
       </p>
-      <a href="/collections" class="btn btn-outline-dark btn-lg">
+      <a href="/collection-list" class="btn btn-outline-primary btn-lg">
         Browse all collections
       </a>
     </div>
@@ -25,32 +25,31 @@
   </section>
 
   <!-- Most Popular Collections Section -->
-<section class="mb-5 pb-5 border-bottom">
-  <h2 class="display-6 fw-bold mb-4">Most Popular Collections</h2>
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-    <div class="col" *ngFor="let collection of collections">
-      <div class="card h-100">
-        <img
-          [src]="collection.imageUrl || 'https://via.placeholder.com/300x200'"
-          class="card-img-top"
-          [alt]="collection.name"
-        />
-        <div class="card-body">
-          <h5 class="card-title">{{ collection.name }}</h5>
-          <p class="card-text">
-            <small class="text-muted">{{ collection.topic }}</small><br />
-            <small class="text-muted">Items quantity: {{ collection.itemCount }}</small><br />
-            <small class="text-muted">
-              Created by
-              <a href="#" class="text-decoration-none">{{ collection.userName }}</a>
-            </small><br />
-          </p>
+  <section class="mb-5 pb-5 border-bottom">
+    <h2 class="display-6 fw-bold mb-4">Most Popular Collections</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+      <div class="col" *ngFor="let collection of collections">
+        <div class="card h-100">
+          <img
+            [src]="collection.imageUrl || 'https://via.placeholder.com/300x200'"
+            class="card-img-top"
+            [alt]="collection.name"
+          />
+          <div class="card-body">
+            <h5 class="card-title">{{ collection.name }}</h5>
+            <p class="card-text">
+              <small>{{ collection.topic }}</small><br />
+              <small>Items quantity: {{ collection.itemCount }}</small><br />
+              <small>
+                Created by
+                <a href="#" class="text-decoration-none">{{ collection.userName }}</a>
+              </small><br />
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-
+  </section>
 
   <!-- Recently Added Items Section -->
   <section>
@@ -76,8 +75,8 @@
               </ng-container>
             </p>
             <p class="card-text">
-              <small class="text-muted">Collection: {{ item.collectionName }}</small><br />
-              <small class="text-muted"> Date : {{ item.dateAdded | date:  'dd/MM/yyyy' }}</small>
+              <small>Collection: {{ item.collectionName }}</small><br />
+              <small>Date: {{ item.dateAdded | date:  'dd/MM/yyyy' }}</small>
             </p>
           </div>
         </div>
