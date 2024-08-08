@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './shared/home/home.component';
-import { AboutComponent } from './shared/about/about.component';
-import { ContactComponent } from './shared/contact/contact.component';
+import { CollectionListComponent } from './features/collections/collection-list/collection-list.component';
 
 
 
@@ -16,11 +15,7 @@ export const routes: Routes = [
     component: HomeComponent
   },
   {
-    path:'about',
-    component: AboutComponent
+    path:'collection-list',
+    component: CollectionListComponent
   },
-  {
-    path:'contact',
-    component: ContactComponent
-  }
 ];
