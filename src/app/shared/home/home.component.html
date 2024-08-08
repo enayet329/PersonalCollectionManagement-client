@@ -25,53 +25,59 @@
   </section>
 
   <!-- Most Popular Collections Section -->
-  <section class="mb-5 pb-5 border-bottom">
-    <h2 class="display-6 fw-bold mb-4">Most Popular Collections</h2>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-      <div class="col">
-        <div class="card h-100">
-          <img
-            src="https://via.placeholder.com/300x200"
-            class="card-img-top"
-            alt="Collection Name"
-          />
-          <div class="card-body">
-            <h5 class="card-title">Collection Name</h5>
-            <p class="card-text">
-              <small class="text-muted">Category</small><br />
-              <small class="text-muted">Items quantity: X</small><br />
-              <small class="text-muted">
-                Created by
-                <a href="#" class="text-decoration-none">Creator Name</a>
-              </small><br />
-              <small class="text-muted">Creation Date</small>
-            </p>
-          </div>
+<section class="mb-5 pb-5 border-bottom">
+  <h2 class="display-6 fw-bold mb-4">Most Popular Collections</h2>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+    <div class="col" *ngFor="let collection of collections">
+      <div class="card h-100">
+        <img
+          [src]="collection.imageUrl || 'https://via.placeholder.com/300x200'"
+          class="card-img-top"
+          [alt]="collection.name"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ collection.name }}</h5>
+          <p class="card-text">
+            <small class="text-muted">{{ collection.topic }}</small><br />
+            <small class="text-muted">Items quantity: {{ collection.itemCount }}</small><br />
+            <small class="text-muted">
+              Created by
+              <a href="#" class="text-decoration-none">{{ collection.userName }}</a>
+            </small><br />
+          </p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 
   <!-- Recently Added Items Section -->
   <section>
     <h2 class="display-6 fw-bold mb-4">Recently Added Items</h2>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-      <div class="col">
+      <div class="col" *ngFor="let item of recentItems">
         <div class="card h-100">
           <img
-            src="https://via.placeholder.com/300x200"
+            [src]="item.imgUrl"
             class="card-img-top"
-            alt="Item Name"
+            [alt]="item.name"
           />
           <div class="card-body">
-            <h5 class="card-title">Item Name</h5>
+            <h5 class="card-title">{{ item.name }}</h5>
             <p class="mb-2">
-              <span class="tag">Tag 1</span>
-              <span class="tag">Tag 2</span>
+              <!-- Display up to 3 tags dynamically -->
+              <ng-container *ngIf="item.tagNames && item.tagNames.length > 0">
+                <span *ngFor="let tag of getLimitedTags(item.tagNames, 3)" class="tag">{{ tag }}</span>
+              </ng-container>
+              <!-- Placeholder if no tags -->
+              <ng-container *ngIf="!item.tagNames || item.tagNames.length === 0">
+                <span class="tag">No Tags</span>
+              </ng-container>
             </p>
             <p class="card-text">
-              <small class="text-muted">Collection: Collection Name</small><br />
-              <small class="text-muted">Added Date</small>
+              <small class="text-muted">Collection: {{ item.collectionName }}</small><br />
+              <small class="text-muted"> Date : {{ item.dateAdded | date:  'dd/MM/yyyy' }}</small>
             </p>
           </div>
         </div>
