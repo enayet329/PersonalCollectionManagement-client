@@ -8,11 +8,15 @@ import { CollectionConstants } from '../constants/constants';
   providedIn: 'root',
 })
 export class CollectionService {
-  private apiUrl = CollectionConstants.API_ENDPOINTS.GET_COLLECTIONS;
+  private apiUrl = CollectionConstants.API_ENDPOINTS;
 
   httpClient = inject(HttpClient);
 
   getLatestCollections(): Observable<Collection[]> {
-    return this.httpClient.get<Collection[]>(this.apiUrl);
+    return this.httpClient.get<Collection[]>(this.apiUrl.GET_LARGEST_COLLECTIONS);
+  };
+
+  getCollections(): Observable<Collection[]> {
+    return this.httpClient.get<Collection[]>(this.apiUrl.GET_COLLECTIONS);
   };
 }
