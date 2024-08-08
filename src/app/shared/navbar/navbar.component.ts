@@ -15,7 +15,7 @@ export class NavbarComponent {
   isMenuCollapsed = true;
   isDarkMode = false;
   currentLanguage = 'en';
-  userIsLoggedIn = true; // Set this based on your authentication logic
+  userIsLoggedIn = false; // Set this based on your authentication logic
   isAdmin = false; // Set this based on user role
   isProfileDropdownOpen = false;
 
@@ -41,10 +41,5 @@ export class NavbarComponent {
     // Implement logout logic here
   }
 
-  @HostListener('document:click', ['$event'])
-  clickOutside(event: Event) {
-    if (!(event.target as HTMLElement).closest('.dropdown')) {
-      this.isProfileDropdownOpen = false;
-    }
-  }
+
 }
