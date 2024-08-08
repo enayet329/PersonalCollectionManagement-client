@@ -1,1 +1,27 @@
-<p>collection-list works!</p>
+<section class="collections-section mb-5 pb-5 border-bottom">
+  <h2 class="section-title">All Collections</h2>
+  <div class="container">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+      <div class="col" *ngFor="let collection of collections">
+        <div class="card h-100 item-card">
+          <img
+            [src]="collection.imageUrl || 'https://via.placeholder.com/300x200'"
+            class="card-img-top item-image"
+            [alt]="collection.name"
+          />
+          <div class="card-body">
+            <h5 class="card-title item-title">{{ collection.name }}</h5>
+            <p class="card-text item-details">
+              <small class="text-muted">{{ collection.topic }}</small><br />
+              <small class="text-muted">Items quantity: {{ collection.itemCount }}</small><br />
+              <small class="text-muted">
+                Created by
+                <a href="#" class="user-link">{{ collection.userName }}</a>
+              </small>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

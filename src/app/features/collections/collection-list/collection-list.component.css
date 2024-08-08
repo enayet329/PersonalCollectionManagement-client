@@ -1,0 +1,58 @@
+.collections-section {
+  padding: 3rem 0;
+  background-color: inherit;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.card {
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-top {
+  object-fit: cover;
+  height: 200px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.card-body {
+  padding: 20px;
+  background-color: inherit; 
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.card-text {
+  font-size: 0.875rem;
+}
+
+.user-link {
+  text-decoration: none;
+}
+
+.user-link:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 992px) {
+  .row-cols-lg-3 {
+    column-count: 3;
+  }
+}
