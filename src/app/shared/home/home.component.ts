@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { Collection } from '../../core/model/collection.mode.';
+import { CollectionService } from '../../core/services/collection.service';
+import { Item } from '../../core/model/item.model';
+import { ItemService } from '../../core/services/item.service';
 
 @Component({
   selector: 'app-home',
@@ -9,30 +13,44 @@ import { RouterModule } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-  collections = [
-    {
-      id: 1,
-      name: 'Antique Vases',
-      category: 'Antiques',
-      itemsCount: 15,
-      imageUrl: '/assets/antique_vases.jpg',
-      creator: { id: 1, name: 'John Doe' },
-      createdAt: new Date('2023-06-15T09:24:00')
-    },
-    // Add more collection objects here
-  ];
+export class HomeComponent implements OnInit {
 
-  recentItems = [
-    {
-      id: 1,
-      name: 'Vintage Vase',
-      category: 'Antiques',
-      imageUrl: '/assets/vintage_vase.jpg',
-      collectionId: 1,
-      addedBy: { id: 1, name: 'John Doe' },
-      addedAt: new Date('2024-08-01T12:34:00')
-    },
-    // Add more item objects here
-  ];
+  collections: Collection[] = [];
+  recentItems: Item[] = [];
+
+  constructor(private collectionService: CollectionService, private itemService: ItemService) {}
+
+  ngOnInit(): void {
+    this.loadCollections();
+    this.loadRecentItems();
+  }
+
+  private loadCollections(): void {
+    this.collectionService.getLatestCollections().subscribe(
+      collections => {
+        this.collections = collections;
+        console.log(this.collections);
+      },
+      error => {
+        console.error('Error fetching collections', error);
+      }
+    );
+  }
+
+  private loadRecentItems(): void {
+    this.itemService.getRecentItems().subscribe(
+      items => {
+        this.recentItems = items;
+        console.log('Recent Items:', this.recentItems);
+      },
+      error => {
+        console.error('Error fetching items', error);
+      }
+    );
+  }
+
+    // Method to limit the number of tags displayed
+    getLimitedTags(tags: string[], maxTags: number = 3): string[] {
+      return tags.slice(0, maxTags);
+    }
 }
