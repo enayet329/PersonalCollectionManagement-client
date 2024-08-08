@@ -1,6 +1,7 @@
 .navbar {
   padding: 0.5rem 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .navbar-brand {
@@ -23,7 +24,7 @@
 
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link.active {
-  color: var(--bs-primary);
+  color: inherit; 
 }
 
 .search-container {
@@ -41,12 +42,14 @@
   outline: none;
   transition: all 0.3s ease;
   font-size: 16px;
+  background-color: inherit;
+  color: inherit;
 }
 
 .search-input:focus,
 .search-container:hover .search-input {
   width: 240px;
-  border-color: var(--bs-primary);
+  border-color: inherit;
 }
 
 .search-btn {
@@ -64,13 +67,13 @@
 }
 
 .search-btn i {
-  color: #777;
+  color: inherit;
   transition: color 0.3s ease;
 }
 
 .search-input:focus + .search-btn i,
 .search-container:hover .search-btn i {
-  color: var(--bs-primary);
+  color: inherit;
 }
 
 .btn-icon {
@@ -80,6 +83,7 @@
   margin: 0 0.25rem;
   cursor: pointer;
   transition: transform 0.3s ease;
+  color: inherit;
 }
 
 .btn-icon:hover {
@@ -88,7 +92,6 @@
 
 @media (max-width: 992px) {
   .navbar-collapse {
-    background: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 0.25rem;
     padding: 1rem;
@@ -106,7 +109,23 @@
   }
 }
 
-
 i {
   font-size: 1.5rem;
+  color: inherit;
+}
+
+
+.navbar.dark {
+  background-color: #333333;
+  color: #f1f1f1;
+}
+
+.navbar.dark .search-input {
+  background-color: #444444;
+  color: #f1f1f1;
+  border-color: #555555;
+}
+
+.navbar.dark .btn-icon {
+  color: #f1f1f1;
 }

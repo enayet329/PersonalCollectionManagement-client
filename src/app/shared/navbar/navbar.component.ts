@@ -1,31 +1,41 @@
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
-import {ReactiveFormsModule } from '@angular/forms';
-import {RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterModule, RouterLinkActive, Router } from '@angular/router';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { ThemeService } from '../../core/services/theme.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterOutlet, NgbCollapseModule,RouterLinkActive],
+  imports: [
+    CommonModule,
+    RouterModule,
+    RouterLinkActive,
+    NgbCollapseModule,
+    FormsModule
+  ],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'], // Correct property name
+  styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
   isMenuCollapsed = true;
-  isDarkMode = false;
   currentLanguage = 'en';
-  userIsLoggedIn = false; // Set this based on your authentication logic
-  isAdmin = false; // Set this based on user role
+  userIsLoggedIn = false;
+  isAdmin = true;
   isProfileDropdownOpen = false;
+
+  darkModeService: ThemeService = inject(ThemeService);
+  searchQuery = '';
+
+  constructor(private router: Router) {}
 
   toggleMenu() {
     this.isMenuCollapsed = !this.isMenuCollapsed;
   }
 
   toggleDarkMode() {
-    this.isDarkMode = !this.isDarkMode;
-    // Implement dark mode logic here
+    this.darkModeService.updateDarkMode();
   }
 
   toggleLanguage() {
@@ -41,5 +51,9 @@ export class NavbarComponent {
     // Implement logout logic here
   }
 
-
+  search() {
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/search-results'], { queryParams: { query: this.searchQuery } });
+    }
+  }
 }

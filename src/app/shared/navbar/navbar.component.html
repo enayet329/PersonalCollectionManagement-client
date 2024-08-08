@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+<nav class="navbar navbar-expand-lg navbar-light border-bottom">
   <div class="container-fluid">
     <a class="navbar-brand d-flex align-items-center" routerLink="/">
       <div class="rounded-circle p-2 me-2">
@@ -43,22 +43,17 @@
         <li class="nav-item">
           <a
             class="nav-link"
-            routerLink="/collections"
+            routerLink="/collection-list"
             routerLinkActive="active"
           >
             <i class="fa fa-list-alt" aria-hidden="true"></i> Collections
           </a>
         </li>
         <li class="nav-item" *ngIf="isAdmin">
-          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active"
-            ><img
-            src="assets/dashboard.svg"
-            class="h-8 mr-3"
-            width="40"
-            height="30"
-            alt="Flowbite Logo"
-          />Dashboard</a
-          >
+          <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
+            <i class="bi bi-gear"></i>
+            Dashboard
+          </a>
         </li>
       </ul>
 
@@ -66,11 +61,17 @@
         <div class="search-container me-2">
           <input
             type="text"
+            [(ngModel)]="searchQuery"
+            (keydown.enter)="search()"
             class="search-input"
             placeholder="Search..."
             aria-label="Search"
           />
-          <button class="search-btn" aria-label="Search button">
+          <button
+            (click)="search()"
+            class="search-btn"
+            aria-label="Search button"
+          >
             <i class="fas fa-search"></i>
           </button>
         </div>
@@ -81,14 +82,36 @@
           type="button"
           aria-label="Toggle dark mode"
         >
-          <i [class]="isDarkMode ? 'fas fa-moon' : 'fas fa-sun'"></i>
+          <i
+            [class]="
+              darkModeService.darkModeSignal() === 'dark'
+                ? 'fas fa-moon'
+                : 'fas fa-sun'
+            "
+          ></i>
         </button>
 
-        <button (click)="toggleLanguage()" class="btn btn-icon" type="button" aria-label="Toggle language">
-          <img *ngIf="currentLanguage === 'en'" src="assets/english.svg" alt="English icon" width="20" height="20">
-          <img *ngIf="currentLanguage === 'bn'" src="assets/bangladesh.svg" alt="Bangladesh icon" width="20" height="20">
+        <button
+          (click)="toggleLanguage()"
+          class="btn btn-icon"
+          type="button"
+          aria-label="Toggle language"
+        >
+          <img
+            *ngIf="currentLanguage === 'en'"
+            src="assets/english.svg"
+            alt="English icon"
+            width="20"
+            height="20"
+          />
+          <img
+            *ngIf="currentLanguage === 'bn'"
+            src="assets/bangladesh.svg"
+            alt="Bangladesh icon"
+            width="20"
+            height="20"
+          />
         </button>
-        
 
         <div
           *ngIf="userIsLoggedIn"
@@ -103,7 +126,9 @@
             <i class="fas fa-user-circle fa-lg"></i>
           </button>
           <div class="dropdown-menu" [class.show]="isProfileDropdownOpen">
-            <a class="dropdown-item" routerLink="/profile">Profile</a>
+            <a class="dropdown-item text-primary" routerLink="/profile"
+              >Profile</a
+            >
             <div class="dropdown-divider"></div>
             <a class="dropdown-item text-danger" (click)="logout()">Logout</a>
           </div>
