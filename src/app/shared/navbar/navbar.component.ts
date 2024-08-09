@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouterLinkActive, Router } from '@angular/router';
 import { NgbCollapseModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +9,7 @@ import { CloudinaryUploadService } from '../../core/services/image-upload.servic
 import { UserService } from '../../core/services/user.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ToastrService  } from 'ngx-toastr';
+import { JwtDecoderService } from '../../core/services/jwt-decoder.service';
 
 @Component({
   selector: 'app-navbar',
@@ -24,17 +25,19 @@ import { ToastrService  } from 'ngx-toastr';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
-  private token: string | null = localStorage.getItem('token');
-  private prefferedTheme: boolean | null = localStorage.getItem('prefferedThemeDark') 
-  ? JSON.parse(localStorage.getItem('prefferedThemeDark')!) 
-  : null;
+export class NavbarComponent implements OnInit {
 
-  private prefferedLanguage: string | null = localStorage.getItem('prefferedLanguage');
+  user: any = null;
+  private token: string | null = null;
+  userId: string | null = null;
+  isAdmin: boolean = false;
+  userIsLoggedIn: boolean = false;
+  isBlocked: boolean = false;
+  preferredLanguage: string | null = null;
+  preferredThemeDark: boolean = false;
+
   isMenuCollapsed = true;
-  currentLanguage = this.prefferedLanguage;
-  userIsLoggedIn: boolean = this.token? true : false;
-  isAdmin = true;
+  currentLanguage: string | null = null;
   isProfileDropdownOpen = false;
 
   darkModeService: ThemeService = inject(ThemeService);
@@ -55,33 +58,81 @@ export class NavbarComponent {
     private cloudinaryService: CloudinaryUploadService,
     private userService: UserService,
     private sanitizer: DomSanitizer,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private jwtDecoder: JwtDecoderService
   ) {}
   
+  ngOnInit() {
+    this.initForms();
+    this.initializeUserState();
+  }
+  
+  private initializeUserState() {
+    this.token = localStorage.getItem('token');
+    if (this.token && !this.jwtDecoder.isTokenExpired(this.token)) {
+      this.userId = this.jwtDecoder.getUserIdFromToken(this.token);
+      this.isAdmin = this.jwtDecoder.getIsAdminFromToken(this.token);
+      this.isBlocked = this.jwtDecoder.getIsBlockedFromToken(this.token);
+      this.preferredLanguage = this.jwtDecoder.getPreferredLanguageFromToken(this.token);
+      this.preferredThemeDark = this.jwtDecoder.getPreferredThemeDarkFromToken(this.token);
+      this.user = {
+        id: this.userId,
+        username: this.jwtDecoder.getUsernameFromToken(this.token),
+        email: this.jwtDecoder.getEmailFromToken(this.token),
+        isAdmin: this.isAdmin,
+        isBlocked: this.isBlocked
+      };
+      this.userIsLoggedIn = true;
+      this.currentLanguage = this.preferredLanguage || 'en';
+    } else {
+      this.resetUserState();
+    }
+  }
+
+  private resetUserState() {
+    this.userIsLoggedIn = false;
+    this.isAdmin = false;
+    this.userId = null;
+    this.user = null;
+    this.token = null;
+    this.isBlocked = false;
+    this.preferredLanguage = null;
+    this.preferredThemeDark = false;
+    this.currentLanguage = 'en';
+    localStorage.removeItem('token');
+  }
 
   toggleMenu() {
     this.isMenuCollapsed = !this.isMenuCollapsed;
   }
-
+          
   toggleDarkMode() {
+    this.preferredThemeDark = !this.preferredThemeDark;
     this.darkModeService.updateDarkMode();
   }
 
   toggleLanguage() {
-    this.currentLanguage = this.currentLanguage === 'en'? 'bn' : 'en';
+    this.currentLanguage = this.currentLanguage === 'en' ? 'bn' : 'en';
     localStorage.setItem('prefferedLanguage', this.currentLanguage);
   }
 
-  toggleProfileDropdown() {
-    this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
+  openProfileDropdown() {
+    this.isProfileDropdownOpen = true;
+  }
+
+  closeProfileDropdown() {
+    this.isProfileDropdownOpen = false;
   }
 
   logout() {
-    if (localStorage.getItem('token')) {
-      localStorage.removeItem('token');
-      this.userIsLoggedIn = false;
+    if (this.token) {
+      this.resetUserState();
       this.toastr.success('Logout Successful', 'See you again!');
-      this.router.navigate(['/home']);
+      localStorage.removeItem('token');
+      localStorage.removeItem('prefferedLanguage');
+      localStorage.removeItem('theme');
+
+      window.location.reload();
     } else {
       this.toastr.error('Logout Failed', 'No user is logged in.');
     }
@@ -91,10 +142,6 @@ export class NavbarComponent {
     if (this.searchQuery.trim()) {
       this.router.navigate(['/search-results'], { queryParams: { query: this.searchQuery } });
     }
-  }
-
-  ngOnInit() {
-    this.initForms();
   }
 
   initForms() {
@@ -175,12 +222,11 @@ export class NavbarComponent {
     this.userService.loginUser(requestPayload).subscribe(
       (response: ResponseModel) => {
         if (response.success) {
-          localStorage.setItem('token', JSON.stringify(response));
-          localStorage.setItem('prefferedLanguage', response.preferredLanguage ? response.preferredLanguage : 'en');
-          localStorage.setItem('theme', JSON.stringify(response.preferredThemeDark ? 'dark' : 'null'));
-          this.userIsLoggedIn = true;
+          localStorage.setItem('token', response.accessToken!);
+          this.initializeUserState();
           this.toastr.success('Login Successful', 'Welcome back!');
           this.modalService.dismissAll();
+          this.router.navigate(['/home']);
         } else {
           this.toastr.error('Login Failed', response.message || 'Please try again.');
         }
@@ -204,6 +250,7 @@ export class NavbarComponent {
         if (response.success) {
           this.toastr.success('Registration Successful', 'Please login to continue!');
           this.modalService.dismissAll();
+          this.router.navigate(['/login']);
         } else {
           this.toastr.error('Registration Failed', response.message || 'Please try again.');
         }
