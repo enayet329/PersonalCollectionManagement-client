@@ -1,5 +1,6 @@
 const apiUrl = 'http://localhost:7138/api/v1/';
 
+// Collection Constants
 export const CollectionConstants = {
   API_ENDPOINTS: {
     GET_COLLECTIONS: apiUrl + 'collections',
@@ -12,7 +13,7 @@ export const CollectionConstants = {
   }
 };
 
-
+// Item Constants
 export const ItemConstants = {
   API_ENDPOINTS: {
     SEARCH_ITEMS: apiUrl + 'items/search/query',
@@ -24,5 +25,20 @@ export const ItemConstants = {
     ADD_ITEM: apiUrl + 'items/add',
     UPDATE_ITEM: apiUrl + 'items/update/id/item',
     DELETE_ITEM: apiUrl + 'items/delete/id'
+  }
+};
+
+// User Constants
+export const UserConstants = {
+  API_ENDPOINTS: {
+    REGISTER: apiUrl + 'accounts/register',
+    LOGIN: apiUrl + 'accounts/login',
+    REFRESH_TOKEN: apiUrl + 'accounts/refresh-token',
+    GET_USER_BY_ID: apiUrl + 'accounts/user/id',
+    GET_USER_BY_EMAIL: apiUrl + 'accounts/user/email',
+    CHECK_USERNAME_AVAILABILITY: apiUrl + 'accounts/availability/username',
+    CHECK_EMAIL_AVAILABILITY: apiUrl + 'accounts/availability/email',
+    UPDATE_LANGUAGE: apiUrl + 'accounts/language/userId',
+    UPDATE_THEME: apiUrl + 'accounts/theme/userId',
   }
 };
