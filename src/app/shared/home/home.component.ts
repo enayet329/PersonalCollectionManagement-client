@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { Collection } from '../../core/model/collection.mode.';
 import { CollectionService } from '../../core/services/collection.service';
 import { Item } from '../../core/model/item.model';
@@ -9,7 +9,7 @@ import { ItemService } from '../../core/services/item.service';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,RouterLink],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
