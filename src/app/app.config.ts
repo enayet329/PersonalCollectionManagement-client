@@ -1,6 +1,7 @@
 import {
   ApplicationConfig,
   importProvidersFrom,
+  NgModule,
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
@@ -27,7 +28,7 @@ export const appConfig: ApplicationConfig = {
       Validators,
       FormBuilder,
       ReactiveFormsModule,
-    
+      NgModule
     ),
   ],
 };

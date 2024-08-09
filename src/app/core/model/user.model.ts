@@ -15,9 +15,9 @@ export interface UserLoginModel{
 }
 
 export interface UserRegisterModel{
-
     username: string;
     email: string;
     passwordHash: string;
     imageURL: string;
 }
+

@@ -1,5 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light border-bottom">
   <div class="container-fluid">
+    <!-- Brand Section -->
     <a class="navbar-brand d-flex align-items-center" routerLink="/">
       <div class="rounded-circle p-2 me-2">
         <img
@@ -13,6 +14,7 @@
       <span class="navbar-text mx-auto fw-bold">Collectify</span>
     </a>
 
+    <!-- Navbar Toggler -->
     <button
       class="navbar-toggler"
       type="button"
@@ -24,11 +26,13 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
+    <!-- Navbar Content -->
     <div
       class="collapse navbar-collapse"
       id="navbarSupportedContent"
-      [class.show]="!isMenuCollapsed"
+      [ngClass]="{ 'show': !isMenuCollapsed }"
     >
+      <!-- Left Navigation Links -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a
@@ -51,13 +55,14 @@
         </li>
         <li class="nav-item" *ngIf="isAdmin">
           <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
-            <i class="bi bi-gear"></i>
-            Dashboard
+            <i class="bi bi-gear"></i> Dashboard
           </a>
         </li>
       </ul>
 
+      <!-- Right Navigation Section -->
       <div class="d-flex align-items-center">
+        <!-- Search Section -->
         <div class="search-container me-2">
           <input
             type="text"
@@ -76,14 +81,15 @@
           </button>
         </div>
 
+        <!-- Dark Mode Toggle -->
         <button
           (click)="toggleDarkMode()"
-          class="btn btn-icon"
+          class="btn btn-icon ms-2"
           type="button"
           aria-label="Toggle dark mode"
         >
           <i
-            [class]="
+            [ngClass]="
               darkModeService.darkModeSignal() === 'dark'
                 ? 'fas fa-moon'
                 : 'fas fa-sun'
@@ -91,9 +97,10 @@
           ></i>
         </button>
 
+        <!-- Language Toggle -->
         <button
           (click)="toggleLanguage()"
-          class="btn btn-icon"
+          class="btn btn-icon ms-2"
           type="button"
           aria-label="Toggle language"
         >
@@ -113,6 +120,7 @@
           />
         </button>
 
+        <!-- Profile Dropdown -->
         <div
           *ngIf="userIsLoggedIn"
           class="dropdown ms-2"
@@ -125,30 +133,145 @@
           >
             <i class="fas fa-user-circle fa-lg"></i>
           </button>
-          <div class="dropdown-menu" [class.show]="isProfileDropdownOpen">
-            <a class="dropdown-item text-primary" routerLink="/profile"
-              >Profile</a
-            >
+          <div
+            class="dropdown-menu"
+            [ngClass]="{ 'show': isProfileDropdownOpen }"
+          >
+            <a class="dropdown-item text-primary" routerLink="/profile">
+              Profile
+            </a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item text-danger" (click)="logout()">Logout</a>
           </div>
         </div>
 
+        <!-- Sign In/Sign Up Buttons -->
         <div *ngIf="!userIsLoggedIn" class="d-flex align-items-center ms-2">
-          <a
-            routerLink="/login"
+          <button
             class="btn btn-outline-primary me-2"
-            routerLinkActive="active"
-            >Sign In</a
+            (click)="modalService.open(signinModal)"
           >
-          <a
-            routerLink="/register"
+            Sign In
+          </button>
+          <button
             class="btn btn-primary"
-            routerLinkActive="active"
-            >Sign Up</a
+            (click)="modalService.open(signupModal)"
           >
+            Sign Up
+          </button>
         </div>
       </div>
     </div>
   </div>
 </nav>
+
+<!-- Sign In Modal -->
+<ng-template #signinModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Sign In</h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="signinForm" (ngSubmit)="onSigninSubmit()">
+      <div class="mb-3">
+        <label for="signinEmail" class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="signinEmail"
+          formControlName="email"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="signinPassword" class="form-label">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="signinPassword"
+          formControlName="password"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Sign In</button>
+    </form>
+  </div>
+</ng-template>
+
+<!-- Sign Up Modal -->
+<ng-template #signupModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Sign Up</h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <div class="form-group mb-3">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          formControlName="name"
+          required
+        />
+      </div>
+      <div class="form-group mb-3">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          formControlName="email"
+          required
+        />
+      </div>
+      <div class="form-group mb-3">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          formControlName="password"
+          required
+        />
+      </div>
+      <div class="form-group mb-3">
+        <label for="profile-image">Profile Image</label>
+        <div
+          class="profile-image-container border p-2 text-center"
+          (dragover)="onDragOver($event)"
+          (drop)="onDrop($event)"
+        >
+          <img
+            [src]="profileImageUrl"
+            alt="Profile Image"
+            class="img-fluid rounded"
+            *ngIf="profileImageUrl"
+          />
+          <p *ngIf="!profileImageUrl" class="text-muted">
+            Drag and drop your profile image here
+          </p>
+        </div>
+        <input
+          type="file"
+          class="form-control mt-2"
+          id="profile-image"
+          (change)="onFileSelected($event)"
+          accept="image/*"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+    </form>
+  </div>
+</ng-template>
