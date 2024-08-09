@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Collection } from '../../core/model/collection.mode.';
 import { CollectionService } from '../../core/services/collection.service';
 import { Item } from '../../core/model/item.model';
@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   collections: Collection[] = [];
   recentItems: Item[] = [];
 
-  constructor(private collectionService: CollectionService, private itemService: ItemService) {}
+  constructor(private collectionService: CollectionService, private itemService: ItemService,   private router: Router,) {}
 
   ngOnInit(): void {
     this.loadCollections();
@@ -51,5 +51,13 @@ export class HomeComponent implements OnInit {
 
   getLimitedTags(tags: string[], limit: 3): string[] {
     return tags.slice(0, limit);
+  }
+
+  goToCollectionDetails(collectionId: string) {
+    this.router.navigate(['/collection-detail', collectionId]);
+  }
+  
+  goToItemDetails(itemId: string) {
+    this.router.navigate(['/item-detail', itemId]);
   }
 }
