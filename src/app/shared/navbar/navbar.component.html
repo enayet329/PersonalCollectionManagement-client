@@ -124,11 +124,11 @@
         <div
           *ngIf="userIsLoggedIn"
           class="dropdown ms-2"
-          (clickOutside)="isProfileDropdownOpen = false"
+          (mouseover)="openProfileDropdown()"
+          (mouseleave)="closeProfileDropdown()"
         >
           <button
             class="btn btn-icon"
-            (click)="toggleProfileDropdown()"
             aria-label="Profile options"
           >
             <i class="fas fa-user-circle fa-lg"></i>
