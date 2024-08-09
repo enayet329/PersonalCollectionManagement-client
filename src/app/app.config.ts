@@ -7,8 +7,9 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule, NgForOf } from '@angular/common';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgxFileDropModule } from 'ngx-file-drop';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,17 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(NgForOf),
     provideRouter(routes),
     importProvidersFrom(HttpClientModule),
-    importProvidersFrom(CommonModule,NgModel,BrowserModule,FormsModule)
+    importProvidersFrom(
+      CommonModule,
+      NgModel,
+      BrowserModule,
+      FormsModule,
+      NgxFileDropModule,
+      FormGroup,
+      Validators,
+      FormBuilder,
+      ReactiveFormsModule,
+    
+    ),
   ],
 };
