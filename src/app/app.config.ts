@@ -11,6 +11,7 @@ import { CommonModule, NgForOf } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgxFileDropModule } from 'ngx-file-drop';
+import { ToastrModule } from 'ngx-toastr';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,7 +29,14 @@ export const appConfig: ApplicationConfig = {
       Validators,
       FormBuilder,
       ReactiveFormsModule,
-      NgModule
+      NgModule,
+      ToastrModule.forRoot({
+        timeOut: 3000,
+        positionClass: 'toast-bottom-right',
+        preventDuplicates: true,
+        closeButton: true,
+      })
+      
     ),
   ],
 };

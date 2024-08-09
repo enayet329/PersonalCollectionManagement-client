@@ -8,6 +8,7 @@ import { ResponseModel } from '../../core/model/response.model';
 import { CloudinaryUploadService } from '../../core/services/image-upload.service';
 import { UserService } from '../../core/services/user.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { ToastrService  } from 'ngx-toastr';
 
 @Component({
   selector: 'app-navbar',
@@ -53,7 +54,8 @@ export class NavbarComponent {
     private router: Router,
     private cloudinaryService: CloudinaryUploadService,
     private userService: UserService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private toastr: ToastrService
   ) {}
   
 
@@ -75,9 +77,14 @@ export class NavbarComponent {
   }
 
   logout() {
-    localStorage.getItem('token') && localStorage.removeItem('token');
-    this.userIsLoggedIn = false;
-    this.router.navigate(['/home']);
+    if (localStorage.getItem('token')) {
+      localStorage.removeItem('token');
+      this.userIsLoggedIn = false;
+      this.toastr.success('Logout Successful', 'See you again!');
+      this.router.navigate(['/home']);
+    } else {
+      this.toastr.error('Logout Failed', 'No user is logged in.');
+    }
   }
 
   search() {
@@ -133,63 +140,58 @@ export class NavbarComponent {
   }
 
   onSubmit() {
-    console.log('Form Submitted');
     if (this.signupForm.valid) {
-      console.log('Form is valid');
       if (this.profileImage) {
-        console.log('Uploading image');
         this.cloudinaryService.uploadImage(this.profileImage)
           .then((url: string) => {
-            console.log('Image uploaded successfully:', url);
             this.signupForm.patchValue({ profileImageUrl: url });
             this.register();
           })
           .catch((error: Error) => {
-            console.error('Error uploading image:', error);
+            this.toastr.error('Error uploading image', 'Please try again.');
           });
       } else {
         this.register();
       }
     } else {
-      console.log('Form is invalid');
+      this.toastr.error('Form is invalid', 'Please fill all required fields.');
     }
   }
 
   onSigninSubmit() {
     if (this.signinForm.valid) {
-      const credentials = this.signinForm.value;
       this.login();
-      console.log('Sign in with:', credentials);
     } else {
-      console.log('Sign in form is invalid');
+      this.toastr.error('Sign in form is invalid', 'Please fill all required fields.');
     }
   }
 
-  login(){
-    console.log('Login method called');
+  login() {
     const requestPayload = {
       email: this.signinForm.value.email,
       password: this.signinForm.value.password
     };
-    console.log('Request Payload:', requestPayload);
 
-    this.userService.loginUser(requestPayload).subscribe((response: ResponseModel) => 
-    {
-      if (response.success == true) {
-        console.log("User logged in successfully", response);
-
-        localStorage.setItem('token', JSON.stringify(response));
-        localStorage.setItem('prefferedLanguage', response.preferredLanguage? response.preferredLanguage : 'en');
-        localStorage.setItem('theme', JSON.stringify(response.preferredThemeDark === true? 'dark' : 'null'))
-        this.userIsLoggedIn = true;
-        this.modalService.dismissAll();
+    this.userService.loginUser(requestPayload).subscribe(
+      (response: ResponseModel) => {
+        if (response.success) {
+          localStorage.setItem('token', JSON.stringify(response));
+          localStorage.setItem('prefferedLanguage', response.preferredLanguage ? response.preferredLanguage : 'en');
+          localStorage.setItem('theme', JSON.stringify(response.preferredThemeDark ? 'dark' : 'null'));
+          this.userIsLoggedIn = true;
+          this.toastr.success('Login Successful', 'Welcome back!');
+          this.modalService.dismissAll();
+        } else {
+          this.toastr.error('Login Failed', response.message || 'Please try again.');
+        }
+      },
+      (error) => {
+        this.toastr.error('Login Error', error.message || 'An unexpected error occurred.');
       }
-    })
-
+    );
   }
 
   register() {
-    console.log('Register method called');
     const requestPayload = {
       username: this.signupForm.value.name,
       email: this.signupForm.value.email,
@@ -199,21 +201,15 @@ export class NavbarComponent {
 
     this.userService.registerUser(requestPayload).subscribe(
       (response: ResponseModel) => {
-
-        if (response.success == true) {
-
-          console.log("User registered successfully", response);
-          localStorage.setItem('user', JSON.stringify(requestPayload.email))
+        if (response.success) {
+          this.toastr.success('Registration Successful', 'Please login to continue!');
           this.modalService.dismissAll();
         } else {
-          console.error(response.message);
+          this.toastr.error('Registration Failed', response.message || 'Please try again.');
         }
       },
-      (error: { error: { errors: any; }; }) => {
-        console.error('Registration error:', error);
-        if (error.error && error.error.errors) {
-          console.error('Validation Errors:', error.error.errors);
-        }
+      (error) => {
+        this.toastr.error('Registration Error', error.message || 'An unexpected error occurred.');
       }
     );
   }
