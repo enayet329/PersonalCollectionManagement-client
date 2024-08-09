@@ -5,7 +5,6 @@ import { Injectable, signal } from '@angular/core';
 })
 export class ThemeService {
   darkModeSignal = signal<string>('null');
-  private theme: string = localStorage.getItem('theme') || 'null';
 
   constructor() {
     const savedTheme = localStorage.getItem('theme') || 'null';
@@ -22,7 +21,7 @@ export class ThemeService {
   }
 
   private applyTheme(theme: string) {
-    document.body.classList.toggle('dark-theme', theme === 'dark');
+    document.body.classList.toggle('enabled', theme === 'dark');
     localStorage.setItem('theme', theme);
   }
 }

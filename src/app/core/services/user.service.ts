@@ -1,5 +1,5 @@
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../model/response.model';
@@ -20,4 +20,17 @@ export class UserService {
   loginUser(user: any): Observable<ResponseModel> {
     return this.httpClient.post<ResponseModel>(this.apiUrl.LOGIN, user);
   }
+
+  updateTheme(userId: string, theme: boolean): Observable<any> {
+    const url = `${this.apiUrl.UPDATE_THEME}`;
+    const params = { userId, theme: theme.toString() };
+  
+    return this.httpClient.put<any>(url, null, { params });
+  }
+  
+
+  updateLanguage(language: string): Observable<any> {
+    return this.httpClient.put<any>(this.apiUrl.UPDATE_LANGUAGE, language);
+  }
+
 }
