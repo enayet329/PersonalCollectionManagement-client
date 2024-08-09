@@ -3,12 +3,18 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, RouterLinkActive, Router } from '@angular/router';
 import { NgbCollapseModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeService } from '../../core/services/theme.service';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ResponseModel } from '../../core/model/response.model';
 import { CloudinaryUploadService } from '../../core/services/image-upload.service';
 import { UserService } from '../../core/services/user.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { ToastrService  } from 'ngx-toastr';
+import { ToastrService } from 'ngx-toastr';
 import { JwtDecoderService } from '../../core/services/jwt-decoder.service';
 
 @Component({
@@ -23,10 +29,9 @@ import { JwtDecoderService } from '../../core/services/jwt-decoder.service';
     ReactiveFormsModule,
   ],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-
   user: any = null;
   private token: string | null = null;
   userId: string | null = null;
@@ -61,26 +66,30 @@ export class NavbarComponent implements OnInit {
     private toastr: ToastrService,
     private jwtDecoder: JwtDecoderService
   ) {}
-  
+
   ngOnInit() {
     this.initForms();
     this.initializeUserState();
   }
-  
+
   private initializeUserState() {
     this.token = localStorage.getItem('token');
     if (this.token && !this.jwtDecoder.isTokenExpired(this.token)) {
       this.userId = this.jwtDecoder.getUserIdFromToken(this.token);
       this.isAdmin = this.jwtDecoder.getIsAdminFromToken(this.token);
       this.isBlocked = this.jwtDecoder.getIsBlockedFromToken(this.token);
-      this.preferredLanguage = this.jwtDecoder.getPreferredLanguageFromToken(this.token);
-      this.preferredThemeDark = this.jwtDecoder.getPreferredThemeDarkFromToken(this.token);
+      this.preferredLanguage = this.jwtDecoder.getPreferredLanguageFromToken(
+        this.token
+      );
+      this.preferredThemeDark = this.jwtDecoder.getPreferredThemeDarkFromToken(
+        this.token
+      );
       this.user = {
         id: this.userId,
         username: this.jwtDecoder.getUsernameFromToken(this.token),
         email: this.jwtDecoder.getEmailFromToken(this.token),
         isAdmin: this.isAdmin,
-        isBlocked: this.isBlocked
+        isBlocked: this.isBlocked,
       };
       this.userIsLoggedIn = true;
       this.currentLanguage = this.preferredLanguage || 'en';
@@ -105,12 +114,33 @@ export class NavbarComponent implements OnInit {
   toggleMenu() {
     this.isMenuCollapsed = !this.isMenuCollapsed;
   }
-          
   toggleDarkMode() {
     this.preferredThemeDark = !this.preferredThemeDark;
-    this.darkModeService.updateDarkMode();
+  
+    this.userService.updateTheme(this.userId!, this.preferredThemeDark).subscribe(
+      (response: ResponseModel) => {
+        if (response.message !== 'Error') {
+          this.darkModeService.updateDarkMode();
+          this.toastr.success('Theme updated successfully');
+          console.log('Theme updated', response.message);
+        } else {
+          this.preferredThemeDark = !this.preferredThemeDark;
+          this.toastr.error(
+            'Error updating theme',
+            response.message || 'Please try again.'
+          );
+        }
+      },
+      (error) => {
+        this.preferredThemeDark = !this.preferredThemeDark;
+        this.toastr.error(
+          'Error updating theme',
+          error.message || 'An unexpected error occurred.'
+        );
+      }
+    );
   }
-
+  
   toggleLanguage() {
     this.currentLanguage = this.currentLanguage === 'en' ? 'bn' : 'en';
     localStorage.setItem('prefferedLanguage', this.currentLanguage);
@@ -140,7 +170,9 @@ export class NavbarComponent implements OnInit {
 
   search() {
     if (this.searchQuery.trim()) {
-      this.router.navigate(['/search-results'], { queryParams: { query: this.searchQuery } });
+      this.router.navigate(['/search-results'], {
+        queryParams: { query: this.searchQuery },
+      });
     }
   }
 
@@ -149,12 +181,12 @@ export class NavbarComponent implements OnInit {
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      profileImageUrl: ['']
+      profileImageUrl: [''],
     });
 
     this.signinForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
   }
 
@@ -189,7 +221,8 @@ export class NavbarComponent implements OnInit {
   onSubmit() {
     if (this.signupForm.valid) {
       if (this.profileImage) {
-        this.cloudinaryService.uploadImage(this.profileImage)
+        this.cloudinaryService
+          .uploadImage(this.profileImage)
           .then((url: string) => {
             this.signupForm.patchValue({ profileImageUrl: url });
             this.register();
@@ -209,30 +242,52 @@ export class NavbarComponent implements OnInit {
     if (this.signinForm.valid) {
       this.login();
     } else {
-      this.toastr.error('Sign in form is invalid', 'Please fill all required fields.');
+      this.toastr.error(
+        'Sign in form is invalid',
+        'Please fill all required fields.'
+      );
     }
   }
 
   login() {
     const requestPayload = {
       email: this.signinForm.value.email,
-      password: this.signinForm.value.password
+      password: this.signinForm.value.password,
     };
 
     this.userService.loginUser(requestPayload).subscribe(
       (response: ResponseModel) => {
         if (response.success) {
-          localStorage.setItem('token', response.accessToken!);
+          const token = response.accessToken!;
+          const isBlocked = this.jwtDecoder.getIsBlockedFromToken(token);
+          const preferredThemeDark = this.jwtDecoder.getPreferredThemeDarkFromToken(token);
+
+          if (isBlocked) {
+            this.toastr.error(
+              'Login Failed',
+              'Your account is blocked. Please contact support.'
+            );
+            return;
+          }
+          localStorage.setItem('token', token);
+          localStorage.setItem('theme',preferredThemeDark == true ? 'dark' : 'null')
           this.initializeUserState();
           this.toastr.success('Login Successful', 'Welcome back!');
           this.modalService.dismissAll();
           this.router.navigate(['/home']);
+          window.location.reload();
         } else {
-          this.toastr.error('Login Failed', response.message || 'Please try again.');
+          this.toastr.error(
+            'Login Failed',
+            response.message || 'Please try again.'
+          );
         }
       },
       (error) => {
-        this.toastr.error('Login Error', error.message || 'An unexpected error occurred.');
+        this.toastr.error(
+          'Login Error',
+          error.message || 'An unexpected error occurred.'
+        );
       }
     );
   }
@@ -242,21 +297,31 @@ export class NavbarComponent implements OnInit {
       username: this.signupForm.value.name,
       email: this.signupForm.value.email,
       passwordHash: this.signupForm.value.password,
-      imageURL: this.signupForm.value.profileImageUrl
+      imageURL: this.signupForm.value.profileImageUrl,
     };
 
     this.userService.registerUser(requestPayload).subscribe(
       (response: ResponseModel) => {
         if (response.success) {
-          this.toastr.success('Registration Successful', 'Please login to continue!');
+          this.toastr.success(
+            'Registration Successful',
+            'Please login to continue!'
+          );
           this.modalService.dismissAll();
           this.router.navigate(['/login']);
+          window.location.reload();
         } else {
-          this.toastr.error('Registration Failed', response.message || 'Please try again.');
+          this.toastr.error(
+            'Registration Failed',
+            response.message || 'Please try again.'
+          );
         }
       },
       (error) => {
-        this.toastr.error('Registration Error', error.message || 'An unexpected error occurred.');
+        this.toastr.error(
+          'Registration Error',
+          error.message || 'An unexpected error occurred.'
+        );
       }
     );
   }
