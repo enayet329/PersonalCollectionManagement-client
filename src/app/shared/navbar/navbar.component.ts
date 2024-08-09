@@ -24,9 +24,15 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
+  private token: string | null = localStorage.getItem('token');
+  private prefferedTheme: boolean | null = localStorage.getItem('prefferedThemeDark') 
+  ? JSON.parse(localStorage.getItem('prefferedThemeDark')!) 
+  : null;
+
+  private prefferedLanguage: string | null = localStorage.getItem('prefferedLanguage');
   isMenuCollapsed = true;
-  currentLanguage = 'en';
-  userIsLoggedIn = false;
+  currentLanguage = this.prefferedLanguage;
+  userIsLoggedIn: boolean = this.token? true : false;
   isAdmin = true;
   isProfileDropdownOpen = false;
 
@@ -60,7 +66,8 @@ export class NavbarComponent {
   }
 
   toggleLanguage() {
-    this.currentLanguage = this.currentLanguage === 'en' ? 'bn' : 'en';
+    this.currentLanguage = this.currentLanguage === 'en'? 'bn' : 'en';
+    localStorage.setItem('prefferedLanguage', this.currentLanguage);
   }
 
   toggleProfileDropdown() {
@@ -68,7 +75,9 @@ export class NavbarComponent {
   }
 
   logout() {
-    // Implement logout logic here
+    localStorage.getItem('token') && localStorage.removeItem('token');
+    this.userIsLoggedIn = false;
+    this.router.navigate(['/home']);
   }
 
   search() {
@@ -149,11 +158,34 @@ export class NavbarComponent {
   onSigninSubmit() {
     if (this.signinForm.valid) {
       const credentials = this.signinForm.value;
-      // Implement sign-in logic here
+      this.login();
       console.log('Sign in with:', credentials);
     } else {
       console.log('Sign in form is invalid');
     }
+  }
+
+  login(){
+    console.log('Login method called');
+    const requestPayload = {
+      email: this.signinForm.value.email,
+      password: this.signinForm.value.password
+    };
+    console.log('Request Payload:', requestPayload);
+
+    this.userService.loginUser(requestPayload).subscribe((response: ResponseModel) => 
+    {
+      if (response.success == true) {
+        console.log("User logged in successfully", response);
+
+        localStorage.setItem('token', JSON.stringify(response));
+        localStorage.setItem('prefferedLanguage', response.preferredLanguage? response.preferredLanguage : 'en');
+        localStorage.setItem('theme', JSON.stringify(response.preferredThemeDark === true? 'dark' : 'null'))
+        this.userIsLoggedIn = true;
+        this.modalService.dismissAll();
+      }
+    })
+
   }
 
   register() {
@@ -165,14 +197,13 @@ export class NavbarComponent {
       imageURL: this.signupForm.value.profileImageUrl
     };
 
-    console.log('Request Payload:', requestPayload);
-
     this.userService.registerUser(requestPayload).subscribe(
       (response: ResponseModel) => {
 
         if (response.success == true) {
 
           console.log("User registered successfully", response);
+          localStorage.setItem('user', JSON.stringify(requestPayload.email))
           this.modalService.dismissAll();
         } else {
           console.error(response.message);
