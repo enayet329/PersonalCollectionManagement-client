@@ -116,11 +116,11 @@ export class NavbarComponent implements OnInit {
   }
   toggleDarkMode() {
     this.preferredThemeDark = !this.preferredThemeDark;
-  
+    this.darkModeService.updateDarkMode();
     this.userService.updateTheme(this.userId!, this.preferredThemeDark).subscribe(
       (response: ResponseModel) => {
         if (response.message !== 'Error') {
-          this.darkModeService.updateDarkMode();
+
           this.toastr.success('Theme updated successfully');
           console.log('Theme updated', response.message);
         } else {
