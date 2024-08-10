@@ -1,16 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CollectionService } from '../../../core/services/collection.service';
 import { Collection } from '../../../core/model/collection.mode.';
 import { ItemService } from '../../../core/services/item.service';
 import { Item } from '../../../core/model/item.model';
 import { CommonModule } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-collection-detail',
   standalone: true,
-  imports: [CommonModule, NgbDropdownModule, RouterLink],
+  imports: [CommonModule, NgbDropdownModule, RouterModule],
   templateUrl: './collection-detail.component.html',
   styleUrls: ['./collection-detail.component.css'],
 })
@@ -25,7 +26,8 @@ export class CollectionDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private collectionService: CollectionService,
-    private itemService: ItemService
+    private itemService: ItemService,
+    private toaster: ToastrService,
   ) {}
 
   ngOnInit(): void {
@@ -58,22 +60,31 @@ export class CollectionDetailComponent implements OnInit {
   }
 
   editCollection(collection: any) {
-    // Implement the logic to edit the collection
     console.log('Editing collection:', collection);
   }
 
   deleteCollection(collection: any) {
-    // Implement the logic to delete the collection
     console.log('Deleting collection:', collection);
   }
 
-  editItem(item: any) {
-    // Implement the logic to edit the item
-    console.log('Editing item:', item);
+  handleAction(event: Event, action: string, item: any): void {
+    event.stopPropagation();
+    if (action === 'edit') {
+      this.editItem(item);
+    } else if (action === 'delete') {
+      this.deleteItem(item);
+    }
   }
 
-  deleteItem(item: any) {
-    // Implement the logic to delete the item
-    console.log('Deleting item:', item);
+  editItem(item: any): void {
+    console.log('Edit item:', item);
+  }
+
+  deleteItem(item: any): void {
+    console.log('Delete item:', item);
+  }
+
+  navigateToDetail(itemId: string): void {
+    this.router.navigate(['/item-detail', itemId]);
   }
 }
