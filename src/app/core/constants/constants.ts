@@ -58,4 +58,5 @@ export const LikeConstants = {
   API_ENDPOINTS: {
     TOGGLE_LIKE: apiUrl + 'likes/toggle',
     GET_LIKE_BY_ITEM_ID: apiUrl + 'likes/itemId',
+    GET_LIKE_BY_USER_ID: apiUrl + 'likes/IsItemLiked'
   }}
