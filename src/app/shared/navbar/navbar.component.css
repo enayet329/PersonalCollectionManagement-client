@@ -2,6 +2,8 @@
   padding: 0.5rem 1.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative;
+  overflow: visible;
 }
 
 .navbar-brand {
@@ -24,7 +26,7 @@
 
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link.active {
-  color: inherit;
+  color: #007bff;
 }
 
 .search-container {
@@ -39,7 +41,7 @@
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 0.25rem;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, border-color 0.3s ease;
 }
 
 .search-input:focus {
@@ -47,6 +49,7 @@
   border-color: #007bff;
   outline: none;
 }
+
 .search-btn {
   position: absolute;
   right: 0;
@@ -59,6 +62,7 @@
 
 .search-btn i {
   color: #007bff;
+  transition: color 0.3s ease;
 }
 
 .search-btn:hover i {
@@ -71,14 +75,72 @@
   color: inherit;
   cursor: pointer;
   transition: color 0.3s ease;
+  padding: 0.375rem;
 }
 
 .btn-icon:hover {
   color: #007bff;
 }
 
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  min-width: 120px;
+  z-index: 1000;
+  background-color: inherit;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+  padding: 0.5rem 0;
+  margin: 0.125rem 0 0;
+}
+
 .dropdown-menu.show {
   display: block;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1.5rem;
+  clear: both;
+  font-weight: 400;
+  color: inherit;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  text-decoration: none;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1.5rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  text-decoration: none;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  color: #16181b;
+  text-decoration: none;
 }
 
 .profile-image-container {
