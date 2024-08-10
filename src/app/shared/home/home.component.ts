@@ -5,20 +5,25 @@ import { Collection } from '../../core/model/collection.mode.';
 import { CollectionService } from '../../core/services/collection.service';
 import { Item } from '../../core/model/item.model';
 import { ItemService } from '../../core/services/item.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule,RouterLink],
+  imports: [CommonModule, RouterModule, RouterLink],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-
   collections: Collection[] = [];
   recentItems: Item[] = [];
 
-  constructor(private collectionService: CollectionService, private itemService: ItemService,   private router: Router,) {}
+  constructor(
+    private collectionService: CollectionService,
+    private itemService: ItemService,
+    private router: Router,
+    private toastr: ToastrService,
+  ) {}
 
   ngOnInit(): void {
     this.loadCollections();
@@ -27,11 +32,11 @@ export class HomeComponent implements OnInit {
 
   private loadCollections(): void {
     this.collectionService.getLatestCollections().subscribe(
-      collections => {
+      (collections) => {
         this.collections = collections;
         console.log(this.collections);
       },
-      error => {
+      (error) => {
         console.error('Error fetching collections', error);
       }
     );
@@ -39,11 +44,11 @@ export class HomeComponent implements OnInit {
 
   private loadRecentItems(): void {
     this.itemService.getRecentItems().subscribe(
-      items => {
+      (items) => {
         this.recentItems = items;
         console.log('Recent Items:', this.recentItems);
       },
-      error => {
+      (error) => {
         console.error('Error fetching items', error);
       }
     );
@@ -56,7 +61,7 @@ export class HomeComponent implements OnInit {
   goToCollectionDetails(collectionId: string) {
     this.router.navigate(['/collection-detail', collectionId]);
   }
-  
+
   goToItemDetails(itemId: string) {
     this.router.navigate(['/item-detail', itemId]);
   }
