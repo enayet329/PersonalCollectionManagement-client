@@ -114,13 +114,12 @@ export class NavbarComponent implements OnInit {
   toggleMenu() {
     this.isMenuCollapsed = !this.isMenuCollapsed;
   }
-  toggleDarkMode() {
+   toggleDarkMode() {
     this.preferredThemeDark = !this.preferredThemeDark;
     this.darkModeService.updateDarkMode();
     this.userService.updateTheme(this.userId!, this.preferredThemeDark).subscribe(
       (response: ResponseModel) => {
         if (response.message !== 'Error') {
-
           this.toastr.success('Theme updated successfully');
           console.log('Theme updated', response.message);
         } else {
@@ -177,10 +176,11 @@ export class NavbarComponent implements OnInit {
     this.signupForm = this.formBuilder.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(4)]],
       profileImageUrl: [''],
     });
 
+  
     this.signinForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -271,7 +271,6 @@ export class NavbarComponent implements OnInit {
           this.initializeUserState();
           this.toastr.success('Login Successful', 'Welcome back!');
           this.modalService.dismissAll();
-          this.router.navigate(['/home']);
           window.location.reload();
         } else {
           this.toastr.error(
@@ -305,7 +304,6 @@ export class NavbarComponent implements OnInit {
             'Please login to continue!'
           );
           this.modalService.dismissAll();
-          this.router.navigate(['/login']);
           window.location.reload();
         } else {
           this.toastr.error(
