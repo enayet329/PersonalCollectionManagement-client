@@ -13,7 +13,7 @@ export interface Comment {
   userId: string; 
   itemId: string; 
   userName: string;
-  userImageUrl: string;
+  userProfileImgeUrl: string;
 }
 
 export interface CommentResponse {
