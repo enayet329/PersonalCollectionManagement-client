@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CommentConstants } from '../constants/constants';
 import { Observable } from 'rxjs';
-import { Comment, AddComment, CommentResponse } from '../model/comment.model'; // Import both Comment and AddComment
+import { Comment, AddComment, CommentResponse } from '../model/comment.model';
 
 @Injectable({
   providedIn: 'root',
