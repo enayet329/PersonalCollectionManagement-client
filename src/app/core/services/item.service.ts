@@ -21,4 +21,11 @@ export class ItemService {
     const params = { collectionId: collectionId };
     return this.httpClient.get<Item[]>(url, { params: params });
   }
+
+  getItemById(itemId: string): Observable<Item> {
+    const url = this.apiUrl.GET_ITEM_BY_ID;
+    const params = { itemId: itemId };
+    return this.httpClient.get<Item>(url, { params: params });
+  }
+
 }
