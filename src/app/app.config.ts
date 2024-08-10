@@ -12,6 +12,7 @@ import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Vali
 import { BrowserModule } from '@angular/platform-browser';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { ToastrModule } from 'ngx-toastr';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,6 +31,7 @@ export const appConfig: ApplicationConfig = {
       FormBuilder,
       ReactiveFormsModule,
       NgModule,
+      NgbDropdown,
       ToastrModule.forRoot({
         timeOut: 3000,
         positionClass: 'toast-bottom-right',

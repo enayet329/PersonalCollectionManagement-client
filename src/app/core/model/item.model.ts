@@ -6,5 +6,6 @@ export interface Item {
   dateAdded: string;
   collectionName: string;
   collectionId: string;
-  tagNames: string[];
+  tagNames: string[] | null;
+  likes: number;
 }

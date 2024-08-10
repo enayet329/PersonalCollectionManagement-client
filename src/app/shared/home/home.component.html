@@ -70,7 +70,7 @@
       <div class="col" *ngFor="let item of recentItems">
         <div class="card h-100" (click)="goToItemDetails(item.id)">
           <div class="card h-100">
-            <img [src]="item.imgUrl" class="card-img-top" [alt]="item.name" />
+            <img [src]="item.imgUrl || 'https://via.placeholder.com/300x200'" class="card-img-top" [alt]="item.name" />
             <div class="card-body">
               <h5 class="card-title">{{ item.name }}</h5>
               <p class="mb-2">

@@ -133,10 +133,7 @@ export class NavbarComponent implements OnInit {
       },
       (error) => {
         this.preferredThemeDark = !this.preferredThemeDark;
-        this.toastr.error(
-          'Error updating theme',
-          error.message || 'An unexpected error occurred.'
-        );
+        this.toastr.warning('Please login to update theme', 'Error');
       }
     );
   }

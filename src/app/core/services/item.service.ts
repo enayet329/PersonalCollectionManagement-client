@@ -8,11 +8,17 @@ import { Item } from '../model/item.model';
   providedIn: 'root'
 })
 export class ItemService {
-  private apiUrl = ItemConstants.API_ENDPOINTS.GET_RECENT_ITEMS;
+  private apiUrl = ItemConstants.API_ENDPOINTS;
 
   constructor(private httpClient: HttpClient) {}
 
   getRecentItems(): Observable<Item[]> {
-    return this.httpClient.get<Item[]>(this.apiUrl);
+    return this.httpClient.get<Item[]>(this.apiUrl.GET_RECENT_ITEMS);
+  }
+
+  getItemByCollectionId(collectionId: string): Observable<Item[]> {
+    const url = this.apiUrl.GET_ITEMS_BY_COLLECTION_ID;
+    const params = { collectionId: collectionId };
+    return this.httpClient.get<Item[]>(url, { params: params });
   }
 }
