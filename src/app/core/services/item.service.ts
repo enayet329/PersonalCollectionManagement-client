@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ItemConstants } from '../constants/constants';
@@ -24,8 +24,7 @@ export class ItemService {
 
   getItemById(itemId: string): Observable<Item> {
     const url = this.apiUrl.GET_ITEM_BY_ID;
-    const params = { itemId: itemId };
-    return this.httpClient.get<Item>(url, { params: params });
+    const params = new HttpParams().set('id', itemId);
+    return this.httpClient.get<Item>(url, { params });
   }
-
 }
