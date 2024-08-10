@@ -1,0 +1,26 @@
+.dropdown-menu {
+    background-color: #343a40;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .dropdown-item {
+    color: #fff;
+  }
+  
+  .dropdown-item:hover, .dropdown-item:focus {
+    background-color: #495057;
+  }
+  
+  .dropdown-item svg {
+    margin-right: 8px;
+  }
+  
+  .btn-link {
+    color: inherit;
+  }
+  
+  .btn-link:hover, .btn-link:focus {
+    color: #adb5bd; 
+    text-decoration: none;
+  }
+  
