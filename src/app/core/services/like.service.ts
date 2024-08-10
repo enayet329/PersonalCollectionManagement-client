@@ -16,4 +16,18 @@ export class LikeService {
     const params = { itemId: itemId };
     return this.httpClient.get(url, { params });
   }
+
+  toggleLike(data: { userId: string; itemId: string }): Observable<any> {
+    const url = this.apiUrl.TOGGLE_LIKE;
+    return this.httpClient.post(url, data);
+  }
+
+  isItemLiked(userId: string, itemId: string): Observable<any> {
+    const url = this.apiUrl.GET_LIKE_BY_USER_ID;
+    const body = {
+      userId: userId,
+      itemId: itemId,
+    };
+    return this.httpClient.post<any>(url, body);
+  }
 }
