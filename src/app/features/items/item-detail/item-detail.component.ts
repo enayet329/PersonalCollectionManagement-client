@@ -1,19 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Item } from '../../../core/model/item.model';
-import { ItemService } from '../../../core/services/item.service';
-import { CommentService } from '../../../core/services/comment.service';
-import { AddComment, Comment } from '../../../core/model/comment.model';
 import { CommonModule } from '@angular/common';
-import { LikeService } from '../../../core/services/like.service';
-import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { Item } from '../../../core/model/item.model';
+import { AddComment, Comment } from '../../../core/model/comment.model';
+import { ItemService } from '../../../core/services/item.service';
+import { CommentService } from '../../../core/services/comment.service';
+import { LikeService } from '../../../core/services/like.service';
+import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
 
 @Component({
   selector: 'app-item-detail',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule],
+  imports: [RouterLink, CommonModule, FormsModule, NgbDropdownModule],
   templateUrl: './item-detail.component.html',
   styleUrls: ['./item-detail.component.css'],
 })
@@ -35,7 +37,6 @@ export class ItemDetailComponent implements OnInit {
   preferredLanguage: string | null = null;
   preferredThemeDark: boolean = false;
   currentLanguage: string | null = null;
-
 
   constructor(
     private route: ActivatedRoute,
@@ -59,12 +60,8 @@ export class ItemDetailComponent implements OnInit {
       this.userId = this.jwtDecode.getUserIdFromToken(this.token);
       this.isAdmin = this.jwtDecode.getIsAdminFromToken(this.token);
       this.isBlocked = this.jwtDecode.getIsBlockedFromToken(this.token);
-      this.preferredLanguage = this.jwtDecode.getPreferredLanguageFromToken(
-        this.token
-      );
-      this.preferredThemeDark = this.jwtDecode.getPreferredThemeDarkFromToken(
-        this.token
-      );
+      this.preferredLanguage = this.jwtDecode.getPreferredLanguageFromToken(this.token);
+      this.preferredThemeDark = this.jwtDecode.getPreferredThemeDarkFromToken(this.token);
       this.user = {
         id: this.userId,
         username: this.jwtDecode.getUsernameFromToken(this.token),
@@ -98,10 +95,10 @@ export class ItemDetailComponent implements OnInit {
         this.item = data;
         this.likeCount = this.item.likes;
         this.checkIfItemLiked();
-        console.log(this.item);
       },
       (error) => {
         console.error('Error fetching item details', error);
+        this.toaster.error('Failed to load item details', 'Error');
       }
     );
   }
@@ -111,10 +108,9 @@ export class ItemDetailComponent implements OnInit {
       this.likeService.isItemLiked(this.userId, this.itemId).subscribe({
         next: (response) => {
           this.hasLiked = response.success;
-          console.log(response);
         },
         error: (error) => {
-          console.error('Error:', error);
+          console.error('Error checking if item is liked:', error);
         },
       });
     }
@@ -124,9 +120,11 @@ export class ItemDetailComponent implements OnInit {
     this.commentService.getCommetsByItemId(this.itemId).subscribe(
       (comments) => {
         this.comments = comments;
+        console.log('Comments:', this.comments[3].userName);
       },
       (error) => {
         console.error('Error fetching comments:', error);
+        this.toaster.error('Failed to load comments', 'Error');
       }
     );
   }
@@ -143,18 +141,19 @@ export class ItemDetailComponent implements OnInit {
           this.newComment = {} as AddComment;
           this.toaster.success('Comment added successfully', 'Success');
         } else {
-          console.error('Error adding comment:', response.message);
+          this.toaster.error('Failed to add comment', 'Error');
         }
       },
       (error) => {
         console.error('Error adding comment:', error);
+        this.toaster.error('An error occurred while adding the comment', 'Error');
       }
     );
   }
 
   toggleLike(): void {
     if (!this.isLoggedIn || !this.userId) {
-      console.error('User is not logged in or userId is null');
+      this.toaster.warning('You must be logged in to like items', 'Warning');
       return;
     }
 
@@ -165,25 +164,56 @@ export class ItemDetailComponent implements OnInit {
 
     this.likeService.toggleLike(likeData).subscribe(
       (response) => {
-        this.hasLiked = response.success == true;
+        this.hasLiked = response.success;
         this.likeCount = response.likes;
         if (response.success) {
           this.toaster.success('Item liked successfully', 'Success');
         } else {
-          this.toaster.info('Remove like successfully', 'Removed');
+          this.toaster.info('Item unliked successfully', 'Info');
         }
       },
       (error) => {
         console.error('Error toggling like:', error);
+        this.toaster.error('An error occurred while processing your request', 'Error');
       }
     );
   }
 
-  deleteItem(itemId: string): void {
-    // Implement delete item logic here
+  handleDropdownClick(action: string): void {
+    if (action === 'edit') {
+      this.editItem();
+    } else if (action === 'delete') {
+      this.deleteItem();
+    }
+  }
+
+  handleCommentDropdownClick(action: string, commentId: string): void {
+    if (action === 'edit') {
+      this.editComment(commentId);
+    } else if (action === 'delete') {
+      this.deleteComment(commentId);
+    }
+  }
+
+  editItem(): void {
+    console.log('Edit item');
+    this.toaster.info('Edit item functionality not implemented yet', 'Info');
+  }
+
+  deleteItem(): void {
+    if (confirm('Are you sure you want to delete this item?')) {
+
+    }
+  }
+
+  editComment(commentId: string): void {
+    console.log('Edit comment', commentId);
+    this.toaster.info('Edit comment functionality not implemented yet', 'Info');
   }
 
   deleteComment(commentId: string): void {
-    // Implement delete comment logic here
+    if (confirm('Are you sure you want to delete this comment?')) {      
+
+    }
   }
 }
