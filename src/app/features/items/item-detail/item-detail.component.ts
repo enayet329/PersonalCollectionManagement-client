@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -11,6 +11,7 @@ import { ItemService } from '../../../core/services/item.service';
 import { CommentService } from '../../../core/services/comment.service';
 import { LikeService } from '../../../core/services/like.service';
 import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
+import { LikeResponseModel } from '../../../core/model/response.model';
 
 @Component({
   selector: 'app-item-detail',
@@ -22,6 +23,7 @@ import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
 export class ItemDetailComponent implements OnInit {
   itemId: string = '';
   item: Item = {} as Item;
+  like: LikeResponseModel = {} as LikeResponseModel;
   comments: Comment[] = [];
   newComment: AddComment = {} as AddComment;
   hasLiked: boolean = false;
@@ -45,6 +47,7 @@ export class ItemDetailComponent implements OnInit {
     private likeService: LikeService,
     private jwtDecode: JwtDecoderService,
     private toaster: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -120,7 +123,6 @@ export class ItemDetailComponent implements OnInit {
     this.commentService.getCommetsByItemId(this.itemId).subscribe(
       (comments) => {
         this.comments = comments;
-        console.log('Comments:', this.comments[3].userName);
       },
       (error) => {
         console.error('Error fetching comments:', error);
@@ -165,9 +167,10 @@ export class ItemDetailComponent implements OnInit {
     this.likeService.toggleLike(likeData).subscribe(
       (response) => {
         this.hasLiked = response.success;
-        this.likeCount = response.likes;
+        this.like = response;
         if (response.success) {
           this.toaster.success('Item liked successfully', 'Success');
+          console.log('Item liked successfully', response.likes);
         } else {
           this.toaster.info('Item unliked successfully', 'Info');
         }
@@ -215,5 +218,10 @@ export class ItemDetailComponent implements OnInit {
     if (confirm('Are you sure you want to delete this comment?')) {      
 
     }
+  }
+
+
+  goToCollection(collectionId: string): void {
+    this.router.navigate(['/collection-detail', collectionId]);
   }
 }
