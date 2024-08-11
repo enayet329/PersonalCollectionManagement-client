@@ -6,3 +6,9 @@ export interface ResponseModel {
   preferredLanguage: string | null;
   preferredThemeDark: boolean;
 }
+
+export interface LikeResponseModel {
+  success: boolean;
+  message: string;
+  likeCount: number;
+}
