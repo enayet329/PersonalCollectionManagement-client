@@ -3,16 +3,17 @@
     <div class="row g-0">
       <div class="col-md-4 position-relative">
         <img
-          [src]="item.imgUrl"
-          [alt]="item.name"
-          class="img-fluid rounded-start h-100 object-cover"
-        />
+        [src]="item.imgUrl || 'assets/logo.png'"
+        [alt]="item.name"
+        class="img-fluid rounded-start h-100 object-cover"
+        onerror="this.src='assets/logo.png'"
+      />      
       </div>
       <div class="col-md-8">
         <div class="card-body p-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="h3 fw-bold">{{ item.name }}</h2>
-            <div ngbDropdown *ngIf="isLoggedIn && (isAdmin)">
+            <div *ngIf="isLoggedIn && isAdmin" ngbDropdown>
               <button
                 class="btn"
                 ngbDropdownToggle
@@ -36,7 +37,14 @@
                 aria-labelledby="dropdownMenuButton"
                 class="dropdown-menu dropdown-menu-end shadow-sm"
               >
-                <li><a class="dropdown-item" href="javascript:void(0)" (click)="handleDropdownClick('edit')">Edit</a></li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="javascript:void(0)"
+                    (click)="handleDropdownClick('edit')"
+                    >Edit</a
+                  >
+                </li>
                 <li>
                   <button
                     type="button"
@@ -53,7 +61,9 @@
           <div class="mb-4">
             <h4 class="h6 text-uppercase mb-2">Tags</h4>
             <div class="d-flex flex-wrap gap-2">
-              <span class="badge text-muted border border-secondary rounded-pill px-3 py-2">
+              <span
+                class="badge text-muted border border-secondary rounded-pill px-3 py-2"
+              >
                 {{ item.tagNames }}
               </span>
             </div>
@@ -61,14 +71,14 @@
           <p class="mb-2">
             <strong>Collection:</strong>
             <a
-              [routerLink]="['/collections', item.collectionId]"
+              (click)="goToCollection(item.collectionId)"
               class="text-decoration-none"
             >
               {{ item.collectionName }}
             </a>
           </p>
           <p class="text-muted small mb-4">
-            Added on {{ item.dateAdded | date: 'longDate' }}
+            Added on {{ item.dateAdded | date : "longDate" }}
           </p>
           <div class="d-flex align-items-center">
             <button
@@ -92,7 +102,7 @@
                   d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
                 />
               </svg>
-              <span>{{ hasLiked ? 'Liked' : 'Like' }}</span>
+              <span>{{ hasLiked ? "Liked" : "Like" }}</span>
             </button>
             <button
               class="btn btn-outline-secondary"
@@ -113,7 +123,7 @@
               </svg>
               <span>Like</span>
             </button>
-            <span class="ms-2 fw-bold">{{ likeCount }}</span>
+            <span class="ms-2 fw-bold">{{ like.likeCount }}</span>
           </div>
         </div>
       </div>
@@ -122,8 +132,8 @@
 
   <div class="mt-5 row">
     <!-- Comments section (left side) -->
-    <div class="col-md-8 ">
-      <h3 class="h4 ">Comments</h3>
+    <div class="col-md-8">
+      <h3 class="h4">Comments</h3>
       <ng-container *ngIf="comments.length > 0; else noComments">
         <div
           *ngFor="let comment of comments"
@@ -133,21 +143,26 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
               <div class="d-flex align-items-center">
                 <img
-                  [src]="comment.userProfileImgeUrl"
+                  [src]="comment.userProfileImgeUrl || 'assets/user.svg'"
                   [alt]="comment.userName"
                   class="rounded-circle me-3"
-                  style="width: 48px; height: 48px; object-fit: cover;"
+                  style="width: 48px; height: 48px; object-fit: cover"
+                  onerror="this.src='assets/user.svg'"
                 />
                 <div>
-                  <h5 class="card-title fw-bold mb-0">{{ comment.userName }}</h5>
-                  <small class="text-muted">{{ comment.createdAt | date: 'medium' }}</small>
+                  <h5 class="card-title fw-bold mb-0">
+                    {{ comment.userName }}
+                  </h5>
+                  <small class="text-muted">{{
+                    comment.createdAt | date : "medium"
+                  }}</small>
                 </div>
               </div>
-              <div *ngIf="isLoggedIn && (isAdmin || comment.userId === userId)" ngbDropdown>
-                <button
-                  class="btn btn-link btn-sm"
-                  ngbDropdownToggle
-                >
+              <div
+                *ngIf="isLoggedIn && (isAdmin || comment.userId === userId)"
+                ngbDropdown
+              >
+                <button class="btn btn-link btn-sm" ngbDropdownToggle>
                   <svg
                     width="1em"
                     height="1em"
@@ -160,8 +175,18 @@
                     <circle cx="14" cy="8" r="2"></circle>
                   </svg>
                 </button>
-                <ul ngbDropdownMenu class="dropdown-menu dropdown-menu-end shadow-sm">
-                  <li><a class="dropdown-item" href="javascript:void(0)" (click)="handleCommentDropdownClick('edit', comment.id)">Edit</a></li>
+                <ul
+                  ngbDropdownMenu
+                  class="dropdown-menu dropdown-menu-end shadow-sm"
+                >
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="javascript:void(0)"
+                      (click)="handleCommentDropdownClick('edit', comment.id)"
+                      >Edit</a
+                    >
+                  </li>
                   <li>
                     <button
                       type="button"
