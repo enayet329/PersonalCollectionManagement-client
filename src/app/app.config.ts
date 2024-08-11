@@ -13,6 +13,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { ToastrModule } from 'ngx-toastr';
 import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
       BrowserModule,
       FormsModule,
       NgxFileDropModule,
+      BrowserAnimationsModule,
       FormGroup,
       Validators,
       FormBuilder,
