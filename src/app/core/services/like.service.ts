@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { LikeConstants } from '../constants/constants';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { LikeResponseModel } from '../model/response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,12 +23,12 @@ export class LikeService {
     return this.httpClient.post(url, data);
   }
 
-  isItemLiked(userId: string, itemId: string): Observable<any> {
+  isItemLiked(userId: string, itemId: string): Observable<LikeResponseModel> {
     const url = this.apiUrl.GET_LIKE_BY_USER_ID;
     const body = {
       userId: userId,
       itemId: itemId,
     };
-    return this.httpClient.post<any>(url, body);
+    return this.httpClient.post<LikeResponseModel>(url, body);
   }
 }
