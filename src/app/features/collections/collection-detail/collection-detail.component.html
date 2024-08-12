@@ -3,10 +3,11 @@
   <div class="row p-3">
     <div class="col-md-5">
       <img
-         [src]="collection?.imageUrl"
+         [src]="collection?.imageUrl || 'assets/logo.png'"
          [alt]="collection?.topic"
          class="img-fluid rounded shadow"
          style="max-height: 400px; object-fit: cover;"
+         onerror="this.src='assets/logo.png'"
       >
     </div>
     <div class="col-md-7">
@@ -63,10 +64,11 @@
               <td>{{ i + 1 }}</td>
               <td>
                 <img
-                   [src]="item.imgUrl"
+                   [src]="item.imgUrl || 'assets/logo.png'"
                    [alt]="item.name"
                    class="img-thumbnail"
                    style="width: 80px; height: 80px; object-fit: cover;"
+                   onerror="this.src='assets/logo.png'"
                 >
               </td>
               <td>{{ item.name }}</td>
