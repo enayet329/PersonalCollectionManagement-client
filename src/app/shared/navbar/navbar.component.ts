@@ -108,7 +108,6 @@ export class NavbarComponent implements OnInit {
     this.preferredLanguage = null;
     this.preferredThemeDark = false;
     this.currentLanguage = 'en';
-    localStorage.removeItem('token');
   }
 
   toggleMenu() {
