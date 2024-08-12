@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Item } from '../../../core/model/item.model';
 import { SearchService } from '../../../core/services/search.service';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -13,12 +13,14 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./search-results.component.css']
 })
 export class SearchResultsComponent {
+
   items: Item[] = [];
   query: string = '';
 
   constructor(
     private searchService: SearchService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.route.queryParams.subscribe(params => {
       this.query = params['query'];
@@ -37,4 +39,8 @@ export class SearchResultsComponent {
   getLimitedTags(tags: string[], limit: number): string[] {
     return tags.slice(0, limit);
   }
+
+  onItemClick(item: Item): void {
+    this.router.navigate(['/item-detail', item.id]);
+    }
 }
