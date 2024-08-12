@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ResponseModel } from '../model/response.model';
 import { UserConstants } from '../constants/constants';
+import { UserModel } from '../model/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -33,4 +34,9 @@ export class UserService {
     return this.httpClient.put<any>(this.apiUrl.UPDATE_LANGUAGE, language);
   }
 
+  getUserById(userId: string): Observable<UserModel> {
+    const url = this.apiUrl.GET_USER_BY_ID;
+    const params = { id: userId };
+    return this.httpClient.get<UserModel>(url, { params });
+  }
 }
