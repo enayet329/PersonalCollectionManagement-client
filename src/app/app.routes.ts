@@ -5,6 +5,7 @@ import { AdminDashboardComponent } from './features/admin/admin-dashboard/admin-
 import { SearchResultsComponent } from './features/search/search-results/search-results.component';
 import { CollectionDetailComponent } from './features/collections/collection-detail/collection-detail.component';
 import { ItemDetailComponent } from './features/items/item-detail/item-detail.component'; // Import ItemDetailComponent
+import { ProfileViewComponent } from './features/user-profile/profile-view/profile-view.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -13,4 +14,5 @@ export const routes: Routes = [
   { path: 'search-results', component: SearchResultsComponent },
   { path: 'collection-detail/:id', component: CollectionDetailComponent },
   { path: 'item-detail/:id', component: ItemDetailComponent },
+  { path: 'profile-view/:id', component: ProfileViewComponent},
 ];
