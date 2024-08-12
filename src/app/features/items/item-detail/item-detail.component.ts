@@ -89,14 +89,13 @@ export class ItemDetailComponent implements OnInit {
     this.preferredLanguage = null;
     this.preferredThemeDark = false;
     this.currentLanguage = 'en';
-    localStorage.removeItem('token');
   }
 
   getItem(): void {
     this.itemService.getItemById(this.itemId).subscribe(
       (data) => {
         this.item = data;
-        this.likeCount = this.item.likes;
+        this.like.likeCount = this.item.likes;
         this.checkIfItemLiked();
       },
       (error) => {
@@ -170,7 +169,6 @@ export class ItemDetailComponent implements OnInit {
         this.like = response;
         if (response.success) {
           this.toaster.success('Item liked successfully', 'Success');
-          console.log('Item liked successfully', response.likes);
         } else {
           this.toaster.info('Item unliked successfully', 'Info');
         }
