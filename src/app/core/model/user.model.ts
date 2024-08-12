@@ -7,6 +7,7 @@ export interface UserModel {
   preferredThemeDark: boolean;
   isAdmin: boolean;
   isBlocked: boolean;
+  joinedAt: Date;
 }
 
 export interface UserLoginModel{
