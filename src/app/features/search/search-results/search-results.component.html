@@ -1,13 +1,20 @@
 <section class="items-section">
-  <h2 class="section-title">All Items</h2>
+  <h2 class="section-title">Search Results</h2>
   <div class="container">
     <div *ngIf="items.length === 0" class="no-items-message">
       <p>No items available.</p>
     </div>
     <div *ngIf="items.length > 0" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       <div class="col" *ngFor="let item of items">
-        <div class="card item-card">
-          <img [src]="item.imgUrl" class="card-img-top item-image" [alt]="item.name" />
+        <div class="card item-card" (click)="onItemClick(item)">
+          <img
+          [src]="item.imgUrl || 'assets/logo.png'"
+          height="230px"
+           width="100px"
+          class="card-img-top"
+          [alt]="item.name"
+          onerror="this.src='/assets/logo.png'"
+        />
           <div class="card-body">
             <h5 class="card-title item-title">{{ item.name }}</h5>
             <p class="tags">
@@ -22,6 +29,9 @@
               <small>Collection: {{ item.collectionName }}</small><br />
               <small>Date: {{ item.dateAdded | date: 'dd/MM/yyyy' }}</small>
             </p>
+            <div class="card-footer bg-transparent d-flex justify-content-center align-items-center">
+              <small class="text-center">Click to view details</small>
+            </div>
           </div>
         </div>
       </div>
