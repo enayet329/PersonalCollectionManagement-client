@@ -151,6 +151,13 @@ export class ItemDetailComponent implements OnInit {
       }
     );
   }
+  onEnter(event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter') {
+      this.addComment();
+    }
+  }
+  
 
   toggleLike(): void {
     if (!this.isLoggedIn || !this.userId) {

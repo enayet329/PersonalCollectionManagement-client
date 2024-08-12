@@ -222,6 +222,7 @@
               class="form-control"
               placeholder="Write a comment..."
               required
+              (keydown.enter)="onEnter($event)"
             ></textarea>
           </div>
           <button type="submit" class="btn btn-primary">Submit</button>
@@ -233,5 +234,4 @@
         </div>
       </ng-template>
     </div>
-  </div>
-</div>
+    
