@@ -9,8 +9,8 @@ export const CollectionConstants = {
     DELETE_COLLECTION: apiUrl + 'collections/delete/id',
     GET_COLLECTION_BY_ID: apiUrl + 'collections/get/id',
     GET_COLLECTIONS_BY_USER_ID: apiUrl + 'collections/get/userId',
-    UPDATE_COLLECTION: apiUrl + 'collections/update/id'
-  }
+    UPDATE_COLLECTION: apiUrl + 'collections/update/id',
+  },
 };
 
 // Item Constants
@@ -24,8 +24,8 @@ export const ItemConstants = {
     GET_RECENT_ITEMS: apiUrl + 'items/recent',
     ADD_ITEM: apiUrl + 'items/add',
     UPDATE_ITEM: apiUrl + 'items/update/id/item',
-    DELETE_ITEM: apiUrl + 'items/delete/id'
-  }
+    DELETE_ITEM: apiUrl + 'items/delete/id',
+  },
 };
 
 // User Constants
@@ -40,7 +40,7 @@ export const UserConstants = {
     CHECK_EMAIL_AVAILABILITY: apiUrl + 'accounts/availability/email',
     UPDATE_LANGUAGE: apiUrl + 'accounts/language/userId',
     UPDATE_THEME: apiUrl + 'accounts/theme/userId',
-  }
+  },
 };
 
 // Comment Constants
@@ -50,13 +50,26 @@ export const CommentConstants = {
     GET_COMMENT_BY_ID: apiUrl + 'comments/get/id',
     ADD_COMMENT: apiUrl + 'comments',
     DELETE_COMMENT: apiUrl + 'comments/delete/commentId',
-    UPDATE_COMMENT: apiUrl + 'comments/update'
-  }}
+    UPDATE_COMMENT: apiUrl + 'comments/update',
+  },
+};
 
 // Like Constants
 export const LikeConstants = {
   API_ENDPOINTS: {
     TOGGLE_LIKE: apiUrl + 'likes/toggle',
     GET_LIKE_BY_ITEM_ID: apiUrl + 'likes/itemId',
-    GET_LIKE_BY_USER_ID: apiUrl + 'likes/IsItemLiked'
-  }}
+    GET_LIKE_BY_USER_ID: apiUrl + 'likes/IsItemLiked',
+  },
+};
+
+
+// customField Constants
+export const CustomFieldConstants = {
+  API_ENDPOINTS: {
+    GET_CUSTOM_FIELDS_BY_COLLECTION_ID: apiUrl + 'custom-fields/collectionId',
+    ADD_CUSTOM_FIELD: apiUrl + 'custom-fields/add',
+    DELETE_CUSTOM_FIELD: apiUrl + 'custom-fields/delete/id',
+    UPDATE_CUSTOM_FIELD: apiUrl + 'custom-fields/update',
+  },
+};
