@@ -137,7 +137,7 @@
             class="dropdown-menu"
             [ngClass]="{ 'show': isProfileDropdownOpen }"
           >
-            <a class="dropdown-item text-primary" routerLink="/profile">
+            <a class="dropdown-item text-primary" (click)="openProfil(userId!)">
               Profile
             </a>
             <div class="dropdown-divider"></div>
