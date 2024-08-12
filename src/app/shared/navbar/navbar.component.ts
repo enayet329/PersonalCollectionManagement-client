@@ -142,6 +142,10 @@ export class NavbarComponent implements OnInit {
     localStorage.setItem('prefferedLanguage', this.currentLanguage);
   }
 
+  openProfil(userId: string): void{
+    this.router.navigate(['/profile-view', userId]);
+  }
+
   openProfileDropdown() {
     this.isProfileDropdownOpen = true;
   }
