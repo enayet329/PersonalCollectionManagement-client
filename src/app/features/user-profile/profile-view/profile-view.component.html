@@ -1,1 +1,72 @@
-<p>profile-view works!</p>
+<div class="container my-5">
+  <!-- Profile Header -->
+  <div class="text-center mb-4">
+    <img
+      src="{{ user.imageURL || 'assets/user.svg' }}"
+      alt="Profile Picture"
+      class="rounded-circle mb-3"
+      height="150px"
+      width="150px"
+      onerror="this.src='assets/user.svg'"
+    />
+    <h1 class="display-4 font-weight-bold">{{ user.username }}</h1>
+    <p class="lead text-muted">Manage your personal collection</p>
+  </div>
+
+  <!-- User Info -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h2 class="card-title">Personal Information</h2>
+      <div class="row">
+        <div class="col-md-4">
+          <p><strong>Name:</strong> {{user.username}}</p>
+        </div>
+        <div class="col-md-4">
+          <p><strong>Email:</strong> {{user.email}}</p>
+        </div>
+        <div class="col-md-4">
+          <p><strong>Joined:</strong> {{user.joinedAt | date:'mediumDate'}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Collection Button -->
+  <div class="mb-4 text-right">
+    <button class="btn btn-success" (click)="addCollection(user.id)">Add Collection</button>
+  </div>
+
+  <!-- User Collections -->
+  <section class="mb-5 pb-5 border-bottom">
+    <h2 class="display-6 fw-bold mb-4">Your Collections</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+      <div class="col" *ngFor="let collection of collections">
+        <div class="card h-80" (click)="goToCollectionDetails(collection.id)">
+          <div class="card h-100 d-flex flex-column">
+            <img
+              [src]="collection.imageUrl || 'assets/logo.png'"
+              class="card-img-top"
+              height="200px"
+              width="100%"
+              [alt]="collection.name"
+              onerror="this.src='/assets/logo.png'"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ collection.name }}</h5>
+              <p class="card-text">
+                <small>{{ collection.topic }}</small
+                ><br />
+                <small>Items quantity: {{ collection.itemCount }}</small
+                >
+              </p>
+              <div
+                class="card-footer bg-transparent d-flex justify-content-center align-items-center">
+                <small class="text-center">Click to view details</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
