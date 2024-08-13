@@ -39,4 +39,5 @@ export class UserService {
     const params = { id: userId };
     return this.httpClient.get<UserModel>(url, { params });
   }
+
 }
