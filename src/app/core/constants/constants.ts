@@ -28,6 +28,23 @@ export const ItemConstants = {
   },
 };
 
+//Admin constants
+export const AdminConstants = {
+  API_ENDPOINTS: {
+    GET_USERS: apiUrl + 'admin/users',
+    CREATE_COLLECTION: apiUrl + 'admin/collections',
+    CREATE_ITEM: apiUrl + 'admin/items',
+    GET_USER_BY_ID: apiUrl + 'admin/user/id',
+    GET_USER_BY_EMAIL: apiUrl + 'admin/user/email',
+    ASSIGN_ADMIN_ROLE: apiUrl + 'admin/user/roles/admin',
+    UPDATE_ADMIN_ROLE: apiUrl + 'admin/user/roles/admin',
+    DELETE_USER: apiUrl + 'admin/delete/user',
+    BLOCK_USER: apiUrl + 'admin/user/block',
+    UNBLOCK_USER: apiUrl + 'admin/users/unblock',
+  },
+};
+
+
 // User Constants
 export const UserConstants = {
   API_ENDPOINTS: {
