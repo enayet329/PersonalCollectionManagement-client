@@ -113,6 +113,7 @@ export class NavbarComponent implements OnInit {
   toggleMenu() {
     this.isMenuCollapsed = !this.isMenuCollapsed;
   }
+
    toggleDarkMode() {
     this.preferredThemeDark = !this.preferredThemeDark;
     this.darkModeService.updateDarkMode();
@@ -270,6 +271,7 @@ export class NavbarComponent implements OnInit {
             return;
           }
           localStorage.setItem('token', token);
+          localStorage.setItem('refreshToken', response.refreshToken!)
           localStorage.setItem('theme',preferredThemeDark == true ? 'dark' : 'null')
           this.initializeUserState();
           this.toastr.success('Login Successful', 'Welcome back!');
