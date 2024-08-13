@@ -90,3 +90,14 @@ export const CustomFieldConstants = {
     UPDATE_CUSTOM_FIELD: apiUrl + 'custom-fields/update',
   },
 };
+
+// customFieldValue Constants
+export const CustomFieldValueConstants = {
+  API_ENDPOINTS: {
+    GET_CUSTOM_FIELD_VALUES_BY_ITEM_ID: apiUrl + 'custom-field-values/itemId',
+    ADD_CUSTOM_FIELD_VALUE: apiUrl + 'custom-field-values/add',
+    DELETE_CUSTOM_FIELD_VALUE: apiUrl + 'custom-field-values/delete/id',
+    UPDATE_CUSTOM_FIELD_VALUE: apiUrl + 'custom-field-values/update',
+  },
+};
+
