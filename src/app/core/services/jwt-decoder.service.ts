@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 export class JwtDecoderService {
   constructor() { }
 
-  decodeToken(token: string): any {
+  private decodeToken(token: string): any {
     try {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
