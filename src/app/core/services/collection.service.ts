@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Collection } from '../model/collection.mode.';
+import { AddCollectionRequest, Collection } from '../model/collection.mode.';
 import { CollectionConstants } from '../constants/constants';
 
 @Injectable({
@@ -32,4 +32,8 @@ export class CollectionService {
     return this.httpClient.get<Collection[]>(url, { params });
   }
   
+  addCollection(collection: AddCollectionRequest): Observable<Collection>{
+    const url = this.apiUrl.ADD_COLLECTION;
+    return this.httpClient.post<Collection>(url, collection);
+  }
 }
