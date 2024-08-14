@@ -26,7 +26,13 @@
           {{collection?.userName}}
         </a> 
       </p>
-      <div class="d-flex mt-4" *ngIf="isLoggedIn">
+      <div class="d-flex mt-4" *ngIf="isLoggedIn && collection?.userId === currentUser || isAdmin">
+        <button
+        class="btn btn-sm btn-outline-success me-2"
+        (click)="addNewItem(collection?.id)"
+     >
+       Add New Item
+     </button>
         <button
            class="btn btn-sm btn-outline-primary me-2"
            (click)="editCollection(collection?.id)"
@@ -56,7 +62,7 @@
               <th>NAME</th>
               <th>CREATED AT</th>
               <th>LIKES</th>
-              <th *ngIf="isLoggedIn">ACTIONS</th>
+              <th *ngIf="isLoggedIn && collection?.userId === currentUser || isAdmin">ACTIONS</th>
             </tr>
           </thead>
           <tbody>
@@ -74,7 +80,7 @@
               <td>{{ item.name }}</td>
               <td>{{ item.dateAdded | date }}</td>
               <td>{{ item.likes }}</td>
-              <td *ngIf="isLoggedIn" (click)="$event.stopPropagation()">
+              <td *ngIf="isLoggedIn && collection?.userId === currentUser || isAdmin" (click)="$event.stopPropagation()">
                 <div class="dropdown" ngbDropdown>
                   <button class="btn btn-outline-secondary" ngbDropdownToggle>
                     Actions
