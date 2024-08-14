@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AddCollectionRequest, Collection } from '../model/collection.mode.';
 import { CollectionConstants } from '../constants/constants';
+import { Categories } from '../model/categories.model';
 
 @Injectable({
   providedIn: 'root',
@@ -35,5 +36,9 @@ export class CollectionService {
   addCollection(collection: AddCollectionRequest): Observable<Collection>{
     const url = this.apiUrl.ADD_COLLECTION;
     return this.httpClient.post<Collection>(url, collection);
+  }
+
+  getCategories(): Observable<Categories[]> {
+    return this.httpClient.get<Categories[]>(this.apiUrl.GET_COLLECTION_CATEGORY);
   }
 }
