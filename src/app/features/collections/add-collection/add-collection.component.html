@@ -1,34 +1,25 @@
-<form
-  [formGroup]="addCollectionForm"
-  (ngSubmit)="onSubmit()"
-  class="container my-4"
->
+<form [formGroup]="addCollectionForm" (ngSubmit)="onSubmit()" *ngIf="isAdmin || isLoggedIn" class="container my-4">
   <h2 class="mb-4 text-center">Create a New Collection</h2>
+  
+  <div class="row g-3">
 
-  <div class="row">
-    <div class="col-md-6 mb-3">
+    <div class="col-md-6">
       <label for="title" class="form-label">Name</label>
-      <input
-        id="title"
-        type="text"
-        class="form-control"
-        formControlName="title"
-        placeholder="Enter collection title"
-      />
+      <input id="title" type="text" class="form-control" formControlName="title" placeholder="Enter collection title">
     </div>
-    <!-- User Dropdown -->
-
-    <div class="form-group" *ngIf="isAdmin">
-      <label for="user">Select a user</label>
-      <select id="user" class="form-control" formControlName="user">
+    
+    <!-- User Dropdown (Admin only) -->
+    <div class="col-md-6" *ngIf="isAdmin">
+      <label for="user" class="form-label">Select a user</label>
+      <select id="user" class="form-select" formControlName="user">
         <option *ngFor="let user of users" [value]="user.id">
           {{ user.username }}
         </option>
       </select>
     </div>
+    
 
-    <!--Colllection Category-->
-    <div class="col-md-6 mb-3">
+    <div class="col-md-6">
       <label for="category" class="form-label">Select Collection Topic</label>
       <select id="category" class="form-select" formControlName="category">
         <option *ngFor="let category of categories" [value]="category">
@@ -38,68 +29,51 @@
     </div>
   </div>
 
-  <!--Collection Image-->
-  <div class="mb-4">
+
+  <div class="my-4">
     <label for="item-image" class="form-label">Item Image</label>
     <div
-      class="item-image-container border rounded p-3 text-center"
-      (dragover)="onDragOver($event)"
-      (drop)="onDrop($event)"
-    >
-      <img
-        [src]="itemImageUrl"
-        alt="Item Image"
-        class="img-fluid rounded"
-        *ngIf="itemImageUrl"
-      />
-      <p *ngIf="!itemImageUrl" class="text-muted">
-        Drag and drop your Item image here
-      </p>
-    </div>
-    <input
-      type="file"
-      class="form-control mt-2"
-      id="item-image"
-      (change)="onFileSelected($event)"
-      accept="image/*"
+    class="profile-image-container border p-2 text-center d-flex justify-content-center align-items-center"
+    (dragover)="onDragOver($event)"
+    (drop)="onDrop($event)"
+    style="width: 1290px; height: 150px;" 
+  >
+    <img
+      [src]="itemImageUrl"
+      alt="Profile Image"
+      class="img-fluid rounded"
+      *ngIf="itemImageUrl"
+      style="max-width: 100%; max-height: 100%;"
     />
+    <p *ngIf="!itemImageUrl" class="text-muted m-0">
+      Drag and drop your profile image here
+    </p>
+  </div>
+  <input
+    type="file"
+    class="form-control mt-2"
+    id="profile-image"
+    (change)="onFileSelected($event)"
+    accept="image/*"
+  />
   </div>
 
-  <!--Description-->
-  <div class="mb-3">
+
+  <div class="mb-4">
     <label for="description" class="form-label">Description</label>
-    <textarea
-      id="description"
-      class="form-control"
-      formControlName="description"
-      placeholder="Write a description..."
-      rows="4"
-    ></textarea>
+    <textarea id="description" class="form-control" formControlName="description" placeholder="Write a description..." rows="4"></textarea>
   </div>
 
-  <!--Custom Fields-->
+  <!-- Custom fields -->
   <div class="mb-4">
     <label class="form-label d-block">Custom fields</label>
-    <button
-      type="button"
-      class="btn btn-outline-primary mb-2"
-      (click)="addCustomField()"
-    >
+    <button type="button" class="btn btn-outline-primary mb-2" (click)="addCustomField()">
       + Add field
     </button>
     <div formArrayName="customFields">
-      <div
-        *ngFor="let field of customFieldsControls; let i = index"
-        [formGroupName]="i"
-        class="row g-2 mb-2"
-      >
+      <div *ngFor="let field of customFieldsControls; let i = index" [formGroupName]="i" class="row g-2 mb-2">
         <div class="col-md-5">
-          <input
-            type="text"
-            class="form-control"
-            formControlName="label"
-            placeholder="Custom field's label"
-          />
+          <input type="text" class="form-control" formControlName="label" placeholder="Custom field's label">
         </div>
         <div class="col-md-5">
           <select class="form-select" formControlName="type">
@@ -109,11 +83,7 @@
           </select>
         </div>
         <div class="col-md-2">
-          <button
-            type="button"
-            class="btn btn-outline-danger w-100"
-            (click)="removeCustomField(i)"
-          >
+          <button type="button" class="btn btn-outline-danger w-100" (click)="removeCustomField(i)">
             Remove
           </button>
         </div>
@@ -121,16 +91,12 @@
     </div>
   </div>
 
-  <!--Submit and Cancel buttons-->
+  <!-- Submit and Cancel buttons -->
   <div class="d-flex justify-content-end gap-2">
     <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
       Cancel
     </button>
-    <button
-      type="submit"
-      class="btn btn-primary"
-      [disabled]="!addCollectionForm.valid"
-    >
+    <button type="submit" class="btn btn-primary" [disabled]="!addCollectionForm.valid">
       Confirm
     </button>
   </div>
