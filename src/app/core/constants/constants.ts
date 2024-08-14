@@ -1,4 +1,4 @@
-const apiUrl = 'http://localhost:7138/api/v1/';
+const apiUrl = 'https://localhost:7138/api/v1/';
 
 // Collection Constants
 export const CollectionConstants = {
@@ -103,3 +103,15 @@ export const CustomFieldValueConstants = {
   },
 };
 
+// Tag Constants
+export const TagConstants = {
+  API_ENDPOINTS: {
+    GET_TAGS: apiUrl + 'tags',
+    GET_TOP_TAGS: apiUrl + 'tags/top',
+    GET_TAGS_BY_ITEM_ID: apiUrl + 'tags/itemId',
+    GET_TAG_BY_ID: apiUrl + 'tags/id',
+    ADD_TAG: apiUrl + 'tags/add',
+    DELETE_TAG: apiUrl + 'tags/delete/id',
+    UPDATE_TAG: apiUrl + 'tags/update/itemId/tag',
+  },
+};
