@@ -181,7 +181,7 @@ export class NavbarComponent implements OnInit {
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(4)]],
-      profileImageUrl: [''],
+      profileImageUrl: ['',Validators.pattern(/\.(jpg|jpeg|png)$/)],
     });
 
   
@@ -309,7 +309,6 @@ export class NavbarComponent implements OnInit {
             'Please login to continue!'
           );
           this.modalService.dismissAll();
-          window.location.reload();
         } else {
           this.toastr.error(
             'Registration Failed',
