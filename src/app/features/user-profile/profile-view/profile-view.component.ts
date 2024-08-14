@@ -81,6 +81,7 @@ export class ProfileViewComponent implements OnInit {
       preferredLanguage: [this.user.preffrredThemeDark],
       preferredThemeDark: [this.user.preffrredThemeDark],
       profilePic: [this.user.imageURL],
+      joinedAt: [this.user.joinedAt],
     });
   }
 
@@ -138,7 +139,7 @@ export class ProfileViewComponent implements OnInit {
       username: formValue.name,
       email: this.user.email,
       imageURL: imageURL,
-      prefrredLanguage: formValue.preferredLanguage,
+      prefrredLanguage: formValue.preferredLanguage === 'English' ? 'en' : 'bn',
       preffrredThemeDark: true,
       joinedAt: formValue.joinedAt,
       isAdmin: this.isAdmin,
