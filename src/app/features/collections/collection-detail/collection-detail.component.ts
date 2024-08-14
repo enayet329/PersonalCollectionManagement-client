@@ -7,6 +7,7 @@ import { Item } from '../../../core/model/item.model';
 import { CommonModule } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
 
 @Component({
   selector: 'app-collection-detail',
@@ -19,8 +20,11 @@ export class CollectionDetailComponent implements OnInit {
   collectionId: string = '';
   collection: Collection | undefined;
   items: Item[] = [];
+
+  //user state
   isLoggedIn: boolean = true;
   isAdmin: boolean = false;
+  currentUser: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -28,13 +32,31 @@ export class CollectionDetailComponent implements OnInit {
     private collectionService: CollectionService,
     private itemService: ItemService,
     private toaster: ToastrService,
+    private jwtDecoder: JwtDecoderService
   ) {}
 
   ngOnInit(): void {
+    this.initializeUserState();
     this.collectionId = this.route.snapshot.paramMap.get('id')!;
     console.log(this.collectionId);
     this.getCollection();
     this.getItemsByCollectionId();
+  }
+
+  initializeUserState(): void {
+    const token = localStorage.getItem('token');
+    if(token && !this.jwtDecoder.isTokenExpired(token))
+    {
+      this.currentUser = this.jwtDecoder.getUserIdFromToken(token)!;
+
+      this.isLoggedIn = true;
+      this.isAdmin = this.jwtDecoder.getIsAdminFromToken(token)!;
+    }
+    else{
+      this.isLoggedIn = false;
+      this.isAdmin = false;
+      this.currentUser = '';
+    }
   }
 
   private getCollection(): void {
@@ -76,6 +98,10 @@ export class CollectionDetailComponent implements OnInit {
     }
   }
 
+  addNewItem(collectionId: any): void {
+    this.router.navigate(['/add-item', this.collectionId]);
+  }
+
   editItem(item: any): void {
     console.log('Edit item:', item);
   }
@@ -87,4 +113,6 @@ export class CollectionDetailComponent implements OnInit {
   navigateToDetail(itemId: string): void {
     this.router.navigate(['/item-detail', itemId]);
   }
+
+
 }
