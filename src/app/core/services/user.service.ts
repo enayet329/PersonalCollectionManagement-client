@@ -22,6 +22,15 @@ export class UserService {
     return this.httpClient.post<ResponseModel>(this.apiUrl.LOGIN, user);
   }
 
+  updateUser(account: UserModel): Observable<ResponseModel> {
+    const headers = new HttpHeaders({
+      'Accept': '*/*',
+      'Content-Type': 'application/json'
+    });
+
+    return this.httpClient.put<ResponseModel>(this.apiUrl.UPDATE_USER, account, { headers });
+  }
+
   updateTheme(userId: string, theme: boolean): Observable<any> {
     const url = `${this.apiUrl.UPDATE_THEME}`;
     const params = { userId, theme: theme.toString() };
