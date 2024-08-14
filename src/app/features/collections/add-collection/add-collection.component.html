@@ -21,9 +21,10 @@
 
     <div class="col-md-6">
       <label for="category" class="form-label">Select Collection Topic</label>
-      <select id="category" class="form-select" formControlName="category">
-        <option *ngFor="let category of categories" [value]="category">
-          {{ category }}
+      <select id="category" class="form-select " formControlName="category">
+        <option value="" [selected]="true">Select a category</option>
+        <option *ngFor="let category of categories" [value]="category.name">
+          {{ category.name }}
         </option>
       </select>
     </div>
@@ -59,28 +60,35 @@
   </div>
 
 
+  <!--customFields-->
   <div class="mb-4">
     <label for="description" class="form-label">Description</label>
     <textarea id="description" class="form-control" formControlName="description" placeholder="Write a description..." rows="4"></textarea>
   </div>
 
-  <!-- Custom fields -->
   <div class="mb-4">
     <label class="form-label d-block">Custom fields</label>
+    
+    <div class="mb-2">
+      <label for="fieldTypeSelector" class="form-label">Select Field Type</label>
+      <select id="fieldTypeSelector" class="form-select" formControlName="newFieldType">
+        <option value="string" [selected]="true">String</option>
+        <option value="number">Number</option>
+        <option value="date">Date</option>
+      </select>
+    </div>
+    
     <button type="button" class="btn btn-outline-primary mb-2" (click)="addCustomField()">
       + Add field
     </button>
+  
     <div formArrayName="customFields">
       <div *ngFor="let field of customFieldsControls; let i = index" [formGroupName]="i" class="row g-2 mb-2">
         <div class="col-md-5">
           <input type="text" class="form-control" formControlName="label" placeholder="Custom field's label">
         </div>
         <div class="col-md-5">
-          <select class="form-select" formControlName="type">
-            <option value="string">string</option>
-            <option value="number">number</option>
-            <option value="date">date</option>
-          </select>
+          <input type="text" class="form-control" formControlName="type" [attr.disabled]="true">
         </div>
         <div class="col-md-2">
           <button type="button" class="btn btn-outline-danger w-100" (click)="removeCustomField(i)">
@@ -90,7 +98,7 @@
       </div>
     </div>
   </div>
-
+  
   <!-- Submit and Cancel buttons -->
   <div class="d-flex justify-content-end gap-2">
     <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
