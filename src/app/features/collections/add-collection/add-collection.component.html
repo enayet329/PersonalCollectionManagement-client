@@ -102,8 +102,10 @@
               formControlName="newFieldType"
             >
               <option value="string" [selected]="true">String</option>
-              <option value="number">Number</option>
+              <option value="multiline-text">Multiline-text</option>
+              <option value="integer">Integer</option>
               <option value="date">Date</option>
+              <option value="boolean">Boolean</option>
             </select>
           </div>
 
@@ -159,7 +161,7 @@
           >
             Cancel
           </button>
-          <button type="submit" class="btn btn-primary">Confirm</button>
+          <button type="submit" class="btn btn-primary" [disabled]="addCollectionForm.invalid">Confirm</button>
         </div>
       </form>
     </div>

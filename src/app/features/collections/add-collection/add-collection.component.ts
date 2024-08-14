@@ -108,29 +108,39 @@ export class AddCollectionComponent implements OnInit {
   
     const fieldType = fieldTypeControl?.value;
   
-    debugger;
     if (!fieldType) {
       this.toastr.error('Please select a field type before adding.');
       return;
     }
   
+    const integerFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'integer').length;
     const stringFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'string').length;
-    const dateFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'number').length;
-    const booleanFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'date').length;
+    const multilineTextFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'multiline-text').length;
+    const booleanFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'boolean').length;
+    const dateFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'date').length;
   
-    if (fieldType === 'string' && stringFieldsCount >= 3) {
+
+    if (fieldType === 'integer' && integerFieldsCount >= 3) {
+      this.toastr.error('You can only add up to 3 integer fields.');
+      return;
+    }
+    if (fieldType ==='string' && stringFieldsCount >= 3) {
       this.toastr.error('You can only add up to 3 string fields.');
       return;
     }
-    if (fieldType === 'number' && dateFieldsCount >= 3) {
-      this.toastr.error('You can only add up to 3 number fields.');
+    if (fieldType ==='multiline-text' && multilineTextFieldsCount >= 3) {
+      this.toastr.error('You can only add up to 3 multiline-text fields.');
       return;
     }
-    if (fieldType === 'date' && booleanFieldsCount >= 3) {
+    if (fieldType === 'boolean' && booleanFieldsCount >= 3) {
+      this.toastr.error('You can only add up to 3 boolean fields.');
+      return;
+    }
+    if (fieldType === 'date' && dateFieldsCount >= 3) {
       this.toastr.error('You can only add up to 3 date fields.');
       return;
     }
-  
+
     customFields.push(
       this.fb.group({
         label: ['', Validators.required],
@@ -138,7 +148,6 @@ export class AddCollectionComponent implements OnInit {
       })
     );
   
-    fieldTypeControl.reset();
   }
   
   removeCustomField(index: number) {
