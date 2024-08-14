@@ -50,6 +50,7 @@ export const UserConstants = {
   API_ENDPOINTS: {
     REGISTER: apiUrl + 'accounts/register',
     LOGIN: apiUrl + 'accounts/login',
+    UPDATE_USER: apiUrl + 'accounts/update',
     REFRESH_TOKEN: apiUrl + 'accounts/refresh-token',
     GET_USER_BY_ID: apiUrl + 'accounts/user/id',
     GET_USER_BY_EMAIL: apiUrl + 'accounts/user/email',
