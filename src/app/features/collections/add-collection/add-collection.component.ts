@@ -69,7 +69,7 @@ export class AddCollectionComponent implements OnInit {
       image: [null],
       description: [''],
       customFields: this.fb.array([]),
-      newFieldType: ['string', Validators.required]
+      newFieldType: ['string']
     });
   }
   
@@ -108,6 +108,7 @@ export class AddCollectionComponent implements OnInit {
   
     const fieldType = fieldTypeControl?.value;
   
+    debugger;
     if (!fieldType) {
       this.toastr.error('Please select a field type before adding.');
       return;
@@ -206,6 +207,7 @@ export class AddCollectionComponent implements OnInit {
       }
     } else {
       this.toastr.error('Form is invalid', 'Please fill all required fields.', this.addCollectionForm.value);
+      console.log('Form is invalid', this.addCollectionForm.value)
     }
   }
 

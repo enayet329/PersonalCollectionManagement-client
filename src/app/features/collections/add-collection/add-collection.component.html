@@ -1,111 +1,167 @@
-<form [formGroup]="addCollectionForm" (ngSubmit)="onSubmit()" *ngIf="isAdmin || isLoggedIn" class="container my-4">
-  <h2 class="mb-4 text-center">Create a New Collection</h2>
-  
-  <div class="row g-3">
+<div class="container my-5">
+  <div class="card shadow">
+    <div class="card-body">
+      <form
+        [formGroup]="addCollectionForm"
+        (ngSubmit)="onSubmit()"
+        *ngIf="isAdmin || isLoggedIn"
+      >
+        <h2 class="mb-4 text-center">Create a New Collection</h2>
 
-    <div class="col-md-6">
-      <label for="title" class="form-label">Name</label>
-      <input id="title" type="text" class="form-control" formControlName="title" placeholder="Enter collection title">
-    </div>
-    
-    <!-- User Dropdown (Admin only) -->
-    <div class="col-md-6" *ngIf="isAdmin">
-      <label for="user" class="form-label">Select a user</label>
-      <select id="user" class="form-select" formControlName="user">
-        <option *ngFor="let user of users" [value]="user.id">
-          {{ user.username }}
-        </option>
-      </select>
-    </div>
-    
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="title" class="form-label">Name</label>
+            <input
+              id="title"
+              type="text"
+              class="form-control"
+              formControlName="title"
+              placeholder="Enter collection title"
+            />
+          </div>
 
-    <div class="col-md-6">
-      <label for="category" class="form-label">Select Collection Topic</label>
-      <select id="category" class="form-select " formControlName="category">
-        <option value="" [selected]="true">Select a category</option>
-        <option *ngFor="let category of categories" [value]="category.name">
-          {{ category.name }}
-        </option>
-      </select>
-    </div>
-  </div>
+          <!-- User Dropdown (Admin only) -->
+          <div class="col-md-6" *ngIf="isAdmin">
+            <label for="user" class="form-label">Select a user</label>
+            <select id="user" class="form-select" formControlName="user">
+              <option *ngFor="let user of users" [value]="user.id">
+                {{ user.username }}
+              </option>
+            </select>
+          </div>
 
-
-  <div class="my-4">
-    <label for="item-image" class="form-label">Item Image</label>
-    <div
-    class="profile-image-container border p-2 text-center d-flex justify-content-center align-items-center"
-    (dragover)="onDragOver($event)"
-    (drop)="onDrop($event)"
-    style="width: 1290px; height: 150px;" 
-  >
-    <img
-      [src]="itemImageUrl"
-      alt="Profile Image"
-      class="img-fluid rounded"
-      *ngIf="itemImageUrl"
-      style="max-width: 100%; max-height: 100%;"
-    />
-    <p *ngIf="!itemImageUrl" class="text-muted m-0">
-      Drag and drop your profile image here
-    </p>
-  </div>
-  <input
-    type="file"
-    class="form-control mt-2"
-    id="profile-image"
-    (change)="onFileSelected($event)"
-    accept="image/*"
-  />
-  </div>
-
-
-  <!--customFields-->
-  <div class="mb-4">
-    <label for="description" class="form-label">Description</label>
-    <textarea id="description" class="form-control" formControlName="description" placeholder="Write a description..." rows="4"></textarea>
-  </div>
-
-  <div class="mb-4">
-    <label class="form-label d-block">Custom fields</label>
-    
-    <div class="mb-2">
-      <label for="fieldTypeSelector" class="form-label">Select Field Type</label>
-      <select id="fieldTypeSelector" class="form-select" formControlName="newFieldType">
-        <option value="string" [selected]="true">String</option>
-        <option value="number">Number</option>
-        <option value="date">Date</option>
-      </select>
-    </div>
-    
-    <button type="button" class="btn btn-outline-primary mb-2" (click)="addCustomField()">
-      + Add field
-    </button>
-  
-    <div formArrayName="customFields">
-      <div *ngFor="let field of customFieldsControls; let i = index" [formGroupName]="i" class="row g-2 mb-2">
-        <div class="col-md-5">
-          <input type="text" class="form-control" formControlName="label" placeholder="Custom field's label">
+          <div class="col-md-6">
+            <label for="category" class="form-label"
+              >Select Collection Topic</label
+            >
+            <select
+              id="category"
+              class="form-select"
+              formControlName="category"
+            >
+              <option value="" [selected]="true">Select a category</option>
+              <option
+                *ngFor="let category of categories"
+                [value]="category.name"
+              >
+                {{ category.name }}
+              </option>
+            </select>
+          </div>
         </div>
-        <div class="col-md-5">
-          <input type="text" class="form-control" formControlName="type" [attr.disabled]="true">
+
+        <div class="my-4">
+          <label for="item-image" class="form-label">Item Image</label>
+          <div
+            class="profile-image-container border p-2 text-center d-flex justify-content-center align-items-center"
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop($event)"
+            style="width: 100%; height: 150px"
+          >
+            <img
+              [src]="itemImageUrl"
+              alt="Profile Image"
+              class="img-fluid rounded"
+              *ngIf="itemImageUrl"
+              style="max-width: 100%; max-height: 100%"
+            />
+            <p *ngIf="!itemImageUrl" class="text-muted m-0">
+              Drag and drop your profile image here
+            </p>
+          </div>
+          <input
+            type="file"
+            class="form-control mt-2"
+            id="profile-image"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+          />
         </div>
-        <div class="col-md-2">
-          <button type="button" class="btn btn-outline-danger w-100" (click)="removeCustomField(i)">
-            Remove
+
+        <div class="mb-4">
+          <label for="description" class="form-label">Description</label>
+          <textarea
+            id="description"
+            class="form-control"
+            formControlName="description"
+            placeholder="Write a description..."
+            rows="4"
+          ></textarea>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label d-block">Custom fields</label>
+
+          <div class="mb-2">
+            <label for="fieldTypeSelector" class="form-label"
+              >Select Field Type</label
+            >
+            <select
+              id="fieldTypeSelector"
+              class="form-select"
+              formControlName="newFieldType"
+            >
+              <option value="string" [selected]="true">String</option>
+              <option value="number">Number</option>
+              <option value="date">Date</option>
+            </select>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-outline-primary mb-2"
+            (click)="addCustomField()"
+          >
+            + Add field
           </button>
+
+          <div formArrayName="customFields">
+            <div
+              *ngFor="let field of customFieldsControls; let i = index"
+              [formGroupName]="i"
+              class="row g-2 mb-2"
+            >
+              <div class="col-md-5">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="label"
+                  placeholder="Custom field's label"
+                />
+              </div>
+              <div class="col-md-5">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="type"
+                  [attr.disabled]="true"
+                />
+              </div>
+              <div class="col-md-2">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger w-100"
+                  (click)="removeCustomField(i)"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+
+        <!-- Submit and Cancel buttons -->
+        <div class="d-flex justify-content-end gap-2">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="cancel()"
+          >
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+      </form>
     </div>
   </div>
-  
-  <!-- Submit and Cancel buttons -->
-  <div class="d-flex justify-content-end gap-2">
-    <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
-      Cancel
-    </button>
-    <button type="submit" class="btn btn-primary" [disabled]="!addCollectionForm.valid">
-      Confirm
-    </button>
-  </div>
-</form>
+</div>
