@@ -50,10 +50,11 @@ export class AddCollectionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userId = this.route.snapshot.paramMap.get('id') || '';
+    this.userId = this.route.snapshot.paramMap.get('id') || ''; 
+    this.getCollectionCategories();
     this.initializeForm();
     this.initializeUserState();
-    this.getCollectionCategories();
+
     if(this.isAdmin)
     {
       this.getUsers();
@@ -64,7 +65,7 @@ export class AddCollectionComponent implements OnInit {
     this.addCollectionForm = this.fb.group({
       title: ['', Validators.required],
       user: [this.userId, Validators.required],
-      category: ['', Validators.required],
+      category: ['Automotive', Validators.required],
       image: [null],
       description: [''],
       customFields: this.fb.array([]),
@@ -204,7 +205,7 @@ export class AddCollectionComponent implements OnInit {
         this.createCollection('');
       }
     } else {
-      this.toastr.error('Form is invalid', 'Please fill all required fields.');
+      this.toastr.error('Form is invalid', 'Please fill all required fields.', this.addCollectionForm.value);
     }
   }
 
