@@ -10,6 +10,7 @@ export const CollectionConstants = {
     GET_COLLECTION_BY_ID: apiUrl + 'collections/get/id',
     GET_COLLECTIONS_BY_USER_ID: apiUrl + 'collections/get/userId',
     UPDATE_COLLECTION: apiUrl + 'collections/update/id',
+    GET_COLLECTION_CATEGORY : apiUrl + 'collections/get/categories',
   },
 };
 
