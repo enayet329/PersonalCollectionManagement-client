@@ -13,6 +13,7 @@ import { CloudinaryUploadService } from '../../../core/services/image-upload.ser
 import { ToastrService } from 'ngx-toastr';
 import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
 import { AdminService } from '../../../core/services/admin.service';
+import { Categories } from '../../../core/model/categories.model';
 
 @Component({
   selector: 'app-add-collection',
@@ -25,7 +26,7 @@ export class AddCollectionComponent implements OnInit {
   addCollectionForm!: FormGroup;
   private itemImageFile: File | null = null;
   public itemImageUrl: SafeUrl | null = null;
-  categories: string[] = ['Category 1', 'Category 2', 'Category 3'];
+  categories: Categories[] = [];
   userId: string = '';
   collection: Collection = {} as Collection;
   users: UserModel[] = [];
@@ -34,7 +35,6 @@ export class AddCollectionComponent implements OnInit {
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
   isUser: boolean = false;
-
 
   constructor(
     private fb: FormBuilder,
@@ -49,11 +49,11 @@ export class AddCollectionComponent implements OnInit {
     private jwtDecoder: JwtDecoderService
   ) {}
 
-  
   ngOnInit(): void {
     this.userId = this.route.snapshot.paramMap.get('id') || '';
     this.initializeForm();
     this.initializeUserState();
+    this.getCollectionCategories();
     if(this.isAdmin)
     {
       this.getUsers();
@@ -68,9 +68,10 @@ export class AddCollectionComponent implements OnInit {
       image: [null],
       description: [''],
       customFields: this.fb.array([]),
+      newFieldType: ['string', Validators.required]
     });
   }
-
+  
   private initializeUserState(){
     const token = localStorage.getItem('token');
 
@@ -102,12 +103,40 @@ export class AddCollectionComponent implements OnInit {
 
   addCustomField() {
     const customFields = this.addCollectionForm.get('customFields') as FormArray;
+    const fieldTypeControl = this.addCollectionForm.get('newFieldType');
+  
+    const fieldType = fieldTypeControl?.value;
+  
+    if (!fieldType) {
+      this.toastr.error('Please select a field type before adding.');
+      return;
+    }
+  
+    const stringFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'string').length;
+    const dateFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'number').length;
+    const booleanFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'date').length;
+  
+    if (fieldType === 'string' && stringFieldsCount >= 3) {
+      this.toastr.error('You can only add up to 3 string fields.');
+      return;
+    }
+    if (fieldType === 'number' && dateFieldsCount >= 3) {
+      this.toastr.error('You can only add up to 3 number fields.');
+      return;
+    }
+    if (fieldType === 'date' && booleanFieldsCount >= 3) {
+      this.toastr.error('You can only add up to 3 date fields.');
+      return;
+    }
+  
     customFields.push(
       this.fb.group({
         label: ['', Validators.required],
-        type: ['string', Validators.required],
+        type: [fieldType, Validators.required],
       })
     );
+  
+    fieldTypeControl.reset();
   }
   
   removeCustomField(index: number) {
@@ -149,6 +178,17 @@ export class AddCollectionComponent implements OnInit {
     }
   }
 
+  getCollectionCategories(): void {
+    this.collectionService.getCategories().subscribe(
+      (resopnse: Categories[]) => {
+        this.categories = resopnse;
+      },
+      (error) => {
+        console.error('Error getting categories:', error);
+      }
+    )
+  }
+
   onSubmit() {
     if (this.addCollectionForm.valid) {
       if (this.itemImageFile) {
@@ -167,7 +207,6 @@ export class AddCollectionComponent implements OnInit {
       this.toastr.error('Form is invalid', 'Please fill all required fields.');
     }
   }
-
 
   createCustomFields(customFields: CustomField[]): void {
     this.customFieldService.addCustomField(customFields).subscribe(
