@@ -3,11 +3,11 @@ export interface UserModel {
   username: string;
   email: string;
   imageURL: string;
-  preferredLanguage: string;
-  preferredThemeDark: boolean;
+  prefrredLanguage: string;
+  preffrredThemeDark: boolean;
+  joinedAt: string;
   isAdmin: boolean;
   isBlocked: boolean;
-  joinedAt: Date;
 }
 
 export interface UserLoginModel{
