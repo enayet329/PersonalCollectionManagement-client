@@ -27,4 +27,8 @@ export class ItemService {
     const params = new HttpParams().set('id', itemId);
     return this.httpClient.get<Item>(url, { params });
   }
+  addItem(collectionId: string): Observable<Item> {
+    return this.httpClient.post<Item>(this.apiUrl.ADD_ITEM, { collectionId });
+  }
+  
 }
