@@ -20,8 +20,14 @@ export class CollectionDetailComponent implements OnInit {
   collectionId: string = '';
   collection: Collection | undefined;
   items: Item[] = [];
+  paginatedItems: Item[] = [];
+  
+  // Pagination variables
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
 
-  //user state
+  // User state
   isLoggedIn: boolean = true;
   isAdmin: boolean = false;
   currentUser: string = '';
@@ -38,21 +44,17 @@ export class CollectionDetailComponent implements OnInit {
   ngOnInit(): void {
     this.initializeUserState();
     this.collectionId = this.route.snapshot.paramMap.get('id')!;
-    console.log(this.collectionId);
     this.getCollection();
     this.getItemsByCollectionId();
   }
 
   initializeUserState(): void {
     const token = localStorage.getItem('token');
-    if(token && !this.jwtDecoder.isTokenExpired(token))
-    {
+    if (token && !this.jwtDecoder.isTokenExpired(token)) {
       this.currentUser = this.jwtDecoder.getUserIdFromToken(token)!;
-
       this.isLoggedIn = true;
       this.isAdmin = this.jwtDecoder.getIsAdminFromToken(token)!;
-    }
-    else{
+    } else {
       this.isLoggedIn = false;
       this.isAdmin = false;
       this.currentUser = '';
@@ -74,11 +76,26 @@ export class CollectionDetailComponent implements OnInit {
     this.itemService.getItemByCollectionId(this.collectionId).subscribe(
       (items) => {
         this.items = items;
+        this.totalPages = Math.ceil(items.length / this.itemsPerPage);
+        this.paginateItems();
       },
       (error) => {
         console.error(error);
       }
     );
+  }
+
+  private paginateItems(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedItems = this.items.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number): void {
+    if (page > 0 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.paginateItems();
+    }
   }
 
   editCollection(collection: any) {
@@ -99,7 +116,10 @@ export class CollectionDetailComponent implements OnInit {
   }
 
   addNewItem(collectionId: any): void {
-    this.router.navigate(['/add-item', this.collectionId]);
+    if(this.isAdmin || this.isLoggedIn)
+    {
+      this.router.navigate(['/add-item', collectionId]);
+    }
   }
 
   editItem(item: any): void {
@@ -111,8 +131,9 @@ export class CollectionDetailComponent implements OnInit {
   }
 
   navigateToDetail(itemId: string): void {
-    this.router.navigate(['/item-detail', itemId]);
+    if(this.isLoggedIn)
+    {
+      this.router.navigate(['/item-detail', itemId]);
+    }
   }
-
-
 }
