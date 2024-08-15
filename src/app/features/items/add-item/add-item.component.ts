@@ -222,10 +222,9 @@ export class AddItemComponent implements OnInit {
             this.toaster.success('Item added successfully', 'Success');
             const itemId = response.id;
             this.addCustomField(itemId);
-            this.addTag(itemId);
+            this.addTag(itemId);          
+            this.router.navigate(['/collection-detail', this.collectionId]);
           }
-
-          this.router.navigate(['/collection-detail', this.collectionId]);
         },
         (error: any) => {
           console.error(error);
