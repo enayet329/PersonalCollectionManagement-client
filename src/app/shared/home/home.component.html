@@ -46,28 +46,19 @@
             <div class="card-body">
               <h5 class="card-title">{{ collection.name }}</h5>
               <p class="card-text">
-                <small>{{ collection.topic }}</small>
-                <br />
-                <small>Items quantity: {{ collection.itemCount }}</small>
-                <br />
+                <small>{{ collection.topic }}</small
+                ><br />
+                <small>Items quantity: {{ collection.itemCount }}</small
+                ><br />
                 <small>
                   Created by
-                  <a
-                    href="javascript:void(0);"
-                    (click)="
-                      goToUserProfile(collection.userId);
-                      $event.stopPropagation()
-                    "
-                    class="text-decoration-none"
-                  >
+                  <a [routerLink]="['/profile-view', collection.userId]" class="text-decoration-none">
                     {{ collection.userName }}
                   </a>
                 </small>
                 <br />
               </p>
-              <div
-                class="card-footer bg-transparent d-flex justify-content-center align-items-center"
-              >
+              <div class="card-footer bg-transparent d-flex justify-content-center align-items-center">
                 <small class="text-center">Click to view details</small>
               </div>
             </div>
@@ -108,21 +99,13 @@
                   <span class="tag">No Tags</span>
                 </ng-container>
               </p>
-              <p class="card-text">
-                Collection:
-                <a
-                  href="javascript:void(0);"
-                  (click)="goToCollectionDetails(item.collectionId)"
-                  class="text-decoration-none"
-                >
-                  <small>{{ item.collectionName }}</small>
-                </a>
-                <br />
+              <p class="card-text">Collection: 
+                <a href="#" class="text-decoration-none"
+                  ><small>{{ item.collectionName }}</small></a
+                ><br />
                 <small>Date: {{ item.dateAdded | date : "dd/MM/yyyy" }}</small>
               </p>
-              <div
-                class="card-footer bg-transparent d-flex justify-content-center align-items-center"
-              >
+              <div class="card-footer bg-transparent d-flex justify-content-center align-items-center">
                 <small class="text-center">Click to view details</small>
               </div>
             </div>

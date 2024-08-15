@@ -6,6 +6,7 @@ import { CollectionService } from '../../core/services/collection.service';
 import { Item } from '../../core/model/item.model';
 import { ItemService } from '../../core/services/item.service';
 import { ToastrService } from 'ngx-toastr';
+import { JwtDecoderService } from '../../core/services/jwt-decoder.service';
 
 @Component({
   selector: 'app-home',
@@ -18,16 +19,37 @@ export class HomeComponent implements OnInit {
   collections: Collection[] = [];
   recentItems: Item[] = [];
 
+  //user state variables
+  isLoggedIn: boolean = false;
+  isAdmin: boolean = false;
+  isUser: string = '';
+
   constructor(
     private collectionService: CollectionService,
     private itemService: ItemService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private jwtDecoder: JwtDecoderService
   ) {}
 
   ngOnInit(): void {
     this.loadCollections();
     this.loadRecentItems();
+    this.initializeUserState();
+  }
+
+  initializeUserState(): void {
+    const token = localStorage.getItem('token');
+    if (token && !this.jwtDecoder.isTokenExpired(token)) {
+      this.isLoggedIn = true;
+      this.isAdmin = this.jwtDecoder.getIsAdminFromToken(token);
+      this.isUser = this.jwtDecoder.getUserIdFromToken(token)!;
+    }
+    else {
+      this.isLoggedIn = false;
+      this.isAdmin = false;
+      this.isUser = '';
+    }
   }
 
   private loadCollections(): void {
@@ -65,10 +87,16 @@ export class HomeComponent implements OnInit {
   }
 
   goToCollectionDetails(collectionId: string): void {
-    this.router.navigate(['/collection-detail', collectionId]);
+    if(this.isLoggedIn)
+    {
+      this.router.navigate(['/collection-detail', collectionId]);
+    }
   }
 
   goToItemDetails(itemId: string): void {
-    this.router.navigate(['/item-detail', itemId]);
+    if(this.isLoggedIn)
+    {
+      this.router.navigate(['/item-detail', itemId]);
+    }
   }
 }
