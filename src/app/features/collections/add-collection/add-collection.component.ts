@@ -24,8 +24,8 @@ import { Categories } from '../../../core/model/categories.model';
 })
 export class AddCollectionComponent implements OnInit {
   addCollectionForm!: FormGroup;
-  private itemImageFile: File | null = null;
-  public itemImageUrl: SafeUrl | null = null;
+  private collectionImageFile: File | null = null;
+  public collectionUrlImageUrl: SafeUrl | null = null;
   categories: Categories[] = [];
   userId: string = '';
   collection: Collection = {} as Collection;
@@ -166,7 +166,7 @@ export class AddCollectionComponent implements OnInit {
     event.preventDefault();
     const file = event.dataTransfer?.files[0];
     if (file) {
-      this.itemImageFile = file;
+      this.collectionImageFile = file;
       this.updateItemImageUrl();
     }
   }
@@ -174,18 +174,18 @@ export class AddCollectionComponent implements OnInit {
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.itemImageFile = file;
+      this.collectionImageFile = file;
       this.updateItemImageUrl();
     }
   }
 
   private updateItemImageUrl() {
-    if (this.itemImageFile) {
-      this.itemImageUrl = this.sanitizer.bypassSecurityTrustUrl(
-        URL.createObjectURL(this.itemImageFile)
+    if (this.collectionImageFile) {
+      this.collectionUrlImageUrl = this.sanitizer.bypassSecurityTrustUrl(
+        URL.createObjectURL(this.collectionImageFile)
       );
     } else {
-      this.itemImageUrl = null;
+      this.collectionUrlImageUrl = null;
     }
   }
 
@@ -202,9 +202,9 @@ export class AddCollectionComponent implements OnInit {
 
   onSubmit() {
     if (this.addCollectionForm.valid) {
-      if (this.itemImageFile) {
+      if (this.collectionImageFile) {
         this.cloudinaryService
-          .uploadImage(this.itemImageFile)
+          .uploadImage(this.collectionImageFile)
           .then((url: string) => {
             this.createCollection(url);
           })
