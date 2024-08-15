@@ -16,6 +16,10 @@ export class ItemService {
     return this.httpClient.get<Item[]>(this.apiUrl.GET_RECENT_ITEMS);
   }
 
+  getAllItems(): Observable<Item[]> {
+    return this.httpClient.get<Item[]>(this.apiUrl.GET_ALL_ITEMS);
+  }
+
   getItemByCollectionId(collectionId: string): Observable<Item[]> {
     const url = this.apiUrl.GET_ITEMS_BY_COLLECTION_ID;
     const params = { collectionId: collectionId };
