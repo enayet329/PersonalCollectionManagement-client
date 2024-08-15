@@ -1,1 +1,121 @@
-<p>add-item works!</p>
+<form [formGroup]="addItemForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input id="name" formControlName="name" type="text" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea
+      id="description"
+      formControlName="description"
+      class="form-control"
+    ></textarea>
+  </div>
+
+  <div class="my-4">
+    <label for="item-image" class="form-label">Item Image</label>
+    <div
+      class="profile-image-container border p-2 text-center d-flex justify-content-center align-items-center"
+      (dragover)="onDragOver($event)"
+      (drop)="onDrop($event)"
+      style="width: 100%; height: 150px"
+    >
+      <img
+        [src]="itemImageUrl"
+        alt="Profile Image"
+        class="img-fluid rounded"
+        *ngIf="itemImageUrl"
+        style="max-width: 100%; max-height: 100%"
+      />
+      <p *ngIf="!itemImageUrl" class="text-muted m-0">
+        Drag and drop your profile image here
+      </p>
+    </div>
+    <input
+      type="file"
+      class="form-control mt-2"
+      id="profile-image"
+      (change)="onFileSelected($event)"
+      accept="image/*"
+    />
+  </div>
+
+  <!-- Custom Fields -->
+  <div formArrayName="customFields">
+    <div
+      *ngFor="let field of customFieldsArray.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <div [ngSwitch]="field.get('fieldType')?.value">
+        <label>{{ field.get("name")?.value }}</label>
+        <input
+          *ngSwitchCase="'string'"
+          formControlName="value"
+          type="text"
+          class="form-control"
+        />
+        <textarea
+          *ngSwitchCase="'multiline-text'"
+          formControlName="value"
+          class="form-control"
+        ></textarea>
+        <input
+          *ngSwitchCase="'integer'"
+          formControlName="value"
+          type="number"
+          class="form-control"
+        />
+        <input
+          *ngSwitchCase="'date'"
+          formControlName="value"
+          type="date"
+          class="form-control"
+        />
+        <input
+          *ngSwitchCase="'boolean'"
+          formControlName="value"
+          type="checkbox"
+          class="form-check-input"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Tags -->
+  <div class="form-group">
+    <label for="tags">Tags:</label>
+    <select
+      id="tags"
+      class="form-select"
+      (change)="toggleTagSelection($any($event.target).value)"
+      [value]="selectedTags[0]?.id"
+    >
+      <option value="">Select Tag</option>
+      <option *ngFor="let tag of tags" [value]="tag.id">{{ tag.name }}</option>
+    </select>
+  </div>
+  <div class="mt-2">
+    <input
+      type="text"
+      placeholder="Add custom tag"
+      (enter)="addCustomTag($any($event.target).value)"
+      class="form-control"
+    />
+
+    <!-- Display selected tags -->
+    <div class="mt-2">
+      <span *ngFor="let tag of selectedTags" class="badge bg-secondary">
+        {{ tag.name }}
+        <button
+          type="button"
+          class="btn-close btn-sm ms-2"
+          aria-label="Remove"
+          (click)="removeTag(tag)"
+        ></button>
+      </span>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary" [disabled]="addItemForm.invalid">Submit</button>
+</form>
