@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ItemService } from '../../../core/services/item.service';
 import { CustomFieldService } from '../../../core/services/custom-field.service';
-import {
-  CustomFieldResponse,
-} from '../../../core/model/customField.model';
+import { CustomFieldResponse } from '../../../core/model/customField.model';
 import { CommonModule } from '@angular/common';
 import {
   FormArray,
@@ -50,7 +48,7 @@ export class AddItemComponent implements OnInit {
     private customFieldValuesService: CustomFieldValueService,
     private tagService: TagService,
     private cloudinaryService: CloudinaryUploadService,
-    private toaster: ToastrService,
+    private toaster: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -64,16 +62,15 @@ export class AddItemComponent implements OnInit {
     this.addItemForm = this.fb.group({
       name: ['', [Validators.required]],
       imgUrl: [null],
-      description: [""],
+      description: [''],
       collectionId: [this.collectionId, [Validators.required]],
       customFields: this.fb.array([]),
-      tags: this.fb.array([])
+      tags: this.fb.array([]),
     });
   }
   get customFieldsArray(): FormArray {
     return this.addItemForm.get('customFields') as FormArray;
   }
-
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -98,14 +95,14 @@ export class AddItemComponent implements OnInit {
       this.updateItemImageUrl();
     }
   }
- // update item image url
+  // update item image url
   private updateItemImageUrl(): void {
     if (this.itemImageFile) {
       const url = this.sanitizer.bypassSecurityTrustUrl(
         window.URL.createObjectURL(this.itemImageFile)
       );
       this.itemImageUrl = url;
-    } 
+    }
   }
 
   // add custom fields to form
@@ -121,8 +118,8 @@ export class AddItemComponent implements OnInit {
       this.customFieldsArray.push(control);
     });
   }
-  
 
+  
   //get tag and custom field data from server
   getCustomFields(): void {
     this.customFieldService
@@ -139,6 +136,7 @@ export class AddItemComponent implements OnInit {
       );
   }
 
+
   getAllTags(): void {
     this.tagService.getAllTags().subscribe(
       (response: AddTagResponse[]) => {
@@ -153,54 +151,64 @@ export class AddItemComponent implements OnInit {
 
   // add tag to selected tags array
   createTags(tag: AddTagResponse): void {
-    if (!this.selectedTags.some(t => t.id === tag.id)) {
+    if (!this.selectedTags.some((t) => t.id === tag.id)) {
       this.selectedTags.push(tag);
       this.addItemForm.patchValue({ tags: this.selectedTags });
     }
   }
-  
+
   // get selected tags array
   get tagsArray(): FormArray {
     return this.addItemForm.get('tags') as FormArray;
   }
-    // remove tag from selected tags array
+
+
+  // remove tag from selected tags array
   toggleTagSelection(tagId: string): void {
-    const tag = this.tags.find(t => t.id === tagId);
+    const tag = this.tags.find((t) => t.id === tagId);
     if (tag) {
-      const index = this.selectedTags.findIndex(t => t.id === tagId);
+      const index = this.selectedTags.findIndex((t) => t.id === tagId);
       if (index >= 0) {
         this.selectedTags.splice(index, 1);
-        this.tagsArray.removeAt(index);  
+        this.tagsArray.removeAt(index);
       } else {
         this.selectedTags.push(tag);
         this.tagsArray.push(this.fb.control(tag));
       }
     }
   }
-  
 
   removeTag(tag: AddTagResponse): void {
-    this.selectedTags = this.selectedTags.filter(t => t.id !== tag.id);
+    this.selectedTags = this.selectedTags.filter((t) => t.id !== tag.id);
     this.addItemForm.patchValue({ tags: this.selectedTags });
     this.addItemForm.updateValueAndValidity();
   }
 
+
   addCustomTag(tagName: string): void {
     const trimmedTagName = tagName.trim();
-    if (trimmedTagName && !this.selectedTags.some(tag => tag.name.toLowerCase() === trimmedTagName.toLowerCase())) {
-      const newTag: AddTagResponse = { id: Date.now().toString(), name: trimmedTagName };
+    if (
+      trimmedTagName &&
+      !this.selectedTags.some(
+        (tag) => tag.name.toLowerCase() === trimmedTagName.toLowerCase()
+      )
+    ) {
+      const newTag: AddTagResponse = {
+        id: Date.now().toString(),
+        name: trimmedTagName,
+      };
       this.selectedTags.push(newTag);
       this.tagsArray.push(this.fb.control(newTag));
       this.addItemForm.updateValueAndValidity();
     }
   }
- // end of add tag to selected tags array
+
 
   // add item to server
   addItem(imageUrl: string): void {
     if (this.addItemForm.valid) {
       const formValue = this.addItemForm.value;
-  
+
       const itemData: AddItem = {
         name: formValue.name,
         imgUrl: imageUrl,
@@ -210,11 +218,13 @@ export class AddItemComponent implements OnInit {
 
       this.itemService.addItem(itemData).subscribe(
         (response: any) => {
-          console.log(response);
-          const itemId = response.id;
-          this.addCustomField(itemId);
-          this.addTag(itemId);
-  
+          if (response.id) {
+            this.toaster.success('Item added successfully', 'Success');
+            const itemId = response.id;
+            this.addCustomField(itemId);
+            this.addTag(itemId);
+          }
+
           this.router.navigate(['/collection-detail', this.collectionId]);
         },
         (error: any) => {
@@ -225,35 +235,43 @@ export class AddItemComponent implements OnInit {
       console.log('Form is invalid, cannot submit');
     }
   }
-  
+
   // end of add item to server
 
   // add custom field to server
   addCustomField(itemId: string): void {
-    const customFieldData: CustomFieldValue[] = this.addItemForm.value.customFields.map((field: any) => ({
-      value: field.value ? field.value.toString() : null,
-      customFieldId: field.id,
-      itemId: itemId,
-    }));
-  
-    this.customFieldValuesService.addCustomFieldValue(customFieldData).subscribe(
-      (response: any) => {
-        console.log(response);
-      },
-      (error: any) => {
-        console.error(error);
-      }
-    );
+    const customFieldData: CustomFieldValue[] =
+      this.addItemForm.value.customFields.map((field: any) => ({
+        value: field.value ? field.value.toString() : null,
+        customFieldId: field.id,
+        itemId: itemId,
+      }));
+    console.log('customFieldData', customFieldData);
+    this.customFieldValuesService
+      .addCustomFieldValue(customFieldData)
+      .subscribe(
+        (response: any) => {
+          if (response.length > 0) {
+            console.log('Custom field added successfully');
+          } else {
+            console.log('Custom field not added');
+          }
+        },
+        (error: any) => {
+          console.error(error);
+        }
+      );
   }
-  
 
   // add tage to server
   addTag(itemId: string): void {
-    const tagData: AddTagRequest[] = this.addItemForm.value.tags.map((tag: any) => ({
-      name: tag.name,
-      itemId: itemId,
-    }));
-  
+    const tagData: AddTagRequest[] = this.addItemForm.value.tags.map(
+      (tag: any) => ({
+        name: tag.name,
+        itemId: itemId,
+      })
+    );
+
     this.tagService.addTags(tagData).subscribe(
       (response: any) => {
         console.log(response);
@@ -263,30 +281,23 @@ export class AddItemComponent implements OnInit {
       }
     );
   }
-  
-  // end of add custom field to server
-  
-  onSubmit(): void {
 
+  // end of add custom field to server
+
+  onSubmit(): void {
     if (this.addItemForm.valid) {
-      if(this.itemImageFile)
-      {
+      if (this.itemImageFile) {
         this.cloudinaryService.uploadImage(this.itemImageFile!).then(
           (url: string) => {
             this.addItem(url);
-          }
-          ,
+          },
           (error: any) => {
             console.error(error);
-  
           }
-        )
+        );
+      } else {
+        this.addItem('');
       }
-      else{
-
-        this.addItem("");
-      }
-
     } else {
       console.log('Form is invalid:');
       if (this.addItemForm.errors?.['tagsInvalid']) {
@@ -295,12 +306,6 @@ export class AddItemComponent implements OnInit {
       if (this.addItemForm.errors?.['customFieldsInvalid']) {
         console.log('- Custom fields are invalid or missing');
       }
-      Object.keys(this.addItemForm.controls).forEach(key => {
-        const control = this.addItemForm.get(key);
-        if (control?.invalid) {
-          console.log(`- ${key} is invalid:`, control.errors);
-        }
-      });
     }
   }
 }
