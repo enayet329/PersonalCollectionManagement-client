@@ -184,10 +184,9 @@ export class NavbarComponent implements OnInit {
       profileImageUrl: ['',Validators.pattern(/\.(jpg|jpeg|png)$/)],
     });
 
-  
     this.signinForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      password: ['',[Validators.required, Validators.minLength(4)]],
     });
   }
 
