@@ -7,7 +7,7 @@ export interface CustomField {
 export interface CustomFieldResponse {
     id: string;
     name: string;
-    fieldType: string;
+    fieldType: 'string' | 'multiline-text' | 'integer' | 'date' | 'boolean';
     collectionId: string;
     customFieldValues: any[];
 }
