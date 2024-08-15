@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ItemConstants } from '../constants/constants';
-import { Item } from '../model/item.model';
+import { AddItem, Item } from '../model/item.model';
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +27,9 @@ export class ItemService {
     const params = new HttpParams().set('id', itemId);
     return this.httpClient.get<Item>(url, { params });
   }
-  addItem(collectionId: string): Observable<Item> {
-    return this.httpClient.post<Item>(this.apiUrl.ADD_ITEM, { collectionId });
-  }
+  addItem(item: AddItem): Observable<AddItem> {
+    debugger;
+    return this.httpClient.post<AddItem>(this.apiUrl.ADD_ITEM, item);
+  }  
   
 }
