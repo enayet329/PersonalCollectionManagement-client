@@ -4,7 +4,7 @@ import { CollectionListComponent } from './features/collections/collection-list/
 import { AdminDashboardComponent } from './features/admin/admin-dashboard/admin-dashboard.component';
 import { SearchResultsComponent } from './features/search/search-results/search-results.component';
 import { CollectionDetailComponent } from './features/collections/collection-detail/collection-detail.component';
-import { ItemDetailComponent } from './features/items/item-detail/item-detail.component'; // Import ItemDetailComponent
+import { ItemDetailComponent } from './features/items/item-detail/item-detail.component';
 import { ProfileViewComponent } from './features/user-profile/profile-view/profile-view.component';
 import { AddCollectionComponent } from './features/collections/add-collection/add-collection.component';
 import { AddItemComponent } from './features/items/add-item/add-item.component';
