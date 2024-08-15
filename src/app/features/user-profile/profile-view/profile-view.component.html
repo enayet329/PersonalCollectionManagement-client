@@ -1,4 +1,4 @@
-<div class="container my-5" *ngIf="isUser">
+<div class="container my-5" *ngIf="isUser || isAdmin || userIsLoggedIn">
   <div class="text-center mb-4">
     <img
       [src]="user.imageURL || 'assets/user.svg'"
@@ -17,147 +17,209 @@
       <h2 class="card-title">Personal Information</h2>
       <div class="row">
         <div class="col-md-4">
-          <p>
-            <strong>Name:</strong> {{ user.username }}
-          </p>
+          <p><strong>Name:</strong> {{ user.username }}</p>
+        </div>
+        <div class="col-md-4" *ngIf="isAdmin || isUser">
+          <p><strong>Email:</strong> {{ user.email }}</p>
         </div>
         <div class="col-md-4">
           <p>
-            <strong>Email:</strong> {{ user.email }}
-          </p>
-        </div>
-        <div class="col-md-4">
-          <p>
-            <strong>Joined:</strong> {{ user.joinedAt | date: 'mediumDate' }}
+            <strong>Joined:</strong> {{ user.joinedAt | date : "mediumDate" }}
           </p>
         </div>
       </div>
-      <div class="text-right mt-4">
-        <button class="btn btn-outline-primary" (click)="openModal(updateUserModal)">
+      <div class="text-right mt-4" *ngIf="isAdmin || isUser">
+        <button
+          class="btn btn-outline-primary"
+          (click)="openModal(updateUserModal)"
+        >
           Edit Profile
         </button>
       </div>
     </div>
   </div>
 
-  <div class="mb-4 text-right">
-    <button class="btn btn-primary" (click)="addCollection(user.id)">Add Collection</button>
+  <div class="mb-4 text-right" *ngIf="isAdmin || isUser">
+    <button class="btn btn-primary" (click)="addCollection(user.id)">
+      Add Collection
+    </button>
   </div>
 
+  <!-- Collections section -->
   <section class="mb-5 pb-5 border-bottom">
     <h2 class="display-6 fw-bold mb-4">Your Collections</h2>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
       <div class="col" *ngFor="let collection of collections">
-        <div class="card h-80" (click)="goToCollectionDetails(collection.id)">
-          <div class="card h-100 d-flex flex-column">
-            <img
-              [src]="collection.imageUrl || 'assets/logo.png'"
-              class="card-img-top"
-              height="200"
-              width="100%"
-              [alt]="collection.name"
-              onerror="this.src='assets/logo.png'"
-            />
-            <div class="card-body">
-              <h5 class="card-title">{{ collection.name }}</h5>
-              <p class="card-text">
-                <small>{{ collection.topic }}</small><br />
-                <small>Items quantity: {{ collection.itemCount }}</small>
-              </p>
-              <div class="card-footer bg-transparent d-flex justify-content-center align-items-center">
-                <small class="text-center">Click to view details</small>
-              </div>
+        <div class="card h-100 d-flex flex-column position-relative">
+          <img
+            [src]="collection.imageUrl || 'assets/logo.png'"
+            class="card-img-top"
+            height="200"
+            width="100%"
+            [alt]="collection.name"
+            onerror="this.src='assets/logo.png'"
+          />
+          <div class="card-body" (click)="goToCollectionDetails(collection.id)">
+            <h5 class="card-title">{{ collection.name }}</h5>
+            <p class="card-text">
+              <small>{{ collection.topic }}</small><br />
+              <small>Items quantity: {{ collection.itemCount }}</small>
+            </p>
+          </div>
+          <div
+            class="card-footer bg-transparent d-flex justify-content-between align-items-center"
+          >
+            <small class="text-center">Click to view details</small>
+  
+            <!-- Toggle Menu Button -->
+            <div class="dropdown" *ngIf="isAdmin || isUser">
+              <button
+                class="btn btn-secondary btn-sm dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Options
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" (click)="editCollection(collection.id)">Edit</a></li>
+                <li><a class="dropdown-item text-danger" (click)="deleteCollection(collection.id)">Delete</a></li>
+              </ul>
             </div>
           </div>
         </div>
       </div>
     </div>
   </section>
-</div>
-<!-- Update User Modal -->
-<ng-template #updateUserModal let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title" id="updateUserModalLabel">Update Profile</h5>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-  </div>
-  <div class="modal-body">
-    <form [formGroup]="profileUpdateForm" (ngSubmit)="onSubmit()">
-      <!-- Name Input -->
-      <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
-        <input
-          id="name"
-          formControlName="name"
-          type="text"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': profileUpdateForm.get('name')?.invalid && profileUpdateForm.get('name')?.touched }"
-        />
-        <div *ngIf="profileUpdateForm.get('name')?.invalid && profileUpdateForm.get('name')?.touched" class="invalid-feedback">
-          Name is required.
-        </div>
-      </div>
+  
 
-      <!-- Preferred Language Dropdown -->
-      <div class="mb-3">
-        <label for="preferredLanguage" class="form-label">Preferred Language</label>
-        <select
-          id="preferredLanguage"
-          formControlName="preferredLanguage"
-          class="form-select"
-          [ngClass]="{ 'is-invalid': profileUpdateForm.get('preferredLanguage')?.invalid && profileUpdateForm.get('preferredLanguage')?.touched }"
-        >
-          <option value="" [selected]="!user.prefrredLanguage">Select a language</option>
-          <option value="en" [selected]="user.prefrredLanguage === 'en'">English</option>
-          <option value="bn" [selected]="user.prefrredLanguage === 'bn'">Bangla</option>
-        </select>
-        <div *ngIf="profileUpdateForm.get('preferredLanguage')?.invalid && profileUpdateForm.get('preferredLanguage')?.touched" class="invalid-feedback">
-          Please select a preferred language.
-        </div>
-      </div>
-      
-      <!-- Preferred Theme Dark Checkbox -->
-      <div class="mb-3 form-check">
-        <input
-          id="preferredThemeDark"
-          formControlName="preferredThemeDark"
-          type="checkbox"
-          class="form-check-input"
-        />
-        <label for="preferredThemeDark" class="form-check-label">Preferred Theme Dark</label>
-      </div>
-
-      <!-- Profile Image Upload -->
-      <div class="form-group mb-3">
-        <label for="profile-image">Profile Image</label>
-        <div
-          class="profile-image-container border p-2 text-center d-flex justify-content-center align-items-center"
-          (dragover)="onDragOver($event)"
-          (drop)="onDrop($event)"
-          style="width: 460px; height: 150px;" 
-        >
-          <img
-            [src]="imageURL"
-            alt="Profile Image"
-            class="img-fluid rounded"
-            *ngIf="imageURL"
-            style="max-width: 100%; max-height: 100%;"
+  <!-- Update User Modal -->
+  <ng-template #updateUserModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="updateUserModalLabel">Update Profile</h5>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="profileUpdateForm" (ngSubmit)="onSubmit()">
+        <!-- Name Input -->
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input
+            id="name"
+            formControlName="name"
+            type="text"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid':
+                profileUpdateForm.get('name')?.invalid &&
+                profileUpdateForm.get('name')?.touched
+            }"
           />
-          <p *ngIf="!imageURL" class="text-muted m-0">
-            Drag and drop your profile image here
-          </p>
+          <div
+            *ngIf="
+              profileUpdateForm.get('name')?.invalid &&
+              profileUpdateForm.get('name')?.touched
+            "
+            class="invalid-feedback"
+          >
+            Name is required.
+          </div>
         </div>
-        <input
-          type="file"
-          class="form-control mt-2"
-          id="profile-image"
-          (change)="onFileSelected($event)"
-          accept="image/*"
-        />
-      </div>
-      
 
-      <!-- Submit Button -->
-      <button type="submit" class="btn btn-primary mb-3 float-end" [disabled]="profileUpdateForm.invalid" (click)="onSubmit()">Update Profile</button>
-    </form>
-  </div>
-</ng-template>
+        <!-- Preferred Language Dropdown -->
+        <div class="mb-3">
+          <label for="preferredLanguage" class="form-label"
+            >Preferred Language</label
+          >
+          <select
+            id="preferredLanguage"
+            formControlName="preferredLanguage"
+            class="form-select"
+            [ngClass]="{
+              'is-invalid':
+                profileUpdateForm.get('preferredLanguage')?.invalid &&
+                profileUpdateForm.get('preferredLanguage')?.touched
+            }"
+          >
+            <option value="" [selected]="!user.prefrredLanguage">
+              Select a language
+            </option>
+            <option value="en" [selected]="user.prefrredLanguage === 'en'">
+              English
+            </option>
+            <option value="bn" [selected]="user.prefrredLanguage === 'bn'">
+              Bangla
+            </option>
+          </select>
+          <div
+            *ngIf="
+              profileUpdateForm.get('preferredLanguage')?.invalid &&
+              profileUpdateForm.get('preferredLanguage')?.touched
+            "
+            class="invalid-feedback"
+          >
+            Please select a preferred language.
+          </div>
+        </div>
+
+        <!-- Preferred Theme Dark Checkbox -->
+        <div class="mb-3 form-check">
+          <input
+            id="preferredThemeDark"
+            formControlName="preferredThemeDark"
+            type="checkbox"
+            class="form-check-input"
+          />
+          <label for="preferredThemeDark" class="form-check-label"
+            >Preferred Theme Dark</label
+          >
+        </div>
+
+        <!-- Profile Image Upload -->
+        <div class="form-group mb-3">
+          <label for="profile-image">Profile Image</label>
+          <div
+            class="profile-image-container border p-2 text-center d-flex justify-content-center align-items-center"
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop($event)"
+            style="width: 460px; height: 150px"
+          >
+            <img
+              [src]="imageURL"
+              alt="Profile Image"
+              class="img-fluid rounded"
+              *ngIf="imageURL"
+              style="max-width: 100%; max-height: 100%"
+            />
+            <p *ngIf="!imageURL" class="text-muted m-0">
+              Drag and drop your profile image here
+            </p>
+          </div>
+          <input
+            type="file"
+            class="form-control mt-2"
+            id="profile-image"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+          />
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn btn-primary mb-3 float-end"
+          [disabled]="profileUpdateForm.invalid"
+          (click)="onSubmit()"
+        >
+          Update Profile
+        </button>
+      </form>
+    </div>
+  </ng-template>
+</div>
