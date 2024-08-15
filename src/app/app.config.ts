@@ -12,7 +12,7 @@ import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Vali
 import { BrowserModule } from '@angular/platform-browser';
 import { NgxFileDropModule } from 'ngx-file-drop';
 import { ToastrModule } from 'ngx-toastr';
-import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdown, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
@@ -33,6 +33,7 @@ export const appConfig: ApplicationConfig = {
       FormBuilder,
       ReactiveFormsModule,
       NgModule,
+      NgbDropdownModule,
       NgbDropdown,
       ToastrModule.forRoot({
         timeOut: 3000,
