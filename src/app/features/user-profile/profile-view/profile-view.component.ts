@@ -71,12 +71,9 @@ export class ProfileViewComponent implements OnInit {
       this.isBlocked = this.jwtDecoder.getIsBlockedFromToken(this.token);
       this.userIsLoggedIn = true;
       this.isUser = this.userId === this.routeId;
-      if(this.isUser || this.isAdmin)
+      if(this.isUser || this.isAdmin || this.userIsLoggedIn)
       {
-        this.initForm();
-      }
-      else
-      {
+        this.initForm();        
         this.userId = this.routeId;
       }
     } else {
