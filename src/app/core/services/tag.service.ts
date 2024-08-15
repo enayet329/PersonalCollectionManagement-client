@@ -27,4 +27,10 @@ export class TagService {
     return this.http.post<ResponseModel>(this.api.ADD_TAG, tags, { headers });
   }
 
+  getTagsByItemId(itemId: string): Observable<AddTagResponse[]> {
+
+    const url = `${this.api.GET_TAGS_BY_ITEM_ID}?itemId=${itemId}`
+    return this.http.get<AddTagResponse[]>(url);
+  }
+
 }
