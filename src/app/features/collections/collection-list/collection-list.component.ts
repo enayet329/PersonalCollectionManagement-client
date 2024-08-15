@@ -23,6 +23,9 @@ export class CollectionListComponent implements OnInit {
     });
   }
 
+  goToUserProfile(userId: string): void {
+    this.router.navigate(['/profile-view', userId]);
+  }
   goToCollectionDetails(collectionId: string) {
     this.router.navigate(['/collection-detail', collectionId]);
     }
