@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AddCollectionRequest, Collection } from '../model/collection.mode.';
 import { CollectionConstants } from '../constants/constants';
 import { Categories } from '../model/categories.model';
+import { ResponseModel } from '../model/response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -40,5 +41,11 @@ export class CollectionService {
 
   getCategories(): Observable<Categories[]> {
     return this.httpClient.get<Categories[]>(this.apiUrl.GET_COLLECTION_CATEGORY);
+  }
+
+  deleteCollection(id: string): Observable<ResponseModel> {
+    const url = this.apiUrl.DELETE_COLLECTION;
+    const params = { id: id };
+    return this.httpClient.delete<ResponseModel>(url, { params });
   }
 }
