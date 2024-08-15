@@ -12,7 +12,6 @@ import {
   FormGroup,
   ReactiveFormsModule,
   Validators,
-  ValidatorFn,
 } from '@angular/forms';
 import { TagService } from '../../../core/services/tag.service';
 import { AddTagRequest, AddTagResponse } from '../../../core/model/tag.model';
@@ -21,6 +20,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { CustomFieldValue } from '../../../core/model/customFieldValue.model';
 import { CustomFieldValueService } from '../../../core/services/custom-field-value.service';
 import { CloudinaryUploadService } from '../../../core/services/image-upload.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-add-item',
@@ -50,6 +50,7 @@ export class AddItemComponent implements OnInit {
     private customFieldValuesService: CustomFieldValueService,
     private tagService: TagService,
     private cloudinaryService: CloudinaryUploadService,
+    private toaster: ToastrService,
   ) {}
 
   ngOnInit(): void {
@@ -63,7 +64,7 @@ export class AddItemComponent implements OnInit {
     this.addItemForm = this.fb.group({
       name: ['', [Validators.required]],
       imgUrl: [null],
-      description: [null],
+      description: [""],
       collectionId: [this.collectionId, [Validators.required]],
       customFields: this.fb.array([]),
       tags: this.fb.array([])
@@ -73,27 +74,6 @@ export class AddItemComponent implements OnInit {
     return this.addItemForm.get('customFields') as FormArray;
   }
 
-  getValidatorsForFieldType(fieldType: string): ValidatorFn[] {
-    const validators = [];
-    switch (fieldType) {
-      case 'string':
-      case 'multiline-text':
-        validators.push(Validators.required);
-        break;
-      case 'integer':
-        validators.push(Validators.pattern('^[0-9]*$'));
-        break;
-      case 'date':
-        validators.push(Validators.required);
-        break;
-      case 'boolean':
-        validators.push(Validators.required);
-        break;
-      default:
-        break;
-    }
-    return validators;
-  }
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -124,12 +104,8 @@ export class AddItemComponent implements OnInit {
       const url = this.sanitizer.bypassSecurityTrustUrl(
         window.URL.createObjectURL(this.itemImageFile)
       );
-      this.addItemForm.patchValue({ imgUrl: url });
       this.itemImageUrl = url;
-    } else {
-      this.addItemForm.patchValue({ imgUrl: null });
-      this.itemImageUrl = null;
-    }
+    } 
   }
 
   // add custom fields to form
@@ -139,7 +115,7 @@ export class AddItemComponent implements OnInit {
         id: [field.id],
         name: [field.name],
         fieldType: [field.fieldType],
-        value: [null, this.getValidatorsForFieldType(field.fieldType)],
+        value: [null],
         collectionId: [field.collectionId],
       });
       this.customFieldsArray.push(control);
@@ -174,7 +150,6 @@ export class AddItemComponent implements OnInit {
       }
     );
   }
-  // end of get tag and custom field data from server
 
   // add tag to selected tags array
   createTags(tag: AddTagResponse): void {
@@ -184,11 +159,11 @@ export class AddItemComponent implements OnInit {
     }
   }
   
-  // remove tag from selected tags array
+  // get selected tags array
   get tagsArray(): FormArray {
     return this.addItemForm.get('tags') as FormArray;
   }
-  
+    // remove tag from selected tags array
   toggleTagSelection(tagId: string): void {
     const tag = this.tags.find(t => t.id === tagId);
     if (tag) {
@@ -210,11 +185,12 @@ export class AddItemComponent implements OnInit {
     this.addItemForm.updateValueAndValidity();
   }
 
-  addCustomTag(tagName: any): void {
+  addCustomTag(tagName: string): void {
     const trimmedTagName = tagName.trim();
-    if (trimmedTagName && !this.selectedTags.some(tag => tag.name === trimmedTagName)) {
-      const customTag: AddTagRequest = { name: trimmedTagName, itemId: '' };
-      this.addItemForm.patchValue({ tags: this.selectedTags });
+    if (trimmedTagName && !this.selectedTags.some(tag => tag.name.toLowerCase() === trimmedTagName.toLowerCase())) {
+      const newTag: AddTagResponse = { id: Date.now().toString(), name: trimmedTagName };
+      this.selectedTags.push(newTag);
+      this.tagsArray.push(this.fb.control(newTag));
       this.addItemForm.updateValueAndValidity();
     }
   }
@@ -232,6 +208,9 @@ export class AddItemComponent implements OnInit {
         collectionId: formValue.collectionId,
       };
       console.log('itemData', itemData);
+
+      debugger;
+
       this.itemService.addItem(itemData).subscribe(
         (response: any) => {
           console.log(response);
