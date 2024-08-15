@@ -166,16 +166,8 @@
 </nav>
 
 <!-- Sign In Modal -->
+<!-- Sign In Modal -->
 <ng-template #signinModal let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title">Sign In</h5>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="modal.dismiss()"
-    ></button>
-  </div>
   <div class="modal-body">
     <form [formGroup]="signinForm" (ngSubmit)="onSigninSubmit()">
       <div class="mb-3">
@@ -187,7 +179,12 @@
           formControlName="email"
           required
         />
+        <div *ngIf="signinForm.get('email')?.invalid && signinForm.get('email')?.touched" class="text-danger">
+          <small *ngIf="signinForm.get('email')?.errors?.['required']">Email is required.</small>
+          <small *ngIf="signinForm.get('email')?.errors?.['email']">Enter a valid email.</small>
+        </div>
       </div>
+
       <div class="mb-3">
         <label for="signinPassword" class="form-label">Password</label>
         <input
@@ -197,23 +194,21 @@
           formControlName="password"
           required
         />
+        <div *ngIf="signinForm.get('password')?.invalid && signinForm.get('password')?.touched" class="text-danger">
+          <small *ngIf="signinForm.get('password')?.errors?.['required']">Password is required.</small>
+          <small *ngIf="signinForm.get('password')?.errors?.['minlength']">Password must be at least 4 characters long.</small>
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary">Sign In</button>
+
+      <button type="submit" class="btn btn-primary" [disabled]="signinForm.invalid">Sign In</button>
     </form>
   </div>
 </ng-template>
 
+
+<!-- Sign Up Modal -->
 <!-- Sign Up Modal -->
 <ng-template #signupModal let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title">Sign Up</h5>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="modal.dismiss()"
-    ></button>
-  </div>
   <div class="modal-body">
     <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
       <div class="form-group mb-3">
@@ -225,7 +220,12 @@
           formControlName="name"
           required
         />
+        <div *ngIf="signupForm.get('name')?.invalid && signupForm.get('name')?.touched" class="text-danger">
+          <small *ngIf="signupForm.get('name')?.errors?.['required']">Name is required.</small>
+          <small *ngIf="signupForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters long.</small>
+        </div>
       </div>
+
       <div class="form-group mb-3">
         <label for="email">Email</label>
         <input
@@ -235,7 +235,12 @@
           formControlName="email"
           required
         />
+        <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="text-danger">
+          <small *ngIf="signupForm.get('email')?.errors?.['required']">Email is required.</small>
+          <small *ngIf="signupForm.get('email')?.errors?.['email']">Enter a valid email.</small>
+        </div>
       </div>
+
       <div class="form-group mb-3">
         <label for="password">Password</label>
         <input
@@ -245,7 +250,12 @@
           formControlName="password"
           required
         />
+        <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="text-danger">
+          <small *ngIf="signupForm.get('password')?.errors?.['required']">Password is required.</small>
+          <small *ngIf="signupForm.get('password')?.errors?.['minlength']">Password must be at least 4 characters long.</small>
+        </div>
       </div>
+
       <div class="form-group mb-3">
         <label for="profile-image">Profile Image</label>
         <div
@@ -271,7 +281,8 @@
           accept="image/*"
         />
       </div>
-      <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+
+      <button type="submit" class="btn btn-primary w-100" [disabled]="signupForm.invalid">Sign Up</button>
     </form>
   </div>
 </ng-template>
