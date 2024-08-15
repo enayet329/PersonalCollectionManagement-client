@@ -119,7 +119,7 @@
                 type="text"
                 class="form-control"
                 placeholder="Add custom tag"
-                (keyup.enter)="addCustomTag(customTagInput.value); customTagInput.value = ''"
+                (keydown.enter)="$event.preventDefault(); addCustomTag(customTagInput.value); customTagInput.value = ''"
               />
               <button 
                 class="btn btn-outline-secondary" 
