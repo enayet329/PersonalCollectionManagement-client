@@ -20,7 +20,14 @@
                 <small class="text-muted">Items quantity: {{ collection.itemCount }}</small><br />
                 <small class="text-muted">
                   Created by
-                  <a href="#" class="user-link">{{ collection.userName }}</a>
+                  <a
+                    href="javascript:void(0);"
+                    (click)="
+                      goToUserProfile(collection.userId);
+                      $event.stopPropagation()
+                    "
+                    class="text-decoration-none"
+                  >{{ collection.userName }}</a>
                 </small>
               </p>
               <div class="card-footer bg-transparent d-flex justify-content-center align-items-center">
