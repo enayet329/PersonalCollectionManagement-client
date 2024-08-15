@@ -5,8 +5,14 @@ import { UserModel } from '../../../core/model/user.model';
 import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
 import { Collection } from '../../../core/model/collection.mode.';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CloudinaryUploadService } from '../../../core/services/image-upload.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -24,12 +30,15 @@ export class ProfileViewComponent implements OnInit {
   collections: Collection[] = [];
   updateProfileImage: File | null = null;
   imageURL: SafeUrl | null = null;
+  dropdownToggle: boolean = false;
+  routeId: string | null = null;
 
   profileUpdateForm: FormGroup = new FormGroup({});
 
-  private token: string | null = null;
-  private userId: string | null = null;
-  private isAdmin: boolean = false;
+  // user state
+  token: string | null = null;
+  userId: string | null = null;
+  isAdmin: boolean = false;
   userIsLoggedIn: boolean = false;
   isBlocked: boolean = false;
   isUser: boolean = false;
@@ -43,10 +52,12 @@ export class ProfileViewComponent implements OnInit {
     private cloudinaryService: CloudinaryUploadService,
     public modalService: NgbModal,
     private sanitizer: DomSanitizer,
-    private toaster: ToastrService
+    private toaster: ToastrService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    this.routeId = this.route.snapshot.paramMap.get('id');
     this.initializeUserState();
     this.getUserProfile();
     this.getCollectionsByUserId();
@@ -59,7 +70,15 @@ export class ProfileViewComponent implements OnInit {
       this.isAdmin = this.jwtDecoder.getIsAdminFromToken(this.token);
       this.isBlocked = this.jwtDecoder.getIsBlockedFromToken(this.token);
       this.userIsLoggedIn = true;
-      this.isUser = true;
+      this.isUser = this.userId === this.routeId;
+      if(this.isUser || this.isAdmin)
+      {
+        this.initForm();
+      }
+      else
+      {
+        this.userId = this.routeId;
+      }
     } else {
       this.resetUserState();
     }
@@ -97,7 +116,7 @@ export class ProfileViewComponent implements OnInit {
       event.dataTransfer.dropEffect = 'copy';
     }
   }
- 
+
   onDrop(event: any) {
     event.preventDefault();
     this.updateProfileImage = event.dataTransfer?.files[0] || null;
@@ -115,7 +134,8 @@ export class ProfileViewComponent implements OnInit {
   onSubmit(): void {
     if (this.profileUpdateForm.valid) {
       if (this.updateProfileImage) {
-        this.cloudinaryService.uploadImage(this.updateProfileImage)
+        this.cloudinaryService
+          .uploadImage(this.updateProfileImage)
           .then((Url: string) => {
             this.updateUser(Url);
           })
@@ -145,7 +165,6 @@ export class ProfileViewComponent implements OnInit {
       isBlocked: this.isBlocked,
     };
 
-  
     this.userService.updateUser(user).subscribe(
       (response) => {
         console.log('Profile updated successfully:', response);
@@ -156,13 +175,13 @@ export class ProfileViewComponent implements OnInit {
       (error) => {
         console.error('Failed to update profile:', error);
         this.toaster.error(
-          'Failed to update profile: ' + (error.error?.message || error.message),
+          'Failed to update profile: ' +
+            (error.error?.message || error.message),
           'Error'
         );
       }
     );
   }
-  
 
   private getUserProfile() {
     if (this.userId) {
@@ -173,11 +192,24 @@ export class ProfileViewComponent implements OnInit {
     }
   }
 
+  deleteCollection(collectionId: string): void {
+    if (confirm('Are you sure you want to delete this collection?')) {
+      this.collectionService
+        .deleteCollection(collectionId)
+        .subscribe((response: any) => {
+          this.toaster.success('Collection deleted successfully', 'Success');
+          this.getCollectionsByUserId();
+        });
+    }
+  }
+
   private getCollectionsByUserId() {
     if (this.userId) {
-      this.collectionService.getCollectionByUserId(this.userId).subscribe((response) => {
-        this.collections = response;
-      });
+      this.collectionService
+        .getCollectionByUserId(this.userId)
+        .subscribe((response) => {
+          this.collections = response;
+        });
     }
   }
 
@@ -196,5 +228,4 @@ export class ProfileViewComponent implements OnInit {
   editCollection(collectionId: string): void {
     this.router.navigate(['/edit-collection', collectionId]);
   }
-
 }
