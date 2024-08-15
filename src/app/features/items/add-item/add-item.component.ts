@@ -207,9 +207,6 @@ export class AddItemComponent implements OnInit {
         description: formValue.description,
         collectionId: formValue.collectionId,
       };
-      console.log('itemData', itemData);
-
-      debugger;
 
       this.itemService.addItem(itemData).subscribe(
         (response: any) => {
@@ -252,7 +249,6 @@ export class AddItemComponent implements OnInit {
 
   // add tage to server
   addTag(itemId: string): void {
-    debugger;
     const tagData: AddTagRequest[] = this.addItemForm.value.tags.map((tag: any) => ({
       name: tag.name,
       itemId: itemId,
@@ -277,7 +273,6 @@ export class AddItemComponent implements OnInit {
       {
         this.cloudinaryService.uploadImage(this.itemImageFile!).then(
           (url: string) => {
-            debugger;
             this.addItem(url);
           }
           ,
