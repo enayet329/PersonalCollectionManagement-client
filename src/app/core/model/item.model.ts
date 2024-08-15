@@ -9,3 +9,10 @@ export interface Item {
   tagNames: string[] | null;
   likes: number;
 }
+
+export interface AddItem{
+  "name": "",
+  "imgUrl": string,
+  "description": "",
+  "collectionId": ""
+}
