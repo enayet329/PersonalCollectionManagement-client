@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
 import { CollectionService } from '../../../core/services/collection.service';
@@ -29,8 +28,8 @@ export class ProfileViewComponent implements OnInit {
   profileUpdateForm: FormGroup = new FormGroup({});
 
   private token: string | null = null;
-  userId: string | null = null;
-  isAdmin: boolean = false;
+  private userId: string | null = null;
+  private isAdmin: boolean = false;
   userIsLoggedIn: boolean = false;
   isBlocked: boolean = false;
   isUser: boolean = false;
@@ -98,14 +97,14 @@ export class ProfileViewComponent implements OnInit {
       event.dataTransfer.dropEffect = 'copy';
     }
   }
-
+ 
   onDrop(event: any) {
     event.preventDefault();
     this.updateProfileImage = event.dataTransfer?.files[0] || null;
     this.updateImageURL();
   }
 
-  updateImageURL() {
+  private updateImageURL() {
     if (this.updateProfileImage) {
       this.imageURL = this.sanitizer.bypassSecurityTrustUrl(
         URL.createObjectURL(this.updateProfileImage)
@@ -132,7 +131,7 @@ export class ProfileViewComponent implements OnInit {
     }
   }
 
-  updateUser(imageURL: string): void {
+  private updateUser(imageURL: string): void {
     const formValue = this.profileUpdateForm.value;
     const user: UserModel = {
       id: this.userId!,
@@ -193,4 +192,9 @@ export class ProfileViewComponent implements OnInit {
   goToCollectionDetails(collectionId: string): void {
     this.router.navigate(['/collection-detail', collectionId]);
   }
+
+  editCollection(collectionId: string): void {
+    this.router.navigate(['/edit-collection', collectionId]);
+  }
+
 }
