@@ -231,7 +231,7 @@ export class AddItemComponent implements OnInit {
   // add custom field to server
   addCustomField(itemId: string): void {
     const customFieldData: CustomFieldValue[] = this.addItemForm.value.customFields.map((field: any) => ({
-      value: field.value,
+      value: field.value ? field.value.toString() : null,
       customFieldId: field.id,
       itemId: itemId,
     }));
