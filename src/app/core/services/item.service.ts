@@ -32,7 +32,6 @@ export class ItemService {
     return this.httpClient.get<Item>(url, { params });
   }
   addItem(item: AddItem): Observable<AddItem> {
-    debugger;
     return this.httpClient.post<AddItem>(this.apiUrl.ADD_ITEM, item);
   }  
   
