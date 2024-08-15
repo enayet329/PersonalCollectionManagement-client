@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
     private collectionService: CollectionService,
     private itemService: ItemService,
     private router: Router,
-    private toastr: ToastrService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +38,7 @@ export class HomeComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching collections', error);
+        this.toastr.error('Failed to load collections');
       }
     );
   }
@@ -50,19 +51,24 @@ export class HomeComponent implements OnInit {
       },
       (error) => {
         console.error('Error fetching items', error);
+        this.toastr.error('Failed to load recent items');
       }
     );
   }
 
-  getLimitedTags(tags: string[], limit: 3): string[] {
+  goToUserProfile(userId: string): void {
+    this.router.navigate(['/profile-view', userId]);
+  }
+
+  getLimitedTags(tags: string[], limit: number): string[] {
     return tags.slice(0, limit);
   }
 
-  goToCollectionDetails(collectionId: string) {
+  goToCollectionDetails(collectionId: string): void {
     this.router.navigate(['/collection-detail', collectionId]);
   }
 
-  goToItemDetails(itemId: string) {
+  goToItemDetails(itemId: string): void {
     this.router.navigate(['/item-detail', itemId]);
   }
 }
