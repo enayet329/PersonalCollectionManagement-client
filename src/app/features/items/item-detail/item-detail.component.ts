@@ -12,6 +12,8 @@ import { CommentService } from '../../../core/services/comment.service';
 import { LikeService } from '../../../core/services/like.service';
 import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
 import { LikeResponseModel } from '../../../core/model/response.model';
+import { AddTagRequest, AddTagResponse } from '../../../core/model/tag.model';
+import { TagService } from '../../../core/services/tag.service';
 
 @Component({
   selector: 'app-item-detail',
@@ -26,6 +28,8 @@ export class ItemDetailComponent implements OnInit {
   like: LikeResponseModel = {} as LikeResponseModel;
   comments: Comment[] = [];
   newComment: AddComment = {} as AddComment;
+  tags: AddTagResponse[] = [];
+
   hasLiked: boolean = false;
   likeCount: number = 0;
 
@@ -46,6 +50,7 @@ export class ItemDetailComponent implements OnInit {
     private commentService: CommentService,
     private likeService: LikeService,
     private jwtDecode: JwtDecoderService,
+    private tagService: TagService,
     private toaster: ToastrService,
     private router: Router
   ) {}
@@ -54,6 +59,7 @@ export class ItemDetailComponent implements OnInit {
     this.itemId = this.route.snapshot.paramMap.get('id')!;
     this.initializeUserState();
     this.getItem();
+    this.getTagsByItemId();
     this.getComments();
   }
 
@@ -183,6 +189,20 @@ export class ItemDetailComponent implements OnInit {
       (error) => {
         console.error('Error toggling like:', error);
         this.toaster.error('An error occurred while processing your request', 'Error');
+      }
+    );
+  }
+
+ getTagsByItemId(): void {
+    this.tagService.getTagsByItemId(this.itemId).subscribe(
+      (response: AddTagResponse[]) => {
+        if(response.length > 0){
+          this.tags = response;
+          console.log(this.tags);
+        }
+      },
+      (error) => {
+        console.error('Error fetching tags:', error);
       }
     );
   }
