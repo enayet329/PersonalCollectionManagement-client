@@ -1,5 +1,5 @@
 export interface CustomFieldValue {
-    value: string;
+    value: any | null;
     customFieldId: string;
     itemId: string;
 }
