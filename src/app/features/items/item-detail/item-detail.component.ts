@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-
 import { Item } from '../../../core/model/item.model';
 import { AddComment, Comment } from '../../../core/model/comment.model';
 import { ItemService } from '../../../core/services/item.service';
@@ -12,8 +11,10 @@ import { CommentService } from '../../../core/services/comment.service';
 import { LikeService } from '../../../core/services/like.service';
 import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
 import { LikeResponseModel } from '../../../core/model/response.model';
-import { AddTagRequest, AddTagResponse } from '../../../core/model/tag.model';
+import {  AddTagResponse } from '../../../core/model/tag.model';
 import { TagService } from '../../../core/services/tag.service';
+import { CustomFieldValueService } from '../../../core/services/custom-field-value.service';
+import { CustomFieldValue, CustomFieldValueResponse } from '../../../core/model/customFieldValue.model';
 
 @Component({
   selector: 'app-item-detail',
@@ -29,6 +30,7 @@ export class ItemDetailComponent implements OnInit {
   comments: Comment[] = [];
   newComment: AddComment = {} as AddComment;
   tags: AddTagResponse[] = [];
+  customFieldValues: CustomFieldValueResponse[] = [];
 
   hasLiked: boolean = false;
   likeCount: number = 0;
@@ -52,6 +54,7 @@ export class ItemDetailComponent implements OnInit {
     private jwtDecode: JwtDecoderService,
     private tagService: TagService,
     private toaster: ToastrService,
+    private customFieldValueService: CustomFieldValueService,
     private router: Router
   ) {}
 
@@ -60,6 +63,7 @@ export class ItemDetailComponent implements OnInit {
     this.initializeUserState();
     this.getItem();
     this.getTagsByItemId();
+    this.getCustomFields();
     this.getComments();
   }
 
@@ -207,6 +211,15 @@ export class ItemDetailComponent implements OnInit {
     );
   }
 
+  getCustomFields(): void {
+    this.customFieldValueService.getCustomFieldValueByItemId(this.itemId).subscribe(
+      (response: CustomFieldValueResponse[]) => {
+        this.customFieldValues = response;
+        console.log('custom field values',response);
+      }
+    )
+  }
+
   handleDropdownClick(action: string): void {
     if (action === 'edit') {
       this.editItem();
@@ -230,7 +243,7 @@ export class ItemDetailComponent implements OnInit {
 
   deleteItem(): void {
     if (confirm('Are you sure you want to delete this item?')) {
-
+      
     }
   }
 
