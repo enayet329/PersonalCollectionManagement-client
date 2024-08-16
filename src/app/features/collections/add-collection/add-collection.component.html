@@ -51,9 +51,9 @@
         </div>
 
         <div class="my-4">
-          <label for="collectionUrl-image" class="form-label">collectionUrl Image</label>
+          <label for="collectionUrl-image" class="form-label">Collection URL Image</label>
           <div
-            class="profile-image-container border p-2 text-center d-flex justify-content-center align-collectionUrls-center"
+            class="profile-image-container stylish-border p-2 text-center d-flex justify-content-center align-items-center"
             (dragover)="onDragOver($event)"
             (drop)="onDrop($event)"
             style="width: 100%; height: 150px"
@@ -65,9 +65,10 @@
               *ngIf="collectionUrlImageUrl"
               style="max-width: 100%; max-height: 100%"
             />
-            <p *ngIf="!collectionUrlImageUrl" class="text-muted m-0">
-              Drag and drop your profile image here
-            </p>
+            <div *ngIf="!collectionUrlImageUrl" class="placeholder-content">
+              <i class="fas fa-cloud-upload-alt fa-3x mb-2"></i>
+              <p class="text-muted m-0">Drag and drop your image here</p>
+            </div>
           </div>
           <input
             type="file"
@@ -77,7 +78,7 @@
             accept="image/*"
           />
         </div>
-
+        
         <div class="mb-4">
           <label for="description" class="form-label">Description</label>
           <textarea
@@ -91,11 +92,9 @@
 
         <div class="mb-4">
           <label class="form-label d-block">Custom fields</label>
-
+        
           <div class="mb-2">
-            <label for="fieldTypeSelector" class="form-label"
-              >Select Field Type</label
-            >
+            <label for="fieldTypeSelector" class="form-label">Select Field Type</label>
             <select
               id="fieldTypeSelector"
               class="form-select"
@@ -108,7 +107,7 @@
               <option value="boolean">Boolean</option>
             </select>
           </div>
-
+        
           <button
             type="button"
             class="btn btn-outline-primary mb-2"
@@ -117,6 +116,7 @@
             + Add field
           </button>
 
+          <!-- Custom fields form array -->
           <div formArrayName="customFields">
             <div
               *ngFor="let field of customFieldsControls; let i = index"
@@ -136,7 +136,7 @@
                   type="text"
                   class="form-control"
                   formControlName="type"
-                  [attr.disabled]="true"
+                  readonly
                 />
               </div>
               <div class="col-md-2">
@@ -151,7 +151,7 @@
             </div>
           </div>
         </div>
-
+        
         <!-- Submit and Cancel buttons -->
         <div class="d-flex justify-content-end gap-2">
           <button
@@ -161,7 +161,7 @@
           >
             Cancel
           </button>
-          <button type="submit" class="btn btn-primary" >Confirm</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!addCollectionForm.valid || isClicked">Confirm</button>
         </div>
       </form>
     </div>

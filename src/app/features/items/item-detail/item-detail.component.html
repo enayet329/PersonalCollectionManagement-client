@@ -1,4 +1,4 @@
-<div class="container my-5" *ngIf="isLoggedIn">
+<div class="container my-5" *ngIf="!isItemLoading; else loadingTemplate">
   <div class="card shadow-sm hover-shadow-lg transition-all duration-300">
     <div class="row g-0">
       <ng-container *ngIf="item.imgUrl">
@@ -132,54 +132,61 @@
     <!-- Comments section (left side) -->
     <div class="col-md-8">
       <h3 class="h4">Comments</h3>
-      <ng-container *ngIf="comments.length > 0; else noComments">
-        <div *ngFor="let comment of comments" class="card shadow-sm mb-4">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <div class="d-flex align-items-center">
-                <img
-                  [src]="comment.userProfileImgeUrl || 'assets/user.svg'"
-                  [alt]="comment.userName"
-                  class="rounded-circle me-3"
-                  style="width: 48px; height: 48px; object-fit: cover"
-                  onerror="this.src='assets/user.svg'"
-                />
-                <div>
-                  <h5 class="card-title fw-bold mb-0">{{ comment.userName }}</h5>
-                  <small class="text-muted">{{
-                    comment.createdAt | date : "medium"
-                  }}</small>
+      <ng-container *ngIf="!isLoadingComments; else loadingComments">
+        <ng-container *ngIf="comments.length > 0; else noComments">
+          <div *ngFor="let comment of comments" class="card shadow-sm mb-4">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center">
+                  <img
+                    [src]="comment.userProfileImgeUrl || 'assets/user.svg'"
+                    [alt]="comment.userName"
+                    class="rounded-circle me-3"
+                    style="width: 48px; height: 48px; object-fit: cover"
+                    onerror="this.src='assets/user.svg'"
+                  />
+                  <div>
+                    <h5 class="card-title fw-bold mb-0">{{ comment.userName }}</h5>
+                    <small class="text-muted">{{ comment.createdAt | date : "medium" }}</small>
+                  </div>
+                </div>
+                <div *ngIf="isLoggedIn && (isAdmin || comment.userId === userId)" ngbDropdown class="d-inline-block">
+                  <button class="btn btn-link btn-sm" id="commentDropdown" ngbDropdownToggle>
+                    <svg
+                      width="1em"
+                      height="1em"
+                      viewBox="0 0 16 16"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle cx="2" cy="8" r="2"></circle>
+                      <circle cx="8" cy="8" r="2"></circle>
+                      <circle cx="14" cy="8" r="2"></circle>
+                    </svg>
+                  </button>
+                  <div ngbDropdownMenu aria-labelledby="commentDropdown">
+                    <button ngbDropdownItem (click)="editComment(comment.id)">Edit</button>
+                    <button ngbDropdownItem class="text-danger" (click)="deleteComment(comment.id)">Delete</button>
+                  </div>
                 </div>
               </div>
-              <div *ngIf="isLoggedIn && (isAdmin || comment.userId === userId)" ngbDropdown class="d-inline-block">
-                <button class="btn btn-link btn-sm" id="commentDropdown" ngbDropdownToggle>
-                  <svg
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 16 16"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle cx="2" cy="8" r="2"></circle>
-                    <circle cx="8" cy="8" r="2"></circle>
-                    <circle cx="14" cy="8" r="2"></circle>
-                  </svg>
-                </button>
-                <div ngbDropdownMenu aria-labelledby="commentDropdown">
-                  <button ngbDropdownItem (click)="editComment(comment.id)">Edit</button>
-                  <button ngbDropdownItem class="text-danger" (click)="deleteComment(comment.id)">Delete</button>
-                </div>
-              </div>
+              <p class="card-text">{{ comment.content }}</p>
             </div>
-            <p class="card-text">{{ comment.content }}</p>
+          </div>
+        </ng-container>
+        <ng-template #noComments>
+          <div class="alert alert-light border mb-4">No comments yet.</div>
+        </ng-template>
+      </ng-container>
+
+      <ng-template #loadingComments>
+        <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
           </div>
         </div>
-      </ng-container>
-      <ng-template #noComments>
-        <div class="alert alert-light border mb-4">No comments yet.</div>
       </ng-template>
     </div>
-
     <!-- Comment box (right side) -->
     <div class="col-md-4">
       <ng-container *ngIf="isLoggedIn; else loginToComment">
@@ -208,3 +215,12 @@
     </div>
   </div>
 </div>
+
+<!-- Loading Template -->
+<ng-template #loadingTemplate>
+  <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</ng-template>

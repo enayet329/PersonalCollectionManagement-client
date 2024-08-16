@@ -30,6 +30,7 @@ export class AddCollectionComponent implements OnInit {
   userId: string = '';
   collection: Collection = {} as Collection;
   users: UserModel[] = [];
+  isClicked: boolean = false;
 
   //user state
   isLoggedIn: boolean = false;
@@ -201,6 +202,7 @@ export class AddCollectionComponent implements OnInit {
   }
 
   onSubmit() {
+    this.isClicked = true;
     if (this.addCollectionForm.valid) {
       if (this.collectionImageFile) {
         this.cloudinaryService
@@ -224,14 +226,12 @@ export class AddCollectionComponent implements OnInit {
     this.customFieldService.addCustomField(customFields).subscribe(
       (response) => {
         console.log('Custom fields created:', response);
-        this.toastr.success('Custom fields created successfully');
       },
       (error) => {
         console.error('Error creating custom fields:', error);
         if (error.error && error.error.errors) {
           console.error('Validation errors:', error.error.errors);
         }
-        this.toastr.error('Error creating custom fields', 'Please try again.');
       }
     );
   }
@@ -257,7 +257,6 @@ export class AddCollectionComponent implements OnInit {
           collectionId: response.id,
         }));
         console.log('Custom fields:', customFields);
-        console.log('Collection id:', response.id);
         this.createCustomFields(customFields);
 
         this.toastr.success('Collection created successfully');

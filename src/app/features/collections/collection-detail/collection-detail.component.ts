@@ -8,6 +8,9 @@ import { CommonModule } from '@angular/common';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
+import { ResponseModel } from '../../../core/model/response.model';
+import { Location } from '@angular/common';
+   
 
 @Component({
   selector: 'app-collection-detail',
@@ -28,13 +31,14 @@ export class CollectionDetailComponent implements OnInit {
   totalPages: number = 0;
 
   // User state
-  isLoggedIn: boolean = true;
+  isLoggedIn: boolean = false;
   isAdmin: boolean = false;
   currentUser: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private collectionService: CollectionService,
     private itemService: ItemService,
     private toaster: ToastrService,
@@ -67,7 +71,8 @@ export class CollectionDetailComponent implements OnInit {
         this.collection = collection;
       },
       (error) => {
-        console.error(error);
+        console.error('Error fetching collection:', error);
+        this.toaster.error('Error fetching collection details');
       }
     );
   }
@@ -77,15 +82,24 @@ export class CollectionDetailComponent implements OnInit {
       (items) => {
         this.items = items;
         this.totalPages = Math.ceil(items.length / this.itemsPerPage);
+        this.currentPage = this.totalPages > 0 ? 1 : 0;
         this.paginateItems();
       },
       (error) => {
-        console.error(error);
+        console.error('Error fetching items:', error);
+        this.items = [];
+        this.totalPages = 0;
+        this.currentPage = 0;
+        this.paginatedItems = [];
       }
     );
   }
 
   private paginateItems(): void {
+    if (this.items.length === 0) {
+      this.paginatedItems = [];
+      return;
+    }
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     this.paginatedItems = this.items.slice(startIndex, endIndex);
@@ -98,15 +112,37 @@ export class CollectionDetailComponent implements OnInit {
     }
   }
 
-  editCollection(collection: any) {
-    console.log('Editing collection:', collection);
+  editCollection(collection: Collection): void {
+    if (this.isAdmin || (this.isLoggedIn && this.currentUser === this.collection?.userId)) {
+      this.router.navigate(['/edit-collection', collection.id]);
+    } else {
+      this.toaster.warning('You do not have permission to edit this collection');
+    }
+  }
+  deleteCollection(collection: Collection): void {
+    if (this.isAdmin || (this.isLoggedIn && this.currentUser === collection.userId)) {
+      if (confirm('Are you sure you want to delete this collection? This action cannot be undone.')) {
+        this.collectionService.deleteCollection(collection.id).subscribe(
+          (response: ResponseModel) => {
+            if (response.success) {
+              this.toaster.success('Collection deleted successfully');
+              this.router.navigate(['/profile-view', this.currentUser]);
+            } else {
+              this.toaster.error('Error deleting collection');
+            }
+          },
+          (error) => {
+            console.error('Error deleting collection:', error);
+            this.toaster.error('Error deleting collection');
+          }
+        );
+      }
+    } else {
+      this.toaster.warning('You do not have permission to delete this collection');
+    }
   }
 
-  deleteCollection(collection: any) {
-    console.log('Deleting collection:', collection);
-  }
-
-  handleAction(event: Event, action: string, item: any): void {
+  handleAction(event: Event, action: string, item: Item): void {
     event.stopPropagation();
     if (action === 'edit') {
       this.editItem(item);
@@ -115,25 +151,48 @@ export class CollectionDetailComponent implements OnInit {
     }
   }
 
-  addNewItem(collectionId: any): void {
-    if(this.isAdmin || this.isLoggedIn)
-    {
-      this.router.navigate(['/add-item', collectionId]);
+  addNewItem(): void {
+    if (this.isAdmin || this.isLoggedIn) {
+      this.router.navigate(['/add-item', this.collectionId]);
+    } else {
+      this.toaster.warning('Please log in to add a new item');
     }
   }
 
-  editItem(item: any): void {
-    console.log('Edit item:', item);
+  editItem(item: Item): void {
+    if (this.isAdmin || (this.isLoggedIn && this.currentUser === this.collection?.userId)) {
+      this.router.navigate(['/edit-item', item.id]);
+    } else {
+      this.toaster.warning('You do not have permission to edit this item');
+    }
   }
 
-  deleteItem(item: any): void {
-    console.log('Delete item:', item);
+  deleteItem(item: Item): void {
+    if (this.isAdmin || (this.isLoggedIn && this.currentUser === this.collection?.userId)) {
+      this.itemService.deleteItemById(item.id).subscribe(
+        (response: ResponseModel) => {
+          if (response.success) {
+            this.getItemsByCollectionId(); 
+            this.toaster.success('Item deleted successfully');
+          } else {
+            this.toaster.error('Error deleting item');
+          }
+        },
+        (error) => {
+          console.error('Error deleting item:', error);
+          this.toaster.error('Error deleting item');
+        }
+      );
+    } else {
+      this.toaster.warning('You do not have permission to delete this item');
+    }
   }
 
   navigateToDetail(itemId: string): void {
-    if(this.isLoggedIn)
-    {
+    if (this.isLoggedIn) {
       this.router.navigate(['/item-detail', itemId]);
+    } else {
+      this.toaster.warning('Please log in to view item details');
     }
   }
 }

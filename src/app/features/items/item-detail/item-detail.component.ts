@@ -35,6 +35,8 @@ export class ItemDetailComponent implements OnInit {
 
   hasLiked: boolean = false;
   likeCount: number = 0;
+  isLoadingComments: boolean = true;
+  isItemLoading: boolean = true;
 
   // User state
   user: any = null;
@@ -46,6 +48,7 @@ export class ItemDetailComponent implements OnInit {
   preferredLanguage: string | null = null;
   preferredThemeDark: boolean = false;
   currentLanguage: string | null = null;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -107,6 +110,7 @@ export class ItemDetailComponent implements OnInit {
       (data) => {
         this.item = data;
         this.like.likeCount = this.item.likes;
+        this.isItemLoading = false;
         this.checkIfItemLiked();
       },
       (error) => {
@@ -133,6 +137,7 @@ export class ItemDetailComponent implements OnInit {
     this.commentService.getCommetsByItemId(this.itemId).subscribe(
       (comments) => {
         this.comments = comments;
+        this.isLoadingComments = false;
       },
       (error) => {
         console.error('Error fetching comments:', error);

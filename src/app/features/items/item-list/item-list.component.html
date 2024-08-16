@@ -3,53 +3,77 @@
     <div class="text-center mb-4">
       <h2 class="fw-bold">All Items</h2>
     </div>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
-      <div class="col" *ngFor="let item of items">
-        <div class="card h-100" (click)="goToItemDetails(item.id)">
-        <div class="card h-100 border-0 shadow-sm">
-          <img
-            [src]="item.imgUrl || 'assets/logo.png'"
-            class="card-img-top rounded-top"
-            [alt]="item.name"
-            height="180"
-            width="100%"
-            style="object-fit: cover;"
-            onerror="this.src='/assets/logo.png'"
-          />
-          <div class="card-body p-3">
-            <h5 class="card-title fs-6">{{ item.name }}</h5>
-            <div class="mb-2">
-              <!-- Display up to 3 tags dynamically -->
-              <ng-container *ngIf="item.tagNames && item.tagNames.length > 0">
-                <span
-                  *ngFor="let tag of getLimitedTags(item.tagNames)"
-                  class="badge bg-primary me-1"
-                  >{{ tag }}</span
-                >
-              </ng-container>
 
-              <!-- Placeholder if no tags -->
-              <ng-container
-                *ngIf="!item.tagNames || item.tagNames.length === 0"
-              >
-                <span class="badge bg-secondary">No Tags</span>
-              </ng-container>
-            </div>
-            <p class="card-text fs-6">
-              <strong>Collection:</strong>
-              <a [routerLink]="['/collection-detail', item.collectionId]" routerLinkActive="router-link-active"  class="text-decoration-none">
-                <small> {{ item.collectionName }}</small>
-              </a>
-              <br />
-              <small>Date: {{ item.dateAdded | date : 'dd/MM/yyyy' }}</small>
-            </p>
-          </div>
-          <div class="card-footer  text-center border-0 p-2">
-            <small class="text-muted fs-7">Click to view details</small>
-          </div>
+
+    <ng-container *ngIf="loadingItems; else itemsList">
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading items...</span>
         </div>
       </div>
-    </div>
-    </div>
+    </ng-container>
+
+
+    <ng-template #itemsList>
+      <ng-container *ngIf="items && items.length > 0; else noItems">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+          <div class="col" *ngFor="let item of items">
+            <div class="card h-100" (click)="goToItemDetails(item.id)">
+              <div class="card h-100 border-0 shadow-sm">
+                <img
+                  [src]="item.imgUrl || 'assets/logo.png'"
+                  class="card-img-top rounded-top"
+                  [alt]="item.name"
+                  height="180"
+                  width="100%"
+                  style="object-fit: cover;"
+                  onerror="this.src='/assets/logo.png'"
+                />
+                <div class="card-body p-3">
+                  <h5 class="card-title fs-6">{{ item.name }}</h5>
+                  <div class="mb-2">
+                    <!-- Display up to 3 tags dynamically -->
+                    <ng-container *ngIf="item.tagNames && item.tagNames.length > 0">
+                      <span
+                        *ngFor="let tag of getLimitedTags(item.tagNames)"
+                        class="badge bg-primary me-1"
+                        >{{ tag }}</span
+                      >
+                    </ng-container>
+
+                    <ng-container
+                      *ngIf="!item.tagNames || item.tagNames.length === 0"
+                    >
+                      <span class="badge bg-secondary">No Tags</span>
+                    </ng-container>
+                  </div>
+                  <p class="card-text fs-6">
+                    <strong>Collection:</strong>
+                    <a
+                      [routerLink]="['/collection-detail', item.collectionId]"
+                      routerLinkActive="router-link-active"
+                      class="text-decoration-none"
+                    >
+                      <small>{{ item.collectionName }}</small>
+                    </a>
+                    <br />
+                    <small>Date: {{ item.dateAdded | date : 'dd/MM/yyyy' }}</small>
+                  </p>
+                </div>
+                <div class="card-footer text-center border-0 p-2">
+                  <small class="text-muted fs-7">Click to view details</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #noItems>
+        <div class="alert alert-info" role="alert">
+          No recent items available at the moment.
+        </div>
+      </ng-template>
+    </ng-template>
   </div>
 </section>

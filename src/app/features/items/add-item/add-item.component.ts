@@ -37,6 +37,7 @@ export class AddItemComponent implements OnInit {
   item: Item = {} as Item;
   private itemImageFile: File | null = null;
   public itemImageUrl: SafeUrl | null = null;
+  isClicked: boolean = false;
 
   constructor(
     private router: Router,
@@ -284,11 +285,13 @@ export class AddItemComponent implements OnInit {
   // end of add custom field to server
 
   onSubmit(): void {
+    this.isClicked = true;
     if (this.addItemForm.valid) {
       if (this.itemImageFile) {
         this.cloudinaryService.uploadImage(this.itemImageFile!).then(
           (url: string) => {
             this.addItem(url);
+            
           },
           (error: any) => {
             console.error(error);

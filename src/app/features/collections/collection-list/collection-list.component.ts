@@ -17,11 +17,13 @@ export class CollectionListComponent implements OnInit {
   collections: Collection[] = [];
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
+  isLoading: boolean = false;
 
   constructor(private collectionService: CollectionService,    private router: Router, private jwtDecoder: JwtDecoderService) {}
 
   ngOnInit(): void {
     this.collectionService.getCollections().subscribe((data) => {
+      this.isLoading = true;
       this.collections = data;
     });
     this.initializeUserState();

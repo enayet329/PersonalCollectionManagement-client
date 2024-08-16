@@ -18,6 +18,8 @@ import { JwtDecoderService } from '../../core/services/jwt-decoder.service';
 export class HomeComponent implements OnInit {
   collections: Collection[] = [];
   recentItems: Item[] = [];
+  isLoadingCollections: boolean = true;
+  isLoadingItems: boolean = true;
 
   //user state variables
   isLoggedIn: boolean = false;
@@ -44,8 +46,7 @@ export class HomeComponent implements OnInit {
       this.isLoggedIn = true;
       this.isAdmin = this.jwtDecoder.getIsAdminFromToken(token);
       this.isUser = this.jwtDecoder.getUserIdFromToken(token)!;
-    }
-    else {
+    } else {
       this.isLoggedIn = false;
       this.isAdmin = false;
       this.isUser = '';
@@ -55,6 +56,7 @@ export class HomeComponent implements OnInit {
   private loadCollections(): void {
     this.collectionService.getLatestCollections().subscribe(
       (collections) => {
+        this.isLoadingCollections = false;
         this.collections = collections;
         console.log(this.collections);
       },
@@ -70,6 +72,7 @@ export class HomeComponent implements OnInit {
       (items) => {
         this.recentItems = items;
         console.log('Recent Items:', this.recentItems);
+        this.isLoadingItems = false;
       },
       (error) => {
         console.error('Error fetching items', error);
@@ -91,15 +94,13 @@ export class HomeComponent implements OnInit {
   }
 
   goToCollectionDetails(collectionId: string): void {
-    if(this.isLoggedIn)
-    {
+    if (this.isLoggedIn) {
       this.router.navigate(['/collection-detail', collectionId]);
     }
   }
 
   goToItemDetails(itemId: string): void {
-    if(this.isLoggedIn)
-    {
+    if (this.isLoggedIn) {
       this.router.navigate(['/item-detail', itemId]);
     }
   }

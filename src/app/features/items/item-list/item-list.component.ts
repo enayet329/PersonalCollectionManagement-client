@@ -14,7 +14,11 @@ import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
 })
 export class ItemListComponent implements OnInit {
   items: Item[] = [];
-  isLoggedIn: boolean = false;
+
+  loadingItems: boolean = true;
+
+  //user state variables
+  isLoggedIn: boolean = true;
   isAdmin: boolean = false;
 
   constructor(
@@ -41,6 +45,7 @@ export class ItemListComponent implements OnInit {
     this.itemService.getAllItems().subscribe((response: Item[]) => {
       this.items = response;
       console.log('Items fetched successfully', this.items);
+      this.loadingItems = false;
     });
   }
 
