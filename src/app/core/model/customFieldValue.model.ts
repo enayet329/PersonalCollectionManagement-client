@@ -9,4 +9,5 @@ export interface CustomFieldValueResponse {
     value: string;
     customFieldId: string;
     itemId: string;
+    customFieldName: string;
 }
