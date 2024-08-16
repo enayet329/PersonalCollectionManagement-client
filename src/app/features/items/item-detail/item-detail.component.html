@@ -1,24 +1,25 @@
 <div class="container my-5" *ngIf="isLoggedIn">
   <div class="card shadow-sm hover-shadow-lg transition-all duration-300">
     <div class="row g-0">
-      <div class="col-md-4 position-relative">
-        <img
-          [src]="item.imgUrl || 'assets/logo.png'"
-          [alt]="item.name"
-          class="img-fluid rounded-start h-100 object-cover"
-          onerror="this.src='assets/logo.png'"
-        />
-      </div>
-      <div class="col-md-8">
+      <ng-container *ngIf="item.imgUrl">
+        <div class="col-md-4 position-relative">
+          <img
+            [src]="item.imgUrl"
+            [alt]="item.name"
+            class="img-fluid rounded-start"
+            onerror="this.src='assets/logo.png'"
+          />
+        </div>
+      </ng-container>
+      <div [ngClass]="{'col-md-8': item.imgUrl, 'col-md-12': !item.imgUrl}">
         <div class="card-body p-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="h3 fw-bold">{{ item.name }}</h2>
-            <div *ngIf="isLoggedIn && isAdmin" ngbDropdown>
+            <div *ngIf="isLoggedIn && isAdmin" ngbDropdown class="d-inline-block">
               <button
                 class="btn"
-                ngbDropdownToggle
                 id="dropdownMenuButton"
-                aria-expanded="false"
+                ngbDropdownToggle
               >
                 <svg
                   width="1em"
@@ -32,33 +33,31 @@
                   <circle cx="14" cy="8" r="2"></circle>
                 </svg>
               </button>
-              <ul
-                ngbDropdownMenu
-                aria-labelledby="dropdownMenuButton"
-                class="dropdown-menu dropdown-menu-end shadow-sm"
-              >
-                <li>
-                  <a
-                    class="dropdown-item"
-                    href="javascript:void(0)"
-                    (click)="handleDropdownClick('edit')"
-                    >Edit</a
-                  >
-                </li>
-                <li>
-                  <button
-                    type="button"
-                    class="dropdown-item"
-                    (click)="handleDropdownClick('delete')"
-                  >
-                    Delete
-                  </button>
-                </li>
-              </ul>
+              <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
+                <button ngbDropdownItem (click)="handleDropdownClick('edit')">Edit</button>
+                <button ngbDropdownItem class="text-danger" (click)="handleDropdownClick('delete')">Delete</button>
+              </div>
             </div>
           </div>
           <p class="lead mb-4">{{ item.description }}</p>
+          
+          <!-- Custom Fields section -->
           <div class="mb-4">
+            <h4 class="h5 text-uppercase mb-3">Custom Fields</h4>
+            <div class="row g-3">
+              <ng-container *ngFor="let customField of customFieldValues">
+                <div class="col-md-6">
+                  <div class="custom-field p-3 rounded-3 shadow-sm">
+                    <h5 class="h6 text-primary mb-2">{{ customField.customFieldName }}</h5>
+                    <p class="mb-0 fw-bold">{{ customField.value }}</p>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <!-- Tags section -->
             <h4 class="h6 text-uppercase mb-2">Tags</h4>
             <div class="d-flex flex-wrap gap-2">
               <span
@@ -69,12 +68,10 @@
               </span>
             </div>
           </div>
+          
           <p class="mb-2">
             <strong>Collection:</strong>
-            <a
-              (click)="goToCollection(item.collectionId)"
-              class="text-decoration-none"
-            >
+            <a (click)="goToCollection(item.collectionId)" class="text-decoration-none">
               {{ item.collectionName }}
             </a>
           </p>
@@ -136,10 +133,7 @@
     <div class="col-md-8">
       <h3 class="h4">Comments</h3>
       <ng-container *ngIf="comments.length > 0; else noComments">
-        <div
-          *ngFor="let comment of comments"
-          class="card shadow-sm mb-4 transition-all duration-300"
-        >
+        <div *ngFor="let comment of comments" class="card shadow-sm mb-4">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <div class="d-flex align-items-center">
@@ -151,19 +145,14 @@
                   onerror="this.src='assets/user.svg'"
                 />
                 <div>
-                  <h5 class="card-title fw-bold mb-0">
-                    {{ comment.userName }}
-                  </h5>
+                  <h5 class="card-title fw-bold mb-0">{{ comment.userName }}</h5>
                   <small class="text-muted">{{
                     comment.createdAt | date : "medium"
                   }}</small>
                 </div>
               </div>
-              <div
-                *ngIf="isLoggedIn && (isAdmin || comment.userId === userId)"
-                ngbDropdown
-              >
-                <button class="btn btn-link btn-sm" ngbDropdownToggle>
+              <div *ngIf="isLoggedIn && (isAdmin || comment.userId === userId)" ngbDropdown class="d-inline-block">
+                <button class="btn btn-link btn-sm" id="commentDropdown" ngbDropdownToggle>
                   <svg
                     width="1em"
                     height="1em"
@@ -176,28 +165,10 @@
                     <circle cx="14" cy="8" r="2"></circle>
                   </svg>
                 </button>
-                <ul
-                  ngbDropdownMenu
-                  class="dropdown-menu dropdown-menu-end shadow-sm"
-                >
-                  <li>
-                    <a
-                      class="dropdown-item"
-                      href="javascript:void(0)"
-                      (click)="handleCommentDropdownClick('edit', comment.id)"
-                      >Edit</a
-                    >
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      class="dropdown-item"
-                      (click)="handleCommentDropdownClick('delete', comment.id)"
-                    >
-                      Delete
-                    </button>
-                  </li>
-                </ul>
+                <div ngbDropdownMenu aria-labelledby="commentDropdown">
+                  <button ngbDropdownItem (click)="editComment(comment.id)">Edit</button>
+                  <button ngbDropdownItem class="text-danger" (click)="deleteComment(comment.id)">Delete</button>
+                </div>
               </div>
             </div>
             <p class="card-text">{{ comment.content }}</p>

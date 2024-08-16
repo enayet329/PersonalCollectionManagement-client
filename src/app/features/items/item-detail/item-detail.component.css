@@ -23,4 +23,38 @@
     color: #adb5bd; 
     text-decoration: none;
   }
-  
+
+.col-md-4 {
+  position: relative;
+  overflow: hidden;
+}
+
+
+.img-fluid {
+  max-width: 100%;
+  height: auto; 
+}
+
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+
+.custom-field {
+  flex-shrink: 0;
+  margin-bottom: 1rem;
+}
+
+.custom-field h4 {
+  margin-bottom: 0.5rem;
+}
+
+
+img.rounded-circle {
+  width: 48px;
+  height: 80px;
+  object-fit: cover;
+}
