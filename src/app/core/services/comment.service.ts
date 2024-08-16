@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { CommentConstants } from '../constants/constants';
 import { Observable } from 'rxjs';
 import { Comment, AddComment, CommentResponse } from '../model/comment.model';
+import { ResponseModel } from '../model/response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,5 +22,10 @@ export class CommentService {
   createComment(comment: AddComment): Observable<CommentResponse> {
     const url = this.apiUrl.ADD_COMMENT;
     return this.httpClient.post<CommentResponse>(url, comment);
+  }
+
+  deleteComment(commentId: string): Observable<ResponseModel> {
+    const url = `${this.apiUrl.DELETE_COMMENT}?commentId=${commentId}`
+    return this.httpClient.delete<ResponseModel>(url);
   }
 }

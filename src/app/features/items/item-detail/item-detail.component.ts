@@ -10,11 +10,12 @@ import { ItemService } from '../../../core/services/item.service';
 import { CommentService } from '../../../core/services/comment.service';
 import { LikeService } from '../../../core/services/like.service';
 import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
-import { LikeResponseModel } from '../../../core/model/response.model';
+import { LikeResponseModel, ResponseModel } from '../../../core/model/response.model';
 import {  AddTagResponse } from '../../../core/model/tag.model';
 import { TagService } from '../../../core/services/tag.service';
 import { CustomFieldValueService } from '../../../core/services/custom-field-value.service';
 import { CustomFieldValue, CustomFieldValueResponse } from '../../../core/model/customFieldValue.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-item-detail',
@@ -215,7 +216,7 @@ export class ItemDetailComponent implements OnInit {
     this.customFieldValueService.getCustomFieldValueByItemId(this.itemId).subscribe(
       (response: CustomFieldValueResponse[]) => {
         this.customFieldValues = response;
-        console.log('custom field values',response);
+        console.log("custom Field values loaded");
       }
     )
   }
@@ -243,7 +244,17 @@ export class ItemDetailComponent implements OnInit {
 
   deleteItem(): void {
     if (confirm('Are you sure you want to delete this item?')) {
-      
+      this.itemService.deleteItemById(this.itemId).subscribe(
+        (response: ResponseModel) => {
+          if (response.success) {
+            this.toaster.success('Item deleted successfully', 'Success');
+            this.router.navigate(['/collection-detail', this.item.collectionId]);
+          } else {
+            this.toaster.error('Failed to delete item', 'Error');
+            console.error('Failed to delete item', response.message);
+          }
+        }
+      )
     }
   }
 
@@ -253,8 +264,15 @@ export class ItemDetailComponent implements OnInit {
   }
 
   deleteComment(commentId: string): void {
-    if (confirm('Are you sure you want to delete this comment?')) {      
-
+   
+      this.commentService.deleteComment(commentId).subscribe(
+        (response: ResponseModel) => {
+          if (response.success) {
+            this.toaster.success('Comment deleted successfully', 'Success');
+            this.getComments();
+          }
+        }
+      )
     }
   }
 
