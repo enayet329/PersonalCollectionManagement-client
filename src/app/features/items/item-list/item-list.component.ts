@@ -25,6 +25,7 @@ export class ItemListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllItems();
+    this.initializeUserState();
   }
 
 
