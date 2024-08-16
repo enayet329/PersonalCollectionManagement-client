@@ -8,6 +8,7 @@ import { ItemDetailComponent } from './features/items/item-detail/item-detail.co
 import { ProfileViewComponent } from './features/user-profile/profile-view/profile-view.component';
 import { AddCollectionComponent } from './features/collections/add-collection/add-collection.component';
 import { AddItemComponent } from './features/items/add-item/add-item.component';
+import { ItemListComponent } from './features/items/item-list/item-list.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -17,6 +18,7 @@ export const routes: Routes = [
   { path: 'collection-detail/:id', component: CollectionDetailComponent },
   { path: 'add-collection/:id', component: AddCollectionComponent },
   { path: 'item-detail/:id', component: ItemDetailComponent },
+  { path: 'item-list', component: ItemListComponent},
   { path: 'add-item/:id', component: AddItemComponent },
   { path: 'profile-view/:id', component: ProfileViewComponent },
 ];
