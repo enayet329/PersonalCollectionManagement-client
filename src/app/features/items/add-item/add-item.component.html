@@ -107,7 +107,7 @@
                 id="tags"
                 class="form-select"
                 (change)="toggleTagSelection($any($event.target).value)"
-                [value]="selectedTags[0]?.id"
+                [value]="selectedTags.length > 0 ? selectedTags[0].id : null"
               >
                 <option value="">Recommended Tags</option>
                 <option *ngFor="let tag of tags" [value]="tag.id">{{ tag.name }}</option>
