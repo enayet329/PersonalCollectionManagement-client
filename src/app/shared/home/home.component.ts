@@ -78,6 +78,10 @@ export class HomeComponent implements OnInit {
     );
   }
 
+  showMoreItems(): void {
+    this.router.navigate(['/item-list']);
+  }
+
   goToUserProfile(userId: string): void {
     this.router.navigate(['/profile-view', userId]);
   }

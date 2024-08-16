@@ -70,7 +70,10 @@
 
   <!-- Recently Added Items Section -->
   <section>
-    <h2 class="display-6 fw-bold mb-4">Recently Added Items</h2>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <h2 class="display-6 fw-bold mb-4 mb-md-0">Recently Added Items</h2>
+      <button class="btn btn-outline-primary ms-auto" (click)="showMoreItems()">Show More</button>
+    </div>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
       <div class="col" *ngFor="let item of recentItems">
         <div class="card h-100" (click)="goToItemDetails(item.id)">
@@ -115,3 +118,6 @@
     </div>
   </section>
 </main>
+
+
+
