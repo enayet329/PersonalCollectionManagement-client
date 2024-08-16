@@ -250,7 +250,7 @@ export class AddItemComponent implements OnInit {
       .addCustomFieldValue(customFieldData)
       .subscribe(
         (response: any) => {
-          if (response.length > 0) {
+          if (response) {
             console.log('Custom field added successfully');
           } else {
             console.log('Custom field not added');
