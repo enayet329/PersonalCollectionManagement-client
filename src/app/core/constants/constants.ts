@@ -1,4 +1,5 @@
-const apiUrl = 'https://localhost:7138/api/v1/';
+//const apiUrl = 'https://localhost:7138/api/v1/';
+const apiUrl = 'https://collectionapp.somee.com/';
 
 // Collection Constants
 export const CollectionConstants = {
