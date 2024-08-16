@@ -94,14 +94,10 @@ export class HomeComponent implements OnInit {
   }
 
   goToCollectionDetails(collectionId: string): void {
-    if (this.isLoggedIn) {
       this.router.navigate(['/collection-detail', collectionId]);
-    }
   }
 
   goToItemDetails(itemId: string): void {
-    if (this.isLoggedIn) {
       this.router.navigate(['/item-detail', itemId]);
-    }
   }
 }

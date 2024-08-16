@@ -39,15 +39,9 @@ export class CollectionListComponent implements OnInit {
   }
 
   goToUserProfile(userId: string): void {
-    if(this.isLoggedIn)
-    {
       this.router.navigate(['/profile-view', userId]);
-    }
   }
   goToCollectionDetails(collectionId: string) {
-    if(this.isLoggedIn)
-    {
       this.router.navigate(['/collection-detail', collectionId]);
-    }
   }
 }

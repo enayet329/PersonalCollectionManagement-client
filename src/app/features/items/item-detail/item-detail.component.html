@@ -1,219 +1,173 @@
-<div class="container my-5" *ngIf="!isItemLoading; else loadingTemplate">
-  <div class="card shadow-sm hover-shadow-lg transition-all duration-300">
-    <div class="row g-0">
-      <ng-container *ngIf="item.imgUrl">
-        <div class="col-md-4 position-relative">
-          <img
-            [src]="item.imgUrl"
-            [alt]="item.name"
-            class="img-fluid rounded-start"
-            onerror="this.src='assets/logo.png'"
-          />
-        </div>
-      </ng-container>
-      <div [ngClass]="{'col-md-8': item.imgUrl, 'col-md-12': !item.imgUrl}">
-        <div class="card-body p-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="h3 fw-bold">{{ item.name }}</h2>
-            <div *ngIf="isLoggedIn && isAdmin" ngbDropdown class="d-inline-block">
-              <button
-                class="btn"
-                id="dropdownMenuButton"
-                ngbDropdownToggle
-              >
-                <svg
-                  width="1em"
-                  height="1em"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle cx="2" cy="8" r="2"></circle>
-                  <circle cx="8" cy="8" r="2"></circle>
-                  <circle cx="14" cy="8" r="2"></circle>
-                </svg>
-              </button>
-              <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
-                <button ngbDropdownItem (click)="handleDropdownClick('edit')">Edit</button>
-                <button ngbDropdownItem class="text-danger" (click)="handleDropdownClick('delete')">Delete</button>
+<div class="container my-5" *ngIf="isLoggedIn; else notLoggedInTemplate">
+  <ng-container *ngIf="!isItemLoading; else loadingTemplate">
+    <div class="card shadow-sm hover-shadow-lg transition-all duration-300">
+      <div class="row g-0">
+        <ng-container *ngIf="item.imgUrl">
+          <div class="col-md-4 position-relative">
+            <img
+              [src]="item.imgUrl"
+              [alt]="item.name"
+              class="img-fluid rounded-start"
+              onerror="this.src='assets/logo.png'"
+            />
+          </div>
+        </ng-container>
+        <div [ngClass]="{'col-md-8': item.imgUrl, 'col-md-12': !item.imgUrl}">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h2 class="h3 fw-bold">{{ item.name }}</h2>
+              <div *ngIf="isAdmin" ngbDropdown class="d-inline-block">
+                <button class="btn" id="dropdownMenuButton" ngbDropdownToggle>
+                  <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="2" cy="8" r="2"></circle>
+                    <circle cx="8" cy="8" r="2"></circle>
+                    <circle cx="14" cy="8" r="2"></circle>
+                  </svg>
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownMenuButton">
+                  <button ngbDropdownItem (click)="handleDropdownClick('edit')">Edit</button>
+                  <button ngbDropdownItem class="text-danger" (click)="handleDropdownClick('delete')">Delete</button>
+                </div>
               </div>
             </div>
-          </div>
-          <p class="lead mb-4">{{ item.description }}</p>
-          
-          <!-- Custom Fields section -->
-          <div class="mb-4">
-            <h4 class="h5 text-uppercase mb-3">Custom Fields</h4>
-            <div class="row g-3">
-              <ng-container *ngFor="let customField of customFieldValues">
-                <div class="col-md-6">
-                  <div class="custom-field p-3 rounded-3 shadow-sm">
-                    <h5 class="h6 text-primary mb-2">{{ customField.customFieldName }}</h5>
-                    <p class="mb-0 fw-bold">{{ customField.value }}</p>
+            <p class="lead mb-4">{{ item.description }}</p>
+            
+            <!-- Custom Fields section -->
+            <div class="mb-4">
+              <h4 class="h5 text-uppercase mb-3">Custom Fields</h4>
+              <div class="row g-3">
+                <ng-container *ngFor="let customField of customFieldValues">
+                  <div class="col-md-6">
+                    <div class="custom-field p-3 rounded-3 shadow-sm">
+                      <h5 class="h6 text-primary mb-2">{{ customField.customFieldName }}</h5>
+                      <p class="mb-0 fw-bold">{{ customField.value }}</p>
+                    </div>
                   </div>
-                </div>
-              </ng-container>
+                </ng-container>
+              </div>
             </div>
-          </div>
-          
-          <div class="mb-4">
-            <!-- Tags section -->
-            <h4 class="h6 text-uppercase mb-2">Tags</h4>
-            <div class="d-flex flex-wrap gap-2">
-              <span
-                class="badge text-muted border border-secondary rounded-pill px-3 py-2"
-                *ngFor="let tag of tags"
-              >
-                {{ tag.name }}
-              </span>
+            
+            <div class="mb-4">
+              <!-- Tags section -->
+              <h4 class="h6 text-uppercase mb-2">Tags</h4>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="badge text-muted border border-secondary rounded-pill px-3 py-2" *ngFor="let tag of tags">
+                  {{ tag.name }}
+                </span>
+              </div>
             </div>
-          </div>
-          
-          <p class="mb-2">
-            <strong>Collection:</strong>
-            <a (click)="goToCollection(item.collectionId)" class="text-decoration-none">
-              {{ item.collectionName }}
-            </a>
-          </p>
-          <p class="text-muted small mb-4">
-            Added on {{ item.dateAdded | date : "longDate" }}
-          </p>
-          <div class="d-flex align-items-center">
-            <button
-              class="btn"
-              [ngClass]="{
-                'btn-outline-secondary': !hasLiked,
-                'btn-danger': hasLiked
-              }"
-              *ngIf="isLoggedIn"
-              (click)="toggleLike()"
-            >
-              <svg
-                width="1em"
-                height="1em"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
+            
+            <p class="mb-2">
+              <strong>Collection:</strong>
+              <a (click)="goToCollection(item.collectionId)" class="text-decoration-none">
+                {{ item.collectionName }}
+              </a>
+            </p>
+            <p class="text-muted small mb-4">
+              Added on {{ item.dateAdded | date : "longDate" }}
+            </p>
+            <div class="d-flex align-items-center">
+              <button
+                class="btn"
+                [ngClass]="{
+                  'btn-outline-secondary': !hasLiked,
+                  'btn-danger': hasLiked
+                }"
+                (click)="toggleLike()"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
-                />
-              </svg>
-              <span>{{ hasLiked ? "Liked" : "Like" }}</span>
-            </button>
-            <button
-              class="btn btn-outline-secondary"
-              *ngIf="!isLoggedIn"
-              disabled
-            >
-              <svg
-                width="1em"
-                height="1em"
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"
-                />
-              </svg>
-              <span>Like</span>
-            </button>
-            <span class="ms-2 fw-bold">{{ like.likeCount }}</span>
+                <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                </svg>
+                <span>{{ hasLiked ? "Liked" : "Like" }}</span>
+              </button>
+              <span class="ms-2 fw-bold">{{ like.likeCount }}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="mt-5 row">
-    <!-- Comments section (left side) -->
-    <div class="col-md-8">
-      <h3 class="h4">Comments</h3>
-      <ng-container *ngIf="!isLoadingComments; else loadingComments">
-        <ng-container *ngIf="comments.length > 0; else noComments">
-          <div *ngFor="let comment of comments" class="card shadow-sm mb-4">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="d-flex align-items-center">
-                  <img
-                    [src]="comment.userProfileImgeUrl || 'assets/user.svg'"
-                    [alt]="comment.userName"
-                    class="rounded-circle me-3"
-                    style="width: 48px; height: 48px; object-fit: cover"
-                    onerror="this.src='assets/user.svg'"
-                  />
-                  <div>
-                    <h5 class="card-title fw-bold mb-0">{{ comment.userName }}</h5>
-                    <small class="text-muted">{{ comment.createdAt | date : "medium" }}</small>
+    <div class="mt-5 row">
+      <!-- Comments section (left side) -->
+      <div class="col-md-8">
+        <h3 class="h4">Comments</h3>
+        <ng-container *ngIf="!isLoadingComments; else loadingComments">
+          <ng-container *ngIf="comments.length > 0; else noComments">
+            <div *ngFor="let comment of comments" class="card shadow-sm mb-4">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <div class="d-flex align-items-center">
+                    <img
+                      [src]="comment.userProfileImgeUrl || 'assets/user.svg'"
+                      [alt]="comment.userName"
+                      class="rounded-circle me-3"
+                      style="width: 48px; height: 48px; object-fit: cover"
+                      onerror="this.src='assets/user.svg'"
+                    />
+                    <div>
+                      <h5 class="card-title fw-bold mb-0">{{ comment.userName }}</h5>
+                      <small class="text-muted">{{ comment.createdAt | date : "medium" }}</small>
+                    </div>
+                  </div>
+                  <div *ngIf="isLoggedIn && (isAdmin || comment.userId === userId)" ngbDropdown class="d-inline-block">
+                    <button class="btn btn-link btn-sm" id="commentDropdown" ngbDropdownToggle>
+                      <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="2" cy="8" r="2"></circle>
+                        <circle cx="8" cy="8" r="2"></circle>
+                        <circle cx="14" cy="8" r="2"></circle>
+                      </svg>
+                    </button>
+                    <div ngbDropdownMenu aria-labelledby="commentDropdown">
+                      <button ngbDropdownItem (click)="editComment(comment.id)">Edit</button>
+                      <button ngbDropdownItem class="text-danger" (click)="deleteComment(comment.id)">Delete</button>
+                    </div>
                   </div>
                 </div>
-                <div *ngIf="isLoggedIn && (isAdmin || comment.userId === userId)" ngbDropdown class="d-inline-block">
-                  <button class="btn btn-link btn-sm" id="commentDropdown" ngbDropdownToggle>
-                    <svg
-                      width="1em"
-                      height="1em"
-                      viewBox="0 0 16 16"
-                      fill="currentColor"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <circle cx="2" cy="8" r="2"></circle>
-                      <circle cx="8" cy="8" r="2"></circle>
-                      <circle cx="14" cy="8" r="2"></circle>
-                    </svg>
-                  </button>
-                  <div ngbDropdownMenu aria-labelledby="commentDropdown">
-                    <button ngbDropdownItem (click)="editComment(comment.id)">Edit</button>
-                    <button ngbDropdownItem class="text-danger" (click)="deleteComment(comment.id)">Delete</button>
-                  </div>
-                </div>
+                <p class="card-text">{{ comment.content }}</p>
               </div>
-              <p class="card-text">{{ comment.content }}</p>
+            </div>
+          </ng-container>
+          <ng-template #noComments>
+            <div class="alert alert-light border mb-4">No comments yet.</div>
+          </ng-template>
+        </ng-container>
+
+        <ng-template #loadingComments>
+          <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
             </div>
           </div>
-        </ng-container>
-        <ng-template #noComments>
-          <div class="alert alert-light border mb-4">No comments yet.</div>
         </ng-template>
-      </ng-container>
-
-      <ng-template #loadingComments>
-        <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+      </div>
+      <!-- Comment box (right side) -->
+      <div class="col-md-4">
+        <ng-container *ngIf="isLoggedIn; else loginToComment">
+          <h4 class="h5 mb-3">Add a comment</h4>
+          <form (ngSubmit)="addComment()" class="mb-5">
+            <div class="mb-3">
+              <textarea
+                [(ngModel)]="newComment.content"
+                name="comment"
+                id="comment"
+                rows="5"
+                class="form-control"
+                placeholder="Write a comment..."
+                required
+                (keydown.enter)="onEnter($event)"
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </ng-container>
+        <ng-template #loginToComment>
+          <div class="alert alert-light border mb-4">
+            You must be logged in to comment.
           </div>
-        </div>
-      </ng-template>
+        </ng-template>
+      </div>
     </div>
-    <!-- Comment box (right side) -->
-    <div class="col-md-4">
-      <ng-container *ngIf="isLoggedIn; else loginToComment">
-        <h4 class="h5 mb-3">Add a comment</h4>
-        <form (ngSubmit)="addComment()" class="mb-5">
-          <div class="mb-3">
-            <textarea
-              [(ngModel)]="newComment.content"
-              name="comment"
-              id="comment"
-              rows="5"
-              class="form-control"
-              placeholder="Write a comment..."
-              required
-              (keydown.enter)="onEnter($event)"
-            ></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-      </ng-container>
-      <ng-template #loginToComment>
-        <div class="alert alert-light border mb-4">
-          You must be logged in to comment.
-        </div>
-      </ng-template>
-    </div>
-  </div>
+  </ng-container>
 </div>
 
 <!-- Loading Template -->
@@ -221,6 +175,20 @@
   <div class="d-flex justify-content-center align-items-center" style="height: 300px;">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Not Logged In Template -->
+<ng-template #notLoggedInTemplate>
+  <div class="d-flex justify-content-center align-items-center" style="height: 60vh; background: inherit;">
+    <div class="alert alert-light border-0 p-5 shadow-lg text-center rounded" style="max-width: 600px; width: 90%;">
+      <h1 class="display-4 mb-3 text-primary font-weight-bold">
+        <i class="bi bi-exclamation-circle"></i> Access Denied
+      </h1>
+      <p class="lead mb-4">
+        You need to be logged in to access this page. Please log in to continue.
+      </p>
     </div>
   </div>
 </ng-template>

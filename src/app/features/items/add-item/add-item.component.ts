@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ItemService } from '../../../core/services/item.service';
 import { CustomFieldService } from '../../../core/services/custom-field.service';
 import { CustomFieldResponse } from '../../../core/model/customField.model';
@@ -23,7 +23,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-add-item',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,RouterLink],
   templateUrl: './add-item.component.html',
   styleUrls: ['./add-item.component.css'],
 })

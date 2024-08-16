@@ -114,10 +114,17 @@
     </div>
   </div>
 </div>
-
+<!-- Not Logged In Template -->
 <ng-template #loginPrompt>
-  <div class="alert alert-warning" role="alert">
-    Please log in to view collection details.
+  <div class="d-flex justify-content-center align-items-center" style="height: 60vh; background: inherit;">
+    <div class="alert alert-light border-0 p-5 shadow-lg text-center rounded" style="max-width: 600px; width: 90%;">
+      <h1 class="display-4 mb-3 text-primary font-weight-bold">
+        <i class="bi bi-exclamation-circle"></i> Access Denied
+      </h1>
+      <p class="lead mb-4">
+        You need to be logged in to access this page. Please log in to continue.
+      </p>
+    </div>
   </div>
 </ng-template>
 
