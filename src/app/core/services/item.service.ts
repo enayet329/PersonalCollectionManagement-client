@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ItemConstants } from '../constants/constants';
 import { AddItem, Item } from '../model/item.model';
+import { ResponseModel } from '../model/response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,12 @@ export class ItemService {
   }
   addItem(item: AddItem): Observable<AddItem> {
     return this.httpClient.post<AddItem>(this.apiUrl.ADD_ITEM, item);
-  }  
+  } 
+  
+  deleteItemById(itemId: string): Observable<ResponseModel> {
+
+    const url = `${this.apiUrl.DELETE_ITEM}?id=${itemId}`;
+    return this.httpClient.delete<ResponseModel>(url);
+  }
   
 }
