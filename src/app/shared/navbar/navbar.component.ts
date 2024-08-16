@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouterLinkActive, Router } from '@angular/router';
 import { NgbCollapseModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -64,8 +64,16 @@ export class NavbarComponent implements OnInit {
     private userService: UserService,
     private sanitizer: DomSanitizer,
     private toastr: ToastrService,
-    private jwtDecoder: JwtDecoderService
+    private jwtDecoder: JwtDecoderService,
+    private elementRef: ElementRef
   ) {}
+
+  @HostListener('document:click', ['$event'])
+  clickout(event: MouseEvent) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.isProfileDropdownOpen = false;
+    }
+  }
 
   ngOnInit() {
     this.initForms();
@@ -142,16 +150,14 @@ export class NavbarComponent implements OnInit {
     localStorage.setItem('prefferedLanguage', this.currentLanguage);
   }
 
-  openProfil(userId: string): void{
+  openProfil(userId: string): void {
     this.router.navigate(['/profile-view', userId]);
-  }
-
-  openProfileDropdown() {
-    this.isProfileDropdownOpen = true;
-  }
-
-  closeProfileDropdown() {
     this.isProfileDropdownOpen = false;
+  }
+
+  toggleOpenProfileDropdown(event: MouseEvent) {
+    event.stopPropagation();
+    this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
   }
 
   logout() {
@@ -160,7 +166,7 @@ export class NavbarComponent implements OnInit {
       this.toastr.success('Logout Successful', 'See you again!');
       localStorage.removeItem('token');
       localStorage.removeItem('prefferedLanguage');
-      localStorage.removeItem('theme');
+      this.router.navigate(['/']);
 
       window.location.reload();
     } else {
@@ -178,7 +184,7 @@ export class NavbarComponent implements OnInit {
 
   initForms() {
     this.signupForm = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', [Validators.required, Validators.minLength(1)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(4)]],
       profileImageUrl: ['',Validators.pattern(/\.(jpg|jpeg|png)$/)],

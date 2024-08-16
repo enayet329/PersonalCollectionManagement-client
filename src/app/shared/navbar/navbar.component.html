@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light border-bottom">
+<nav class="navbar navbar-expand-lg navbar-light border-bottom ">
   <div class="container-fluid">
     <!-- Brand Section -->
     <a class="navbar-brand d-flex align-items-center" routerLink="/">
@@ -35,8 +35,8 @@
       <!-- Left Navigation Links -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a
-            class="nav-link"
+          
+          <a  class="nav-link"
             routerLink="/"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }"
@@ -45,8 +45,8 @@
           </a>
         </li>
         <li class="nav-item">
-          <a
-            class="nav-link"
+          
+          <a  class="nav-link"
             routerLink="/collection-list"
             routerLinkActive="active"
           >
@@ -61,125 +61,144 @@
       </ul>
 
       <!-- Right Navigation Section -->
-      <div class="d-flex align-items-center">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
         <!-- Search Section -->
-        <div class="search-container me-2">
-          <input
-            type="text"
-            [(ngModel)]="searchQuery"
-            (keydown.enter)="search()"
-            class="search-input"
-            placeholder="Search..."
-            aria-label="Search"
-          />
-          <button
-            (click)="search()"
-            class="search-btn"
-            aria-label="Search button"
-          >
-            <i class="fas fa-search"></i>
-          </button>
-        </div>
+        <li class="nav-item me-2 mb-2 mb-lg-0">
+          <div class="search-container">
+            <input
+              type="text"
+              [(ngModel)]="searchQuery"
+              (keydown.enter)="search()"
+              class="search-input"
+              placeholder="Search..."
+              aria-label="Search"
+            />
+            <button
+              (click)="search()"
+              class="search-btn"
+              aria-label="Search button"
+            >
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </li>
 
         <!-- Dark Mode Toggle -->
-        <button
-          (click)="toggleDarkMode()"
-          class="btn btn-icon ms-2"
-          type="button"
-          aria-label="Toggle dark mode"
-        >
-          <i
-            [ngClass]="
-              darkModeService.darkModeSignal() === 'dark'
-                ? 'fas fa-moon'
-                : 'fas fa-sun'
-            "
-          ></i>
-        </button>
+        <li class="nav-item me-2 mb-2 mb-lg-0">
+          <button
+            (click)="toggleDarkMode()"
+            class="btn btn-icon"
+            type="button"
+            aria-label="Toggle dark mode"
+          >
+            <i
+              [ngClass]="
+                darkModeService.darkModeSignal() === 'dark'
+                  ? 'fas fa-moon'
+                  : 'fas fa-sun'
+              "
+            ></i>
+          </button>
+        </li>
 
         <!-- Language Toggle -->
-        <button
-          (click)="toggleLanguage()"
-          class="btn btn-icon ms-2"
-          type="button"
-          aria-label="Toggle language"
-        >
-          <img
-            *ngIf="currentLanguage === 'en'"
-            src="assets/english.svg"
-            alt="English icon"
-            width="20"
-            height="20"
-          />
-          <img
-            *ngIf="currentLanguage === 'bn'"
-            src="assets/bangladesh.svg"
-            alt="Bangladesh icon"
-            width="20"
-            height="20"
-          />
-        </button>
+        <li class="nav-item me-2 mb-2 mb-lg-0">
+          <button
+            (click)="toggleLanguage()"
+            class="btn btn-icon"
+            type="button"
+            aria-label="Toggle language"
+          >
+            <img
+              *ngIf="currentLanguage === 'en'"
+              src="assets/english.svg"
+              alt="English icon"
+              width="20"
+              height="20"
+            />
+            <img
+              *ngIf="currentLanguage === 'bn'"
+              src="assets/bangladesh.svg"
+              alt="Bangladesh icon"
+              width="20"
+              height="20"
+            />
+          </button>
+        </li>
 
         <!-- Profile Dropdown -->
-        <div
-          *ngIf="userIsLoggedIn"
-          class="dropdown ms-2"
-          (mouseover)="openProfileDropdown()"
-          (mouseleave)="closeProfileDropdown()"
-        >
-          <button
-            class="btn btn-icon"
-            aria-label="Profile options"
-          >
-            <i class="fas fa-user-circle fa-lg"></i>
-          </button>
-          <div
-            class="dropdown-menu"
-            [ngClass]="{ 'show': isProfileDropdownOpen }"
-          >
-            <a class="dropdown-item text-primary" (click)="openProfil(userId!)">
-              Profile
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item text-danger" (click)="logout()">Logout</a>
+        <li class="nav-item mb-2 mb-lg-0" *ngIf="userIsLoggedIn">
+          <div class="dropdown">
+            <button
+              class="btn btn-icon"
+              aria-label="Profile options"
+              (click)="toggleOpenProfileDropdown($event)"
+            >
+              <i class="fas fa-user-circle fa-lg"></i>
+            </button>
+            <div
+              class="dropdown-menu"
+              [ngClass]="{ 'show': isProfileDropdownOpen }"
+            >
+              <a class="dropdown-item text-primary" (click)="openProfil(userId!)">
+                Profile
+              </a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item text-danger" (click)="logout()">Logout</a>
+            </div>
           </div>
-        </div>
+        </li>
 
         <!-- Sign In/Sign Up Buttons -->
-        <div *ngIf="!userIsLoggedIn" class="d-flex align-items-center ms-2">
+        <li class="nav-item d-flex" *ngIf="!userIsLoggedIn">
           <button
-            class="btn btn-outline-primary me-2"
+            class="btn btn-outline-primary btn-sm me-2"
             (click)="modalService.open(signinModal)"
           >
             Sign In
           </button>
           <button
-            class="btn btn-primary"
+            class="btn btn-primary btn-sm"
             (click)="modalService.open(signupModal)"
           >
             Sign Up
           </button>
-        </div>
-      </div>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>
 
-<!-- Sign In Modal -->
+
 <!-- Sign In Modal -->
 <ng-template #signinModal let-modal>
-  <div class="modal-body">
+  <div 
+    [attr.data-bs-theme]="darkModeService.darkModeSignal()" 
+    [ngClass]="{
+      'bg-dark text-light': darkModeService.darkModeSignal() === 'dark',
+      'bg-body-tertiary text-body-secondary': darkModeService.darkModeSignal() !== 'dark'
+    }" 
+    class="modal-content rounded-3 shadow-lg p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="modal-title">Sign In</h5>
+      <button
+        type="button"
+        class="btn-close btn-outline-primary"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
     <form [formGroup]="signinForm" (ngSubmit)="onSigninSubmit()">
       <div class="mb-3">
         <label for="signinEmail" class="form-label">Email</label>
         <input
           type="email"
-          class="form-control"
+          class="form-control rounded-pill"
           id="signinEmail"
           formControlName="email"
           required
         />
-        <div *ngIf="signinForm.get('email')?.invalid && signinForm.get('email')?.touched" class="text-danger">
+        <div *ngIf="signinForm.get('email')?.invalid && signinForm.get('email')?.touched" class="text-danger mt-1">
           <small *ngIf="signinForm.get('email')?.errors?.['required']">Email is required.</small>
           <small *ngIf="signinForm.get('email')?.errors?.['email']">Enter a valid email.</small>
         </div>
@@ -189,100 +208,127 @@
         <label for="signinPassword" class="form-label">Password</label>
         <input
           type="password"
-          class="form-control"
+          class="form-control rounded-pill"
           id="signinPassword"
           formControlName="password"
           required
         />
-        <div *ngIf="signinForm.get('password')?.invalid && signinForm.get('password')?.touched" class="text-danger">
+        <div *ngIf="signinForm.get('password')?.invalid && signinForm.get('password')?.touched" class="text-danger mt-1">
           <small *ngIf="signinForm.get('password')?.errors?.['required']">Password is required.</small>
           <small *ngIf="signinForm.get('password')?.errors?.['minlength']">Password must be at least 4 characters long.</small>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary" [disabled]="signinForm.invalid">Sign In</button>
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="signinForm.invalid">Sign In</button>
+      </div>
     </form>
   </div>
 </ng-template>
 
-
-
 <!-- Sign Up Modal -->
 <ng-template #signupModal let-modal>
-  <div class="modal-body">
-    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-      <div class="form-group mb-3">
-        <label for="name">Name</label>
-        <input
-          type="text"
-          class="form-control"
-          id="name"
-          formControlName="name"
-          required
-        />
-        <div *ngIf="signupForm.get('name')?.invalid && signupForm.get('name')?.touched" class="text-danger">
-          <small *ngIf="signupForm.get('name')?.errors?.['required']">Name is required.</small>
-          <small *ngIf="signupForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters long.</small>
-        </div>
-      </div>
-
-      <div class="form-group mb-3">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          class="form-control"
-          id="email"
-          formControlName="email"
-          required
-        />
-        <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="text-danger">
-          <small *ngIf="signupForm.get('email')?.errors?.['required']">Email is required.</small>
-          <small *ngIf="signupForm.get('email')?.errors?.['email']">Enter a valid email.</small>
-        </div>
-      </div>
-
-      <div class="form-group mb-3">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          class="form-control"
-          id="password"
-          formControlName="password"
-          required
-        />
-        <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="text-danger">
-          <small *ngIf="signupForm.get('password')?.errors?.['required']">Password is required.</small>
-          <small *ngIf="signupForm.get('password')?.errors?.['minlength']">Password must be at least 4 characters long.</small>
-        </div>
-      </div>
-
-      <div class="form-group mb-3">
-        <label for="profile-image">Profile Image</label>
-        <div
-          class="profile-image-container border p-2 text-center"
-          (dragover)="onDragOver($event)"
-          (drop)="onDrop($event)"
-        >
-          <img
-            [src]="profileImageUrl"
-            alt="Profile Image"
-            class="img-fluid rounded"
-            *ngIf="profileImageUrl"
+  <div 
+    [attr.data-bs-theme]="darkModeService.darkModeSignal()" 
+    [ngClass]="{
+      'bg-dark text-light': darkModeService.darkModeSignal() === 'dark',
+      'bg-body-tertiary text-body-secondary': darkModeService.darkModeSignal() !== 'dark'
+    }" 
+    class="modal-content rounded-3 shadow-lg p-4">
+    <div class="modal-header border-bottom-0">
+      <h5 class="modal-title">Sign Up</h5>
+      <button
+        type="button"
+        class="btn-close btn-outline-primary"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="signupForm">
+        <div class="form-group mb-3">
+          <label for="name">Name</label>
+          <input
+            type="text"
+            class="form-control rounded-pill"
+            id="name"
+            formControlName="name"
+            required
           />
-          <p *ngIf="!profileImageUrl" class="text-muted">
-            Drag and drop your profile image here
-          </p>
+          <div *ngIf="signupForm.get('name')?.invalid && signupForm.get('name')?.touched" class="text-danger mt-1">
+            <small *ngIf="signupForm.get('name')?.errors?.['required']">Name is required.</small>
+            <small *ngIf="signupForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters long.</small>
+          </div>
         </div>
-        <input
-          type="file"
-          class="form-control mt-2"
-          id="profile-image"
-          (change)="onFileSelected($event)"
-          accept="image/*"
-        />
-      </div>
 
-      <button type="submit" class="btn btn-primary w-100" [disabled]="signupForm.invalid">Sign Up</button>
-    </form>
+        <div class="form-group mb-3">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            class="form-control rounded-pill"
+            id="email"
+            formControlName="email"
+            required
+          />
+          <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="text-danger mt-1">
+            <small *ngIf="signupForm.get('email')?.errors?.['required']">Email is required.</small>
+            <small *ngIf="signupForm.get('email')?.errors?.['email']">Enter a valid email.</small>
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            class="form-control rounded-pill"
+            id="password"
+            formControlName="password"
+            required
+          />
+          <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="text-danger mt-1">
+            <small *ngIf="signupForm.get('password')?.errors?.['required']">Password is required.</small>
+            <small *ngIf="signupForm.get('password')?.errors?.['minlength']">Password must be at least 4 characters long.</small>
+          </div>
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="profile-image">Profile Image</label>
+          <div
+            class="profile-image-container border p-3 text-center rounded "
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop($event)"
+          >
+            <img
+              [src]="profileImageUrl"
+              alt="Profile Image"
+              class="img-fluid rounded-circle"
+              *ngIf="profileImageUrl"
+            />
+            <div *ngIf="!profileImageUrl" class="text-muted">
+              <i class="bi bi-upload fs-2"></i>
+              <p class="mb-0">Drag and drop your profile image here</p>
+            </div>
+          </div>
+          <input
+            type="file"
+            class="form-control mt-2 rounded-pill"
+            id="profile-image"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+          />
+        </div>
+
+        <div class="d-flex justify-content-end">
+          <button
+            type="submit"
+            class="btn btn-primary rounded-pill px-4"
+            [disabled]="signupForm.invalid"
+            (click)="onSubmit()"
+          >
+            Sign Up
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </ng-template>

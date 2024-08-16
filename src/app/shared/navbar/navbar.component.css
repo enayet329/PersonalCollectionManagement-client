@@ -123,6 +123,7 @@
   text-decoration: none;
   background-color: rgba(0, 0, 0, 0.05);
 }
+
 .dropdown-item {
   display: block;
   width: 100%;
@@ -162,4 +163,21 @@
 
 .profile-image-container:hover {
   border-color: #007bff;
+}
+
+@media (max-width: 991.98px) {
+  .navbar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .search-container {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .search-input {
+    width: 100px;
+  }
 }
