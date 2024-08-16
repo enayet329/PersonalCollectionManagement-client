@@ -274,7 +274,7 @@ export class ItemDetailComponent implements OnInit {
         }
       )
     }
-  }
+
 
 
   goToCollection(collectionId: string): void {
