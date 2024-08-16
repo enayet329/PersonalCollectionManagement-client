@@ -11,3 +11,10 @@ export interface CustomFieldValueResponse {
     itemId: string;
     customFieldName: string;
 }
+
+export interface updateCustomFieldValueRequest {
+    id: string,
+    value: any | null,
+    customFieldId: string,
+    itemId: string
+  }
