@@ -11,3 +11,11 @@ export interface CustomFieldResponse {
     collectionId: string;
     customFieldValues: any[];
 }
+
+export interface updateCustomFieldRequest {
+    id: string;
+    name: string;
+    fieldType: 'string' | 'multiline-text' | 'integer' | 'date' | 'boolean';
+    collectionId: string;
+    customFieldValues: any[];
+  }
