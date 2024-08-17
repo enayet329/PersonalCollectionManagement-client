@@ -66,7 +66,7 @@ export class AddCollectionComponent implements OnInit {
     this.addCollectionForm = this.fb.group({
       title: ['', Validators.required],
       user: [this.userId, Validators.required],
-      category: ['Automotive', Validators.required],
+      category: ['', Validators.required],
       image: [null],
       description: [''],
       customFields: this.fb.array([]),
