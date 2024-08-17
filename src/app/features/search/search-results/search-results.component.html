@@ -1,8 +1,10 @@
-<section class="items-section">
+<section class="items-section" *ngIf="isLoading; else loading">
   <h2 class="section-title">Search Results</h2>
   <div class="container">
-    <div *ngIf="items.length === 0" class="no-items-message">
-      <p>No items available.</p>
+    <div *ngIf="items.length === 0"style="height: 40vh;" class="no-items-message">
+      <div class="alert alert-info" role="alert" >
+        No items available at the moment.
+      </div>
     </div>
     <div *ngIf="items.length > 0" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       <div class="col" *ngFor="let item of items">
@@ -38,3 +40,12 @@
     </div>
   </div>
 </section>
+
+<ng-template #loading>
+  <div class="d-flex flex-column align-items-center justify-content-center" style="height: 60vh; background: rgba(0, 0, 0, 0.05);">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 text-muted">Fetching your collections...</p>
+  </div>
+</ng-template>

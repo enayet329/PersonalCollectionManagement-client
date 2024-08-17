@@ -16,6 +16,7 @@ export class SearchResultsComponent {
 
   items: Item[] = [];
   query: string = '';
+  isLoading: boolean = false;
 
   constructor(
     private searchService: SearchService,
@@ -32,6 +33,7 @@ export class SearchResultsComponent {
     if (this.query.trim()) {
       this.searchService.search(this.query).subscribe(items => {
         this.items = items;
+        this.isLoading = true;
       });
     }
   }
