@@ -17,3 +17,12 @@ export interface AddCollectionRequest {
   imageUrl: string;
   userId: string;
 }
+
+export interface UpdateCollectionRequest {
+  id: string;
+  name: string;
+  description: string;
+  topic: string;
+  imageUrl: any | null;
+  userId: string;
+}
