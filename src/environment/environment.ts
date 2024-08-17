@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  cludeName: 'dwweefdnr',
+  cloudName: 'dwweefdnr',
   uploadPreset: 'ml_default',
 };
