@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { CustomField, CustomFieldResponse } from '../model/customField.model';
+import { CustomField, CustomFieldResponse, updateCustomFieldRequest } from '../model/customField.model';
 import { CustomFieldConstants } from '../constants/constants';
 import { Observable } from 'rxjs';
 
@@ -20,7 +20,7 @@ export class CustomFieldService {
     return this.httpClient.post<any>(this.apiUrl.ADD_CUSTOM_FIELD, customField, { headers });
   }
 
-  updateCustomField(customField: CustomField[]): Observable<any> {
+  updateCustomField(customField: updateCustomFieldRequest[]): Observable<any> {
     
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
