@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AddCollectionRequest, Collection } from '../model/collection.mode.';
+import { AddCollectionRequest, Collection, UpdateCollectionRequest } from '../model/collection.mode.';
 import { CollectionConstants } from '../constants/constants';
 import { Categories } from '../model/categories.model';
 import { ResponseModel } from '../model/response.model';
@@ -38,11 +38,15 @@ export class CollectionService {
     const url = this.apiUrl.ADD_COLLECTION;
     return this.httpClient.post<Collection>(url, collection);
   }
+  updateCollection(collection: UpdateCollectionRequest): Observable<Collection>{
+    const url = this.apiUrl.UPDATE_COLLECTION;
+    return this.httpClient.put<Collection>(url, collection);
+  }
 
   getCategories(): Observable<Categories[]> {
     return this.httpClient.get<Categories[]>(this.apiUrl.GET_COLLECTION_CATEGORY);
   }
-
+  
   deleteCollection(id: string): Observable<ResponseModel> {
     const url = this.apiUrl.DELETE_COLLECTION;
     const params = { id: id };
