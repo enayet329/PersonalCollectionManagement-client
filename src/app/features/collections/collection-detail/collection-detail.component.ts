@@ -38,11 +38,10 @@ export class CollectionDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private location: Location,
     private collectionService: CollectionService,
     private itemService: ItemService,
     private toaster: ToastrService,
-    private jwtDecoder: JwtDecoderService
+    private jwtDecoder: JwtDecoderService,
   ) {}
 
   ngOnInit(): void {
@@ -119,8 +118,11 @@ export class CollectionDetailComponent implements OnInit {
       this.toaster.warning('You do not have permission to edit this collection');
     }
   }
+
+
   deleteCollection(collection: Collection): void {
     if (this.isAdmin || (this.isLoggedIn && this.currentUser === collection.userId)) {
+
       if (confirm('Are you sure you want to delete this collection? This action cannot be undone.')) {
         this.collectionService.deleteCollection(collection.id).subscribe(
           (response: ResponseModel) => {
@@ -142,6 +144,7 @@ export class CollectionDetailComponent implements OnInit {
     }
   }
 
+  
   handleAction(event: Event, action: string, item: Item): void {
     event.stopPropagation();
     if (action === 'edit') {
@@ -169,7 +172,9 @@ export class CollectionDetailComponent implements OnInit {
 
   deleteItem(item: Item): void {
     if (this.isAdmin || (this.isLoggedIn && this.currentUser === this.collection?.userId)) {
-      this.itemService.deleteItemById(item.id).subscribe(
+      if(confirm('Are you sure you want to delete this item?'))
+      {
+        this.itemService.deleteItemById(item.id).subscribe(
         (response: ResponseModel) => {
           if (response.success) {
             this.getItemsByCollectionId(); 
@@ -186,6 +191,8 @@ export class CollectionDetailComponent implements OnInit {
     } else {
       this.toaster.warning('You do not have permission to delete this item');
     }
+      }
+
   }
 
   navigateToDetail(itemId: string): void {
