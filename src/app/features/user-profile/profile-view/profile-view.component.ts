@@ -156,7 +156,7 @@ export class ProfileViewComponent implements OnInit {
       email: this.user.email,
       imageURL: imageURL,
       prefrredLanguage: formValue.preferredLanguage === 'English' ? 'en' : 'bn',
-      preffrredThemeDark: true,
+      preffrredThemeDark: formValue.preferredThemeDark,
       joinedAt: formValue.joinedAt,
       isAdmin: this.isAdmin,
       isBlocked: this.isBlocked,
@@ -166,8 +166,10 @@ export class ProfileViewComponent implements OnInit {
       (response) => {
         console.log('Profile updated successfully:', response);
         this.toaster.success('Profile updated successfully', 'Success');
+        localStorage.setItem('theme', formValue.preferredThemeDark == true?'dark':'null');
         this.getUserProfile();
         this.modalService.dismissAll();
+        window.location.reload();
       },
       (error) => {
         console.error('Failed to update profile:', error);

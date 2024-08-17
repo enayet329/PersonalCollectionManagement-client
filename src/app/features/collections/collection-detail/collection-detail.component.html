@@ -85,10 +85,10 @@
                     Actions
                   </button>
                   <div class="dropdown-menu" ngbDropdownMenu>
-                    <button class="dropdown-item" (click)="handleAction($event, 'edit', item)">Edit</button>
-                    <button class="dropdown-item" (click)="handleAction($event, 'delete', item)">Delete</button>
-                  </div>
-                </div>
+                    <button class="dropdown-item" style="background-color: inherit; color: rgb(134, 185, 147);" (click)="handleAction($event, 'edit', item)">Edit</button>
+                    <button class="dropdown-item" style="background-color: inherit; color: red;" (click)="handleAction($event, 'delete', item)">Delete</button>
+                  </div>                  
+                </div>                
               </td>
             </tr>
           </tbody>
