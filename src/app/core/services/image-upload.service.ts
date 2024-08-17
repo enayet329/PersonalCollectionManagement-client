@@ -25,7 +25,13 @@ export class CloudinaryUploadService {
         body: formData
       })
       .then(response => response.json())
-      .then(data => resolve(data.secure_url))
+      .then(data => {
+        if (data.secure_url) {
+          resolve(data.secure_url);
+        } else {
+          reject('Image upload failed');
+        }
+      })
       .catch(error => reject(error));
     });
   }
