@@ -10,6 +10,7 @@ import { AddCollectionComponent } from './features/collections/add-collection/ad
 import { AddItemComponent } from './features/items/add-item/add-item.component';
 import { ItemListComponent } from './features/items/item-list/item-list.component';
 import { EditCollectionComponent } from './features/collections/edit-collection/edit-collection.component';
+import { EditItemComponent } from './features/items/edit-item/edit-item.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -22,5 +23,6 @@ export const routes: Routes = [
   { path: 'item-detail/:id', component: ItemDetailComponent },
   { path: 'item-list', component: ItemListComponent},
   { path: 'add-item/:id', component: AddItemComponent },
+  { path: 'edit-item/:id', component: EditItemComponent },
   { path: 'profile-view/:id', component: ProfileViewComponent },
 ];
