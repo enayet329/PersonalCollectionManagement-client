@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light border-bottom ">
+<nav class="navbar navbar-expand-lg navbar-light border-bottom">
   <div class="container-fluid">
     <!-- Brand Section -->
     <a class="navbar-brand d-flex align-items-center" routerLink="/">
@@ -30,13 +30,13 @@
     <div
       class="collapse navbar-collapse"
       id="navbarSupportedContent"
-      [ngClass]="{ 'show': !isMenuCollapsed }"
+      [ngClass]="{ show: !isMenuCollapsed }"
     >
       <!-- Left Navigation Links -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          
-          <a  class="nav-link"
+          <a
+            class="nav-link"
             routerLink="/"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }"
@@ -45,8 +45,8 @@
           </a>
         </li>
         <li class="nav-item">
-          
-          <a  class="nav-link"
+          <a
+            class="nav-link"
             routerLink="/collection-list"
             routerLinkActive="active"
           >
@@ -138,9 +138,12 @@
             </button>
             <div
               class="dropdown-menu"
-              [ngClass]="{ 'show': isProfileDropdownOpen }"
+              [ngClass]="{ show: isProfileDropdownOpen }"
             >
-              <a class="dropdown-item text-primary" (click)="openProfil(userId!)">
+              <a
+                class="dropdown-item text-primary"
+                (click)="openProfil(userId!)"
+              >
                 Profile
               </a>
               <div class="dropdown-divider"></div>
@@ -169,16 +172,17 @@
   </div>
 </nav>
 
-
 <!-- Sign In Modal -->
 <ng-template #signinModal let-modal>
-  <div 
-    [attr.data-bs-theme]="darkModeService.darkModeSignal()" 
+  <div
+    [attr.data-bs-theme]="darkModeService.darkModeSignal()"
     [ngClass]="{
       'bg-dark text-light': darkModeService.darkModeSignal() === 'dark',
-      'bg-body-tertiary text-body-secondary': darkModeService.darkModeSignal() !== 'dark'
-    }" 
-    class="modal-content rounded-3 shadow-lg p-4">
+      'bg-body-tertiary text-body-secondary':
+        darkModeService.darkModeSignal() !== 'dark'
+    }"
+    class="modal-content rounded-3 shadow-lg p-4"
+  >
     <div class="d-flex justify-content-between align-items-center mb-3">
       <h5 class="modal-title">Sign In</h5>
       <button
@@ -198,9 +202,18 @@
           formControlName="email"
           required
         />
-        <div *ngIf="signinForm.get('email')?.invalid && signinForm.get('email')?.touched" class="text-danger mt-1">
-          <small *ngIf="signinForm.get('email')?.errors?.['required']">Email is required.</small>
-          <small *ngIf="signinForm.get('email')?.errors?.['email']">Enter a valid email.</small>
+        <div
+          *ngIf="
+            signinForm.get('email')?.invalid && signinForm.get('email')?.touched
+          "
+          class="text-danger mt-1"
+        >
+          <small *ngIf="signinForm.get('email')?.errors?.['required']"
+            >Email is required.</small
+          >
+          <small *ngIf="signinForm.get('email')?.errors?.['email']"
+            >Enter a valid email.</small
+          >
         </div>
       </div>
 
@@ -213,14 +226,30 @@
           formControlName="password"
           required
         />
-        <div *ngIf="signinForm.get('password')?.invalid && signinForm.get('password')?.touched" class="text-danger mt-1">
-          <small *ngIf="signinForm.get('password')?.errors?.['required']">Password is required.</small>
-          <small *ngIf="signinForm.get('password')?.errors?.['minlength']">Password must be at least 4 characters long.</small>
+        <div
+          *ngIf="
+            signinForm.get('password')?.invalid &&
+            signinForm.get('password')?.touched
+          "
+          class="text-danger mt-1"
+        >
+          <small *ngIf="signinForm.get('password')?.errors?.['required']"
+            >Password is required.</small
+          >
+          <small *ngIf="signinForm.get('password')?.errors?.['minlength']"
+            >Password must be at least 4 characters long.</small
+          >
         </div>
       </div>
 
       <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-primary rounded-pill px-4" [disabled]="signinForm.invalid">Sign In</button>
+        <button
+          type="submit"
+          class="btn btn-primary rounded-pill px-4"
+          [disabled]="signinForm.invalid"
+        >
+          Sign In
+        </button>
       </div>
     </form>
   </div>
@@ -228,13 +257,15 @@
 
 <!-- Sign Up Modal -->
 <ng-template #signupModal let-modal>
-  <div 
-    [attr.data-bs-theme]="darkModeService.darkModeSignal()" 
+  <div
+    [attr.data-bs-theme]="darkModeService.darkModeSignal()"
     [ngClass]="{
       'bg-dark text-light': darkModeService.darkModeSignal() === 'dark',
-      'bg-body-tertiary text-body-secondary': darkModeService.darkModeSignal() !== 'dark'
-    }" 
-    class="modal-content rounded-3 shadow-lg p-4">
+      'bg-body-tertiary text-body-secondary':
+        darkModeService.darkModeSignal() !== 'dark'
+    }"
+    class="modal-content rounded-3 shadow-lg p-4"
+  >
     <div class="modal-header border-bottom-0">
       <h5 class="modal-title">Sign Up</h5>
       <button
@@ -255,9 +286,18 @@
             formControlName="name"
             required
           />
-          <div *ngIf="signupForm.get('name')?.invalid && signupForm.get('name')?.touched" class="text-danger mt-1">
-            <small *ngIf="signupForm.get('name')?.errors?.['required']">Name is required.</small>
-            <small *ngIf="signupForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters long.</small>
+          <div
+            *ngIf="
+              signupForm.get('name')?.invalid && signupForm.get('name')?.touched
+            "
+            class="text-danger mt-1"
+          >
+            <small *ngIf="signupForm.get('name')?.errors?.['required']"
+              >Name is required.</small
+            >
+            <small *ngIf="signupForm.get('name')?.errors?.['minlength']"
+              >Name must be at least 3 characters long.</small
+            >
           </div>
         </div>
 
@@ -270,9 +310,19 @@
             formControlName="email"
             required
           />
-          <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="text-danger mt-1">
-            <small *ngIf="signupForm.get('email')?.errors?.['required']">Email is required.</small>
-            <small *ngIf="signupForm.get('email')?.errors?.['email']">Enter a valid email.</small>
+          <div
+            *ngIf="
+              signupForm.get('email')?.invalid &&
+              signupForm.get('email')?.touched
+            "
+            class="text-danger mt-1"
+          >
+            <small *ngIf="signupForm.get('email')?.errors?.['required']"
+              >Email is required.</small
+            >
+            <small *ngIf="signupForm.get('email')?.errors?.['email']"
+              >Enter a valid email.</small
+            >
           </div>
         </div>
 
@@ -285,40 +335,58 @@
             formControlName="password"
             required
           />
-          <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="text-danger mt-1">
-            <small *ngIf="signupForm.get('password')?.errors?.['required']">Password is required.</small>
-            <small *ngIf="signupForm.get('password')?.errors?.['minlength']">Password must be at least 4 characters long.</small>
+          <div
+            *ngIf="
+              signupForm.get('password')?.invalid &&
+              signupForm.get('password')?.touched
+            "
+            class="text-danger mt-1"
+          >
+            <small *ngIf="signupForm.get('password')?.errors?.['required']"
+              >Password is required.</small
+            >
+            <small *ngIf="signupForm.get('password')?.errors?.['minlength']"
+              >Password must be at least 4 characters long.</small
+            >
           </div>
         </div>
 
-        <div class="form-group mb-3">
-          <label for="profile-image">Profile Image</label>
+        <!-- Profile Image Upload -->
+        <div class="col-12">
+          <label for="profile-image" class="form-label">Profile Image</label>
           <div
-            class="profile-image-container border p-3 text-center rounded "
+            class="profile-image-container border rounded-3 p-3 text-center d-flex justify-content-center align-items-center"
             (dragover)="onDragOver($event)"
             (drop)="onDrop($event)"
+            (click)="fileInput.click()"
+            style="height: 200px; cursor: pointer"
           >
             <img
               [src]="profileImageUrl"
               alt="Profile Image"
-              class="img-fluid rounded-circle"
+              class="img-fluid rounded-3"
               *ngIf="profileImageUrl"
+              style="max-width: 100%; max-height: 100%; object-fit: cover"
             />
             <div *ngIf="!profileImageUrl" class="text-muted">
-              <i class="bi bi-upload fs-2"></i>
-              <p class="mb-0">Drag and drop your profile image here</p>
+              <i class="bi bi-cloud-upload fs-1"></i>
+              <p class="mt-2">
+                Drag and drop your profile image here<br />or click to select
+              </p>
             </div>
           </div>
           <input
+            #fileInput
             type="file"
-            class="form-control mt-2 rounded-pill"
+            class="form-control mt-2"
             id="profile-image"
             (change)="onFileSelected($event)"
             accept="image/*"
+            hidden
           />
         </div>
 
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end mt-3">
           <button
             type="submit"
             class="btn btn-primary rounded-pill px-4"
