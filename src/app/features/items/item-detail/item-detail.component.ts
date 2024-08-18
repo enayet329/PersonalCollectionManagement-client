@@ -243,8 +243,7 @@ export class ItemDetailComponent implements OnInit {
   }
 
   editItem(): void {
-    console.log('Edit item');
-    this.toaster.info('Edit item functionality not implemented yet', 'Info');
+    this.router.navigate(['/edit-item', this.itemId]);
   }
 
   deleteItem(): void {
