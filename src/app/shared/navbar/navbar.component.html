@@ -134,24 +134,46 @@
               aria-label="Profile options"
               (click)="toggleOpenProfileDropdown($event)"
             >
-              <i class="fas fa-user-circle fa-lg"></i>
+              <i
+                class="fas fa-user-circle fa-lg"
+                [ngClass]="{
+                  'text-light': darkModeService.darkModeSignal() === 'dark',
+                  'text-dark': darkModeService.darkModeSignal() !== 'dark'
+                }"
+              ></i>
             </button>
             <div
               class="dropdown-menu"
-              [ngClass]="{ show: isProfileDropdownOpen }"
+              [ngClass]="{
+                show: isProfileDropdownOpen,
+                'dropdown-menu-dark':
+                  darkModeService.darkModeSignal() === 'dark'
+              }"
             >
               <a
-                class="dropdown-item text-primary"
+                class="dropdown-item"
                 (click)="openProfil(userId!)"
+                [ngClass]="{
+                  'text-light': darkModeService.darkModeSignal() === 'dark',
+                  'text-primary': darkModeService.darkModeSignal() !== 'dark'
+                }"
               >
-                Profile
+                <i class="fas fa-user me-2"></i>Profile
               </a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item text-danger" (click)="logout()">Logout</a>
+              <a
+                class="dropdown-item"
+                (click)="logout()"
+                [ngClass]="{
+                  'text-danger': darkModeService.darkModeSignal() !== 'dark',
+                  'text-warning': darkModeService.darkModeSignal() === 'dark'
+                }"
+              >
+                <i class="fas fa-sign-out-alt me-2"></i>Logout
+              </a>
             </div>
           </div>
         </li>
-
         <!-- Sign In/Sign Up Buttons -->
         <li class="nav-item d-flex" *ngIf="!userIsLoggedIn">
           <button
