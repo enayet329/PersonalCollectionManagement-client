@@ -38,6 +38,7 @@ export class AddItemComponent implements OnInit {
   private itemImageFile: File | null = null;
   public itemImageUrl: SafeUrl | null = null;
   isClicked: boolean = false;
+  isLoggedIn: boolean = false;
 
   constructor(
     private router: Router,
@@ -57,6 +58,7 @@ export class AddItemComponent implements OnInit {
     this.initializeForm();
     this.getCustomFields();
     this.getAllTags();
+    this.isLoggedIn = localStorage.getItem('token')? true : false;
   }
 
   initializeForm(): void {
@@ -203,11 +205,10 @@ export class AddItemComponent implements OnInit {
       this.addItemForm.updateValueAndValidity();
     }
   }
-
-
+  
   // add item to server
   addItem(imageUrl: string): void {
-    if (this.addItemForm.valid) {
+    if (this.addItemForm.valid && this.isLoggedIn) {
       const formValue = this.addItemForm.value;
 
       const itemData: AddItem = {
@@ -266,12 +267,11 @@ export class AddItemComponent implements OnInit {
   // add tage to server
   addTag(itemId: string): void {
     const tagData: AddTagRequest[] = this.addItemForm.value.tags.map(
-      (tag: any) => ({
+      (tag: AddTagRequest) => ({
         name: tag.name,
         itemId: itemId,
       })
     );
-
     this.tagService.addTags(tagData).subscribe(
       (response: any) => {
         console.log(response);
