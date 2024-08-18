@@ -1,21 +1,21 @@
 <div class="container my-5" *ngIf="isUser || isAdmin || userIsLoggedIn; else loginPrompt">
-  <div class="text-center mb-4">
+  <div class="text-center mb-5">
     <img
       [src]="user.imageURL || 'assets/user.svg'"
       alt="Profile Picture"
-      class="rounded-circle mb-3"
+      class="rounded-circle mb-3 shadow-lg"
       height="150"
       width="150"
       onerror="this.src='assets/user.svg'"
     />
-    <h1 class="display-4 font-weight-bold">{{ user.username }}</h1>
+    <h1 class="display-4 font-weight-bold text-primary">{{ user.username }}</h1>
     <p class="lead text-muted">Manage your personal collection</p>
   </div>
 
-  <div class="card mb-4">
+  <div class="card mb-5 shadow">
     <div class="card-body">
-      <h2 class="card-title">Personal Information</h2>
-      <div class="row">
+      <h2 class="card-title mb-4">Personal Information</h2>
+      <div class="row g-3">
         <div class="col-md-4">
           <p><strong>Name:</strong> {{ user.username }}</p>
         </div>
@@ -23,200 +23,86 @@
           <p><strong>Email:</strong> {{ user.email }}</p>
         </div>
         <div class="col-md-4">
-          <p>
-            <strong>Joined:</strong> {{ user.joinedAt | date : "mediumDate" }}
-          </p>
+          <p><strong>Joined:</strong> {{ user.joinedAt | date : "mediumDate" }}</p>
         </div>
       </div>
-      <div class="text-right mt-4" *ngIf="isAdmin || isUser">
-        <button
-          class="btn btn-outline-primary"
-          (click)="openModal(updateUserModal)"
-        >
+      <div class="text-end mt-4" *ngIf="isAdmin || isUser">
+        <button class="btn btn-outline-primary" (click)="openModal(updateUserModal)">
           Edit Profile
         </button>
       </div>
     </div>
   </div>
 
-  <div class="mb-4 text-right" *ngIf="isAdmin || isUser">
+  <div class="mb-5 text-end" *ngIf="isAdmin || isUser">
     <button class="btn btn-primary" (click)="addCollection(user.id)">
-      Add Collection
+      <i class="bi bi-plus-circle me-2"></i>Add Collection
     </button>
   </div>
 
   <!-- Collections section -->
   <section class="mb-5 pb-5 border-bottom">
     <h2 class="display-6 fw-bold mb-4">Your Collections</h2>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       <div class="col" *ngFor="let collection of collections">
-        <div class="card h-100 d-flex flex-column position-relative">
-          <img
-            [src]="collection.imageUrl || 'assets/logo.png'"
-            class="card-img-top"
-            height="200"
-            width="100%"
-            [alt]="collection.name"
-            onerror="this.src='assets/logo.png'"
-          />
-          <div class="card-body" (click)="goToCollectionDetails(collection.id)">
-            <h5 class="card-title">{{ collection.name }}</h5>
-            <p class="card-text">
-              <small>{{ collection.topic }}</small><br />
-              <small>Items quantity: {{ collection.itemCount }}</small>
-            </p>
-          </div>
-          <div
-            class="card-footer bg-transparent d-flex justify-content-between align-items-center"
-          >
-            <small class="text-center">Click to view details</small>
-  
-            <!-- Toggle Menu Button -->
-            <div class="dropdown" *ngIf="isAdmin || isUser">
-              <button
-                class="btn btn-secondary btn-sm dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Options
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" (click)="editCollection(collection.id)">Edit</a></li>
-                <li><a class="dropdown-item text-danger" (click)="deleteCollection(collection.id)">Delete</a></li>
-              </ul>
+        <div class="card h-100 shadow-sm hover-shadow transition">
+          <div class="position-relative">
+            <img
+              [src]="collection.imageUrl || 'assets/logo.png'"
+              class="card-img-top"
+              height="200"
+              width="100%"
+              [alt]="collection.name"
+              onerror="this.src='assets/logo.png'"
+              style="object-fit: cover;"
+            />
+            <div class="position-absolute top-0 end-0 m-2">
+              <div class="dropdown" *ngIf="isAdmin || isUser">
+                <button
+                  class="btn btn-light btn-sm rounded-circle shadow-sm"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                  <li><a class="dropdown-item" (click)="editCollection(collection.id)"><i class="bi bi-pencil-square me-2"></i>Edit</a></li>
+                  <li><a class="dropdown-item text-danger" (click)="deleteCollection(collection.id)"><i class="bi bi-trash me-2"></i>Delete</a></li>
+                </ul>
+              </div>
             </div>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="card-title mb-0">{{ collection.name }}</h5>
+            </div>
+            <p class="card-text text-muted mb-2">
+              <small><i class="bi bi-tag me-2"></i>{{ collection.topic }}</small>
+            </p>
+            <p class="card-text">
+              <small class="text-muted"><i class="bi bi-collection me-2"></i>Items: {{ collection.itemCount }}</small>
+            </p>
+            <button class="btn btn-outline-primary mt-auto" (click)="goToCollectionDetails(collection.id)">
+              <i class="bi bi-eye me-2"></i>View Details
+            </button>
           </div>
         </div>
       </div>
     </div>
   </section>
-  
+
 
   <!-- Update User Modal -->
   <ng-template #updateUserModal let-modal>
-    <div class="modal-header">
+    <div class="modal-header" [ngClass]="{'bg-dark text-light': darkModeService.darkModeSignal() === 'dark', 'bg-light': darkModeService.darkModeSignal() !== 'dark'}">
       <h5 class="modal-title" id="updateUserModalLabel">Update Profile</h5>
-      <button
-        type="button"
-        class="btn-close"
-        aria-label="Close"
-        (click)="modal.dismiss('Cross click')"
-      ></button>
+      <button type="button" class="btn-close" [ngClass]="{'btn-close-white': darkModeService.darkModeSignal() === 'dark'}" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" [ngClass]="{'bg-dark text-light': darkModeService.darkModeSignal() === 'dark', 'bg-light': darkModeService.darkModeSignal() !== 'dark'}">
       <form [formGroup]="profileUpdateForm" (ngSubmit)="onSubmit()">
-        <!-- Name Input -->
-        <div class="mb-3">
-          <label for="name" class="form-label">Name</label>
-          <input
-            id="name"
-            formControlName="name"
-            type="text"
-            class="form-control"
-            [ngClass]="{
-              'is-invalid':
-                profileUpdateForm.get('name')?.invalid &&
-                profileUpdateForm.get('name')?.touched
-            }"
-          />
-          <div
-            *ngIf="
-              profileUpdateForm.get('name')?.invalid &&
-              profileUpdateForm.get('name')?.touched
-            "
-            class="invalid-feedback"
-          >
-            Name is required.
-          </div>
-        </div>
-
-        <!-- Preferred Language Dropdown -->
-        <div class="mb-3">
-          <label for="preferredLanguage" class="form-label"
-            >Preferred Language</label
-          >
-          <select
-            id="preferredLanguage"
-            formControlName="preferredLanguage"
-            class="form-select"
-            [ngClass]="{
-              'is-invalid':
-                profileUpdateForm.get('preferredLanguage')?.invalid &&
-                profileUpdateForm.get('preferredLanguage')?.touched
-            }"
-          >
-            <option value="" [selected]="!user.prefrredLanguage">
-              Select a language
-            </option>
-            <option value="en" [selected]="user.prefrredLanguage === 'en'">
-              English
-            </option>
-            <option value="bn" [selected]="user.prefrredLanguage === 'bn'">
-              Bangla
-            </option>
-          </select>
-          <div
-            *ngIf="
-              profileUpdateForm.get('preferredLanguage')?.invalid &&
-              profileUpdateForm.get('preferredLanguage')?.touched
-            "
-            class="invalid-feedback"
-          >
-            Please select a preferred language.
-          </div>
-        </div>
-
-        <!-- Preferred Theme Dark Checkbox -->
-        <div class="mb-3 form-check">
-          <input
-            id="preferredThemeDark"
-            formControlName="preferredThemeDark"
-            type="checkbox"
-            class="form-check-input"
-          />
-          <label for="preferredThemeDark" class="form-check-label"
-            >Preferred Theme Dark</label
-          >
-        </div>
-
-        <!-- Profile Image Upload -->
-        <div class="form-group mb-3">
-          <label for="profile-image">Profile Image</label>
-          <div
-            class="profile-image-container border p-2 text-center d-flex justify-content-center align-items-center"
-            (dragover)="onDragOver($event)"
-            (drop)="onDrop($event)"
-            style="width: 460px; height: 150px"
-          >
-            <img
-              [src]="imageURL"
-              alt="Profile Image"
-              class="img-fluid rounded"
-              *ngIf="imageURL"
-              style="max-width: 100%; max-height: 100%"
-            />
-            <p *ngIf="!imageURL" class="text-muted m-0">
-              Drag and drop your profile image here
-            </p>
-          </div>
-          <input
-            type="file"
-            class="form-control mt-2"
-            id="profile-image"
-            (change)="onFileSelected($event)"
-            accept="image/*"
-          />
-        </div>
-
-        <!-- Submit Button -->
-        <button
-          type="submit"
-          class="btn btn-primary mb-3 float-end"
-          [disabled]="profileUpdateForm.invalid"
-          (click)="onSubmit()"
-        >
+        <button type="submit" class="btn btn-primary mb-3" [disabled]="profileUpdateForm.invalid">
           Update Profile
         </button>
       </form>
@@ -225,14 +111,23 @@
 </div>
 
 <ng-template #loginPrompt>
-  <div class="d-flex justify-content-center align-items-center" style="height: 60vh; background: inherit;">
-    <div class="alert alert-light border-0 p-5 shadow-lg text-center rounded" style="max-width: 600px; width: 90%;">
+  <div
+    class="d-flex justify-content-center align-items-center"
+    style="height: 60vh; background: inherit"
+  >
+    <div
+      class="alert alert-light border-0 p-5 shadow-lg text-center rounded"
+      style="max-width: 600px; width: 90%"
+    >
       <h1 class="display-4 mb-3 text-primary font-weight-bold">
-        <i class="bi bi-exclamation-circle"></i> Access Denied
+        <i class="bi bi-person-fill-lock"></i> Login Required
       </h1>
-      <p class="lead mb-4">
-        You need to be logged in to access this page. Please log in to continue.
+      <p class="lead">
+        Please log in to view your collections and manage your profile.
       </p>
+      <a href="/login" class="btn btn-primary btn-lg mt-4">
+        Login Now
+      </a>
     </div>
   </div>
 </ng-template>
