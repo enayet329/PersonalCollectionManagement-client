@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
 import { CollectionService } from '../../../core/services/collection.service';
 import { UserModel } from '../../../core/model/user.model';
@@ -17,6 +17,7 @@ import { CloudinaryUploadService } from '../../../core/services/image-upload.ser
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ToastrService } from 'ngx-toastr';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'app-profile-view',
@@ -42,6 +43,7 @@ export class ProfileViewComponent implements OnInit {
   userIsLoggedIn: boolean = false;
   isBlocked: boolean = false;
   isUser: boolean = false;
+  isDark: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -53,8 +55,10 @@ export class ProfileViewComponent implements OnInit {
     public modalService: NgbModal,
     private sanitizer: DomSanitizer,
     private toaster: ToastrService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
+
+  darkModeService: ThemeService = inject(ThemeService);
 
   ngOnInit() {
     this.routeId = this.route.snapshot.paramMap.get('id');
@@ -88,6 +92,11 @@ export class ProfileViewComponent implements OnInit {
     this.token = null;
     this.isBlocked = false;
   }
+
+  isDarkMode(): boolean {
+    return this.darkModeService.darkModeSignal.toString() === 'dark';
+  }
+  
 
   private initForm() {
     this.profileUpdateForm = this.formBuilder.group({
