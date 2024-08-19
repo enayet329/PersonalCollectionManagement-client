@@ -2,7 +2,7 @@
   <div class="card shadow-lg">
     <div class="card-body">
       <form [formGroup]="addItemForm" (ngSubmit)="onSubmit()" class="p-4">
-        <h2 class="mb-4">Add Item</h2>
+        <h2 class="text-center mb-4">Add Item</h2>
         
         <div class="row">
           <div class="col-md-6 mb-3">
@@ -17,7 +17,7 @@
         </div>
 
         <div class="my-4">
-          <label for="itemImageUrl-image" class="form-label">Collection URL Image</label>
+          <label for="itemImageUrl-image" class="form-label">Item Image</label>
           <div
             class="profile-image-container stylish-border p-2 text-center d-flex justify-content-center align-items-center"
             (dragover)="onDragOver($event)"
