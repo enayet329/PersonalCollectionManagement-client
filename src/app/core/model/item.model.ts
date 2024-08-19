@@ -16,3 +16,11 @@ export interface AddItem{
   "description": "",
   "collectionId": ""
 }
+
+export interface UpdateItem{
+  "id": any,
+  "name": any,
+  "imgUrl": any,
+  "description": any,
+  "collectionId": any
+}
