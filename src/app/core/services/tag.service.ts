@@ -33,4 +33,14 @@ export class TagService {
     return this.http.get<AddTagResponse[]>(url);
   }
 
+  updateTag(itemId: string, payload: any): Observable<any> {
+    const url = `${this.api.UPDATE_TAG}/${itemId}/tag`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': '*/*'
+    });
+
+    return this.http.put(url, payload, { headers });
+  }
+
 }
