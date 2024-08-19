@@ -165,6 +165,7 @@ export class NavbarComponent implements OnInit {
       this.resetUserState();
       this.toastr.success('Logout Successful', 'See you again!');
       localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
       localStorage.removeItem('prefferedLanguage');
       this.router.navigate(['/']);
 
@@ -275,6 +276,7 @@ export class NavbarComponent implements OnInit {
             );
             return;
           }
+          console.log(response)
           localStorage.setItem('token', token);
           localStorage.setItem('refreshToken', response.refreshToken!)
           localStorage.setItem('theme',preferredThemeDark == true ? 'dark' : 'null')
