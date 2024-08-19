@@ -11,8 +11,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
 import { Categories } from '../../../core/model/categories.model';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Collection, UpdateCollectionRequest } from '../../../core/model/collection.mode.';
-import { CustomFieldResponse, updateCustomFieldRequest } from '../../../core/model/customField.model';
+import {
+  Collection,
+  UpdateCollectionRequest,
+} from '../../../core/model/collection.mode.';
+import {
+  CustomFieldResponse,
+  updateCustomFieldRequest,
+} from '../../../core/model/customField.model';
 import { CollectionService } from '../../../core/services/collection.service';
 import { CustomFieldService } from '../../../core/services/custom-field.service';
 import { ToastrService } from 'ngx-toastr';
@@ -33,8 +39,9 @@ export class EditCollectionComponent implements OnInit {
   categories: Categories[] = [];
   collection: Collection = {} as Collection;
   customFields: CustomFieldResponse[] = [];
-  updateCollectionModel: UpdateCollectionRequest  = {} as UpdateCollectionRequest;
-  updateCustomFieldModel: updateCustomFieldRequest[]  =  [];
+  updateCollectionModel: UpdateCollectionRequest =
+    {} as UpdateCollectionRequest;
+  updateCustomFieldModel: updateCustomFieldRequest[] = [];
   isClicked = false;
 
   // User state
@@ -109,44 +116,52 @@ export class EditCollectionComponent implements OnInit {
       description: this.collection.description,
       imageUrl: this.collection.imageUrl,
     });
-  
+
     if (this.collection.imageUrl) {
-      this.collectionUrlImageUrl = this.sanitizer.bypassSecurityTrustUrl(this.collection.imageUrl);
+      this.collectionUrlImageUrl = this.sanitizer.bypassSecurityTrustUrl(
+        this.collection.imageUrl
+      );
     }
   }
-  
 
   private loadCustomFields(): void {
-    this.customFieldService.getCustomFieldsByCollectionId(this.collection.id).subscribe(
-      (response: CustomFieldResponse[]) => {
-        this.customFields = response;
-        this.patchFormWithCustomFields();
-        console.log(this.customFields);
-      },
-      (error) => this.toastr.error('Failed to load custom fields.')
-    );
+    this.customFieldService
+      .getCustomFieldsByCollectionId(this.collection.id)
+      .subscribe(
+        (response: CustomFieldResponse[]) => {
+          this.customFields = response;
+          this.patchFormWithCustomFields();
+          console.log(this.customFields);
+        },
+        (error) => this.toastr.error('Failed to load custom fields.')
+      );
   }
 
   private patchFormWithCustomFields(): void {
-    const customFieldsFormArray = this.editCollectionForm.get('customFields') as FormArray;
+    const customFieldsFormArray = this.editCollectionForm.get(
+      'customFields'
+    ) as FormArray;
     customFieldsFormArray.clear();
-  
-    this.customFields.forEach(field => {
-      customFieldsFormArray.push(this.fb.group({
-        label: [field.name, Validators.required],
-        fieldType: [field.fieldType, Validators.required],
-        value: [field.customFieldValues || ''],
-      }));
+
+    this.customFields.forEach((field) => {
+      customFieldsFormArray.push(
+        this.fb.group({
+          label: [field.name, Validators.required],
+          fieldType: [field.fieldType, Validators.required],
+          value: [field.customFieldValues || ''],
+        })
+      );
     });
   }
-  
 
   get customFieldsControls() {
     return (this.editCollectionForm.get('customFields') as FormArray).controls;
   }
 
   addCustomField(): void {
-    const customFields = this.editCollectionForm.get('customFields') as FormArray;
+    const customFields = this.editCollectionForm.get(
+      'customFields'
+    ) as FormArray;
     const fieldType = this.editCollectionForm.get('newFieldType')?.value;
 
     if (!fieldType) {
@@ -158,16 +173,21 @@ export class EditCollectionComponent implements OnInit {
       return;
     }
 
-    customFields.push(this.fb.group({
-      label: ['', Validators.required],
-      fieldType: [fieldType, Validators.required],
-      value: [''],
-    }));
+    customFields.push(
+      this.fb.group({
+        label: ['', Validators.required],
+        fieldType: [fieldType, Validators.required],
+        value: [''],
+      })
+    );
   }
 
-  private isFieldTypeLimitExceeded(fieldType: string, customFields: FormArray): boolean {
+  private isFieldTypeLimitExceeded(
+    fieldType: string,
+    customFields: FormArray
+  ): boolean {
     const fieldTypeCount = customFields.controls.filter(
-      control => control.get('fieldType')?.value === fieldType
+      (control) => control.get('fieldType')?.value === fieldType
     ).length;
     const limit = 3;
     if (fieldTypeCount >= limit) {
@@ -178,7 +198,9 @@ export class EditCollectionComponent implements OnInit {
   }
 
   removeCustomField(index: number): void {
-    const customFields = this.editCollectionForm.get('customFields') as FormArray;
+    const customFields = this.editCollectionForm.get(
+      'customFields'
+    ) as FormArray;
     customFields.removeAt(index);
   }
 
@@ -227,21 +249,18 @@ export class EditCollectionComponent implements OnInit {
     this.isClicked = true;
 
     if (this.collectionImageFile) {
-      this.cloudinaryService.uploadImage(this.collectionImageFile).then(
-        (url: string) => {
-          this.collectionUrlImageUrl = url
+      this.cloudinaryService
+        .uploadImage(this.collectionImageFile)
+        .then((url: string) => {
+          this.collectionUrlImageUrl = url;
           this.updateCollection();
-        
-        }
-      ).catch(error => {
-        console.error('Image upload failed:', error);
-      });
-    }
-    
-    else{
+        })
+        .catch((error) => {
+          console.error('Image upload failed:', error);
+        });
+    } else {
       this.updateCollection();
     }
-    
   }
 
   private updateCollection(): void {
@@ -250,21 +269,25 @@ export class EditCollectionComponent implements OnInit {
       name: this.editCollectionForm.value.name,
       description: this.editCollectionForm.value.description,
       topic: this.editCollectionForm.value.topic,
-      imageUrl: this.collectionUrlImageUrl ? this.collectionUrlImageUrl.toString() : this.collection.imageUrl,
+      imageUrl: this.collectionUrlImageUrl
+        ? this.collectionUrlImageUrl.toString()
+        : this.collection.imageUrl,
       userId: this.collection.userId,
-    }
+    };
 
-    console.log('updateCollectionModel', this.updateCollectionModel)
-    this.collectionService.updateCollection(this.updateCollectionModel).subscribe(
-      () => {
-        this.toastr.success('Collection updated successfully.');
-        this.updateCustomFields();
-      },
-      (error) => {
-        this.toastr.error('Failed to update the collection.');
-        this.isClicked = false;
-      }
-    );
+    console.log('updateCollectionModel', this.updateCollectionModel);
+    this.collectionService
+      .updateCollection(this.updateCollectionModel)
+      .subscribe(
+        () => {
+          this.toastr.success('Collection updated successfully.');
+          this.updateCustomFields();
+        },
+        (error) => {
+          this.toastr.error('Failed to update the collection.');
+          this.isClicked = false;
+        }
+      );
   }
 
   updateCustomFields(): void {
@@ -274,12 +297,13 @@ export class EditCollectionComponent implements OnInit {
         name: field.label,
         fieldType: field.fieldType,
         collectionId: this.collection.id,
-        customFieldValues: []
+        customFieldValues: [],
       }));
 
-
-      this.updateCustomFieldModel = customFieldData;
-      this.customFieldService.updateCustomField(this.updateCustomFieldModel).subscribe(
+    this.updateCustomFieldModel = customFieldData;
+    this.customFieldService
+      .updateCustomField(this.updateCustomFieldModel)
+      .subscribe(
         () => {
           this.isClicked = false;
           this.router.navigate(['/collection-detail', this.collection.id]);
@@ -292,11 +316,11 @@ export class EditCollectionComponent implements OnInit {
   }
 
   getCategories(): void {
-    this.collectionService.getCategories().subscribe(
-      (response: Categories[]) => {
+    this.collectionService
+      .getCategories()
+      .subscribe((response: Categories[]) => {
         this.categories = response;
-        console.log('categories',this.categories);
-      }
-    )
+        console.log('categories', this.categories);
+      });
   }
 }
