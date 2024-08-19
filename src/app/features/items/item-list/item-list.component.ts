@@ -58,4 +58,12 @@ export class ItemListComponent implements OnInit {
   getLimitedTags(tagNames: string[], limit: number = 3): string[] {
     return tagNames.slice(0, limit);
   }
+
+  updateItem(itemId: string): void {
+    console.log('Edit item clicked', itemId);
+  }
+  deleteItem(itemId: string): void {
+
+    console.log('Delete item clicked', itemId);
+  }
 }
