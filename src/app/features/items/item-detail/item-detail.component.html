@@ -52,12 +52,16 @@
             <div class="mb-4">
               <!-- Tags section -->
               <h4 class="h6 text-uppercase mb-2">Tags</h4>
-              <div class="d-flex flex-wrap gap-2">
+              <div class="d-flex flex-wrap gap-2" *ngIf="tags.length > 0; else noTags">
                 <span class="badge text-muted border border-secondary rounded-pill px-3 py-2" *ngFor="let tag of tags">
                   {{ tag.name }}
                 </span>
               </div>
             </div>
+
+            <ng-template #noTags>
+              <div class="alert alert-light border mb-4">No tags yet.</div>
+            </ng-template>
             
             <p class="mb-2">
               <strong>Collection:</strong>
