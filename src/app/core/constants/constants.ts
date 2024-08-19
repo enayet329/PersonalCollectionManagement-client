@@ -1,5 +1,11 @@
+
+// local IIS apiUrl for development environment
 //const apiUrl = 'https://localhost:7138/api/v1/';
+
+// apiurl for production environment
 const apiUrl = 'https://collectionapp.somee.com/api/v1/';
+
+// apiUrl for development environment
 //const apiUrl = 'https://localhost:7138/api/v1/';
 
 // Collection Constants
@@ -26,7 +32,7 @@ export const ItemConstants = {
     GET_ITEMS_BY_COLLECTION_ID: apiUrl + 'items/get/collectionId',
     GET_RECENT_ITEMS: apiUrl + 'items/recent',
     ADD_ITEM: apiUrl + 'items/add',
-    UPDATE_ITEM: apiUrl + 'items/update/id/item',
+    UPDATE_ITEM: apiUrl + 'items/update',
     DELETE_ITEM: apiUrl + 'items/delete/id',
   },
 };
@@ -114,6 +120,6 @@ export const TagConstants = {
     GET_TAG_BY_ID: apiUrl + 'tags/id',
     ADD_TAG: apiUrl + 'tags/add',
     DELETE_TAG: apiUrl + 'tags/delete/id',
-    UPDATE_TAG: apiUrl + 'tags/update/itemId/tag',
+    UPDATE_TAG: apiUrl + 'tags/update',
   },
 };
