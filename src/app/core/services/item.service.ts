@@ -1,8 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ItemConstants } from '../constants/constants';
-import { AddItem, Item } from '../model/item.model';
+import { AddItem, Item, UpdateItem } from '../model/item.model';
 import { ResponseModel } from '../model/response.model';
 
 @Injectable({
@@ -40,6 +40,10 @@ export class ItemService {
 
     const url = `${this.apiUrl.DELETE_ITEM}?id=${itemId}`;
     return this.httpClient.delete<ResponseModel>(url);
+  }
+
+  updateItem(item: any): Observable<any> {
+    return this.httpClient.put(this.apiUrl.UPDATE_ITEM, item);
   }
   
 }
