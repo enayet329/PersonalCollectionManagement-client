@@ -2,7 +2,7 @@
   <section class="row align-items-center mb-5 pb-5 border-bottom">
     <div class="col-md-6">
       <h1 class="display-4 fw-bold mb-3">
-        Discover and Manage Your Precious Collections
+        <i class="bi bi-collection-fill me-2 text-primary"></i>Discover and Manage Your Precious Collections
       </h1>
       <p class="lead mb-4">
         Our Collection app offers a seamless way to organize, customize, and
@@ -12,56 +12,56 @@
       <a
         routerLink="/collection-list"
         routerLinkActive="active"
-        class="btn btn-outline-primary btn-lg"
+        class="btn btn-primary btn-lg shadow-sm"
       >
-        Browse all collections
+        <i class="bi bi-search me-2"></i>Browse all collections
       </a>
     </div>
     <div class="col-md-6">
       <img
         src="/assets/collection_app_hero.png"
         alt="Collection Graphic"
-        height="460px"
-        width="55%"
-        class="rounded-lg w-full max-w-md hero-image"
+        class=" rounded-lg  hero-image"
+        style="max-height: 460px; width: auto;"
       />
     </div>
   </section>
 
   <!-- Most Popular Collections Section -->
   <section class="mb-5 pb-5 border-bottom">
-    <h2 class="display-6 fw-bold mb-4">Most Largest Collections</h2>
+    <h2 class="display-6 fw-bold mb-4">
+      <i class="bi bi-star-fill me-2 text-warning"></i>Most Largest Collections
+    </h2>
     <ng-container *ngIf="!isLoadingCollections; else loadingCollections">
       <ng-container *ngIf="collections.length > 0; else noCollections">
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
           <div class="col" *ngFor="let collection of collections">
-            <div class="card h-80" (click)="goToCollectionDetails(collection.id)">
-              <div class="card h-100 d-flex flex-column">
-                <img
-                  [src]="collection.imageUrl || 'assets/logo.png'"
-                  class="card-img-top"
-                  height="200px"
-                  width="100%"
-                  [alt]="collection.name"
-                  onerror="this.src='/assets/logo.png'"
-                />
-                <div class="card-body">
-                  <h5 class="card-title">{{ collection.name }}</h5>
-                  <p class="card-text">
-                    <small>{{ collection.topic }}</small><br />
-                    <small>Items quantity: {{ collection.itemCount }}</small><br />
-                    <small>
-                      Created by
-                      <a [routerLink]="['/profile-view', collection.userId]" class="text-decoration-none">
-                        {{ collection.userName }}
-                      </a>
-                    </small>
-                    <br />
-                  </p>
-                  <div class="card-footer bg-transparent d-flex justify-content-center align-items-center">
-                    <small class="text-center">Click to view details</small>
-                  </div>
-                </div>
+            <div class="card h-100 shadow-sm hover-effect" (click)="goToCollectionDetails(collection.id)">
+              <img
+                [src]="collection.imageUrl || 'assets/logo.png'"
+                class="card-img-top"
+                height="200"
+                [alt]="collection.name"
+                onerror="this.src='/assets/logo.png'"
+                style="object-fit: cover;"
+              />
+              <div class="card-body">
+                <h5 class="card-title">
+                  <i class="bi bi-bookmark-star me-2 text-primary"></i>{{ collection.name }}
+                </h5>
+                <p class="card-text">
+                  <small><i class="bi bi-tag me-2"></i>{{ collection.topic }}</small><br />
+                  <small><i class="bi bi-grid-3x3-gap me-2"></i>Items: {{ collection.itemCount }}</small><br />
+                  <small>
+                    <i class="bi bi-person me-2"></i>Created by
+                    <a [routerLink]="['/profile-view', collection.userId]" class="text-decoration-none">
+                      {{ collection.userName }}
+                    </a>
+                  </small>
+                </p>
+              </div>
+              <div class="card-footer bg-transparent text-center">
+                <small class="text-muted"><i class="bi bi-info-circle me-2"></i>Click to view details</small>
               </div>
             </div>
           </div>
@@ -73,44 +73,49 @@
   <!-- Recently Added Items Section -->
   <section>
     <div class="d-flex align-items-center justify-content-between mb-4">
-      <h2 class="display-6 fw-bold mb-4 mb-md-0">Recently Added Items</h2>
-      <button class="btn btn-outline-primary ms-auto" (click)="showMoreItems()">Show More</button>
+      <h2 class="display-6 fw-bold mb-4 mb-md-0">
+        <i class="bi bi-clock-history me-2 text-success"></i>Recently Added Items
+      </h2>
+      <button class="btn btn-outline-primary ms-auto" (click)="showMoreItems()">
+        <i class="bi bi-plus-lg me-2"></i>Show More
+      </button>
     </div>
     <ng-container *ngIf="!isLoadingItems; else loadingItems">
       <ng-container *ngIf="recentItems.length > 0; else noItems">
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
           <div class="col" *ngFor="let item of recentItems">
-            <div class="card h-100" (click)="goToItemDetails(item.id)">
-              <div class="card h-100">
-                <img
-                  [src]="item.imgUrl || 'assets/logo.png'"
-                  class="card-img-top"
-                  [alt]="item.name"
-                  onerror="this.src='/assets/logo.png'"
-                />
-                <div class="card-body">
-                  <h5 class="card-title">{{ item.name }}</h5>
-                  <p class="mb-2">
-                    <ng-container *ngIf="item.tagNames && item.tagNames.length > 0">
-                      <span
-                        *ngFor="let tag of getLimitedTags(item.tagNames, 3)"
-                        class="tag"
-                      >{{ tag }}</span>
-                    </ng-container>
-                    <ng-container *ngIf="!item.tagNames || item.tagNames.length === 0">
-                      <span class="tag">No Tags</span>
-                    </ng-container>
-                  </p>
-                  <p class="card-text">Collection: 
-                    <a href="#" class="text-decoration-none">
-                      <small>{{ item.collectionName }}</small>
-                    </a><br />
-                    <small>Date: {{ item.dateAdded | date : "dd/MM/yyyy" }}</small>
-                  </p>
-                  <div class="card-footer bg-transparent d-flex justify-content-center align-items-center">
-                    <small class="text-center">Click to view details</small>
-                  </div>
-                </div>
+            <div class="card h-100 shadow-sm hover-effect" (click)="goToItemDetails(item.id)">
+              <img
+                [src]="item.imgUrl || 'assets/logo.png'"
+                class="card-img-top"
+                [alt]="item.name"
+                onerror="this.src='/assets/logo.png'"
+                style="height: 200px; object-fit: cover;"
+              />
+              <div class="card-body">
+                <h5 class="card-title">
+                  <i class="bi bi-file-earmark-text me-2 text-info"></i>{{ item.name }}
+                </h5>
+                <p class="mb-2">
+                  <ng-container *ngIf="item.tagNames && item.tagNames.length > 0">
+                    <span
+                      *ngFor="let tag of getLimitedTags(item.tagNames, 3)"
+                      class="badge bg-secondary me-1"
+                    >{{ tag }}</span>
+                  </ng-container>
+                  <ng-container *ngIf="!item.tagNames || item.tagNames.length === 0">
+                    <span class="badge bg-secondary">No Tags</span>
+                  </ng-container>
+                </p>
+                <p class="card-text">
+                  <small><i class="bi bi-collection me-2"></i>Collection: 
+                    <a href="#" class="text-decoration-none">{{ item.collectionName }}</a>
+                  </small><br />
+                  <small><i class="bi bi-calendar-event me-2"></i>Date: {{ item.dateAdded | date : "dd/MM/yyyy" }}</small>
+                </p>
+              </div>
+              <div class="card-footer bg-transparent text-center">
+                <small class="text-muted"><i class="bi bi-info-circle me-2"></i>Click to view details</small>
               </div>
             </div>
           </div>
@@ -121,7 +126,7 @@
 
   <ng-template #loadingCollections>
     <div class="d-flex justify-content-center">
-      <div class="spinner-border" role="status">
+      <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading collections...</span>
       </div>
     </div>
@@ -129,13 +134,13 @@
 
   <ng-template #noCollections>
     <div class="alert alert-info" role="alert">
-      No collections available at the moment.
+      <i class="bi bi-exclamation-circle-fill me-2"></i>No collections available at the moment.
     </div>
   </ng-template>
 
   <ng-template #loadingItems>
     <div class="d-flex justify-content-center">
-      <div class="spinner-border" role="status">
+      <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Loading items...</span>
       </div>
     </div>
@@ -143,7 +148,17 @@
 
   <ng-template #noItems>
     <div class="alert alert-info" role="alert">
-      No recent items available at the moment.
+      <i class="bi bi-exclamation-circle-fill me-2"></i>No recent items available at the moment.
     </div>
   </ng-template>
 </main>
+
+<style>
+  .hover-effect {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+  .hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+  }
+</style>
