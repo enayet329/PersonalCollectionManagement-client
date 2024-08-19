@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CustomFieldValueConstants } from '../constants/constants';
-import { CustomFieldValue, CustomFieldValueResponse } from '../model/customFieldValue.model';
+import { CustomFieldValue, CustomFieldValueResponse, updateCustomFieldValueRequest } from '../model/customFieldValue.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -27,11 +27,11 @@ export class CustomFieldValueService {
     return this.http.get<CustomFieldValueResponse[]>(this.apiurl.GET_CUSTOM_FIELD_VALUES_BY_ITEM_ID, { params });
   }
 
-  updateCustomFieldValue(customFieldValue: CustomFieldValue): Observable<any>{
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Accept': '*/*',
-    }); 
+  updateCustomFieldValue(customFieldValue: updateCustomFieldValueRequest[]): Observable<any>{
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+    
     return this.http.put(this.apiurl.UPDATE_CUSTOM_FIELD_VALUE, customFieldValue, {headers});
   }
 
