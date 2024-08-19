@@ -7,3 +7,8 @@ export interface AddTagResponse {
     id: string,
     name: string,
   }
+
+export interface UpdateTagRequest {
+    id: string,
+    name: string,
+}
