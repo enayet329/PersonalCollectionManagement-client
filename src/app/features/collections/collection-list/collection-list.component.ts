@@ -17,13 +17,13 @@ export class CollectionListComponent implements OnInit {
   collections: Collection[] = [];
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
-  isLoading: boolean = false;
+  isLoading: boolean = true;
 
   constructor(private collectionService: CollectionService,    private router: Router, private jwtDecoder: JwtDecoderService) {}
 
   ngOnInit(): void {
     this.collectionService.getCollections().subscribe((data) => {
-      this.isLoading = true;
+      this.isLoading = false;
       this.collections = data;
     });
     this.initializeUserState();
@@ -38,6 +38,12 @@ export class CollectionListComponent implements OnInit {
     }
   }
 
+  updateCollection(collectionId:string): void {
+    console.log( 'updateCollections called with collectionId: ', collectionId);
+  }
+  deleteCollection(collectionId:string){
+    console.log( 'deleteCollection called with collectionId: ', collectionId);
+  }
   goToUserProfile(userId: string): void {
       this.router.navigate(['/profile-view', userId]);
   }
