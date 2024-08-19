@@ -10,6 +10,7 @@ export interface CustomFieldValueResponse {
     customFieldId: string;
     itemId: string;
     customFieldName: string;
+    fieldType: string;
 }
 
 export interface updateCustomFieldValueRequest {
