@@ -82,7 +82,7 @@ export class NavbarComponent implements OnInit {
 
   private initializeUserState() {
     this.token = localStorage.getItem('token');
-    if (this.token) {
+    if (this.token && this.token !== 'null') {
       this.userId = this.jwtDecoder.getUserIdFromToken(this.token);
       this.isAdmin = this.jwtDecoder.getIsAdminFromToken(this.token);
       this.isBlocked = this.jwtDecoder.getIsBlockedFromToken(this.token);

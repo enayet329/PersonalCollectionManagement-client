@@ -53,7 +53,7 @@ export class CollectionDetailComponent implements OnInit {
 
   initializeUserState(): void {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token && token !== 'null') {
       this.currentUser = this.jwtDecoder.getUserIdFromToken(token)!;
       this.isLoggedIn = true;
       this.isAdmin = this.jwtDecoder.getIsAdminFromToken(token)!;

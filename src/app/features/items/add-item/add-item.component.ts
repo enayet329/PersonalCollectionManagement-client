@@ -39,6 +39,7 @@ export class AddItemComponent implements OnInit {
   public itemImageUrl: SafeUrl | null = null;
   isClicked: boolean = false;
   isLoggedIn: boolean = false;
+  token = localStorage.getItem('token')
 
   constructor(
     private router: Router,
@@ -58,7 +59,10 @@ export class AddItemComponent implements OnInit {
     this.initializeForm();
     this.getCustomFields();
     this.getAllTags();
-    this.isLoggedIn = localStorage.getItem('token')? true : false;
+    if(this.token && this.token !== 'null')
+    {
+      this.isLoggedIn = true;
+    }
   }
 
   initializeForm(): void {

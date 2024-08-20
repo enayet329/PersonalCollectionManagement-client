@@ -31,7 +31,7 @@ export class CollectionListComponent implements OnInit {
 
   initializeUserState(){
     const token = localStorage.getItem('token');
-    if(token)
+    if(token && token !== 'null')
     {
       this.isLoggedIn = true;
       this.isAdmin = this.jwtDecoder.getIsAdminFromToken(token);

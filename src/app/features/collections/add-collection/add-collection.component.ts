@@ -77,7 +77,7 @@ export class AddCollectionComponent implements OnInit {
   private initializeUserState(){
     const token = localStorage.getItem('token');
 
-    if(token)
+    if(token && token !== 'null')
     {
       this.isAdmin = this.jwtDecoder.getIsAdminFromToken(token);
       this.isLoggedIn = true;
