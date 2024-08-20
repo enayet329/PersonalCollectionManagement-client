@@ -49,6 +49,7 @@ export class ItemDetailComponent implements OnInit {
   preferredLanguage: string | null = null;
   preferredThemeDark: boolean = false;
   currentLanguage: string | null = null;
+  isUser: boolean = false;
 
 
   constructor(
@@ -112,6 +113,7 @@ export class ItemDetailComponent implements OnInit {
         this.item = data;
         this.like.likeCount = this.item.likes;
         this.isItemLoading = false;
+        this.isUser = this.userId === this.item.userId;
         this.checkIfItemLiked();
       },
       (error) => {
@@ -149,7 +151,12 @@ export class ItemDetailComponent implements OnInit {
 
   addComment(): void {
     this.isClicked = true;
-    
+    if(!this.newComment.content || this.newComment.content.trim() === '')
+    {
+      this.toaster.warning('Comment cannot be empty', 'Warning');
+      this.isClicked = false;
+      return;
+    }
     this.newComment.itemId = this.itemId;
     this.newComment.userId = this.userId!;
     this.newComment.createdAt = new Date();
