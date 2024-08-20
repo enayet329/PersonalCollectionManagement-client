@@ -8,6 +8,7 @@ export interface Item {
   collectionId: string;
   tagNames: string[] | null;
   likes: number;
+  userId: string;
 }
 
 export interface AddItem{
