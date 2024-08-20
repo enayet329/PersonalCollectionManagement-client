@@ -33,8 +33,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             return next(newReq);
           }),
           catchError((refreshError) => {
-            localStorage.removeItem('token');
-            localStorage.removeItem('refreshToken');
             console.error('Refresh token failed', refreshError);
             return throwError(refreshError);
           })
