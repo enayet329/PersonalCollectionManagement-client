@@ -16,7 +16,7 @@
           <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h2 class="h3 fw-bold">{{ item.name }}</h2>
-              <div *ngIf="isAdmin" ngbDropdown class="d-inline-block">
+              <div *ngIf="isAdmin || isLoggedIn" ngbDropdown class="d-inline-block">
                 <button
                 class="btn btn-light btn-sm rounded-circle shadow-sm"
                 type="button"
