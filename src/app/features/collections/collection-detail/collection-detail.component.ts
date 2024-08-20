@@ -9,7 +9,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
 import { ResponseModel } from '../../../core/model/response.model';
-import { Location } from '@angular/common';
+
    
 
 @Component({
@@ -53,7 +53,7 @@ export class CollectionDetailComponent implements OnInit {
 
   initializeUserState(): void {
     const token = localStorage.getItem('token');
-    if (token && !this.jwtDecoder.isTokenExpired(token)) {
+    if (token) {
       this.currentUser = this.jwtDecoder.getUserIdFromToken(token)!;
       this.isLoggedIn = true;
       this.isAdmin = this.jwtDecoder.getIsAdminFromToken(token)!;

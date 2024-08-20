@@ -42,7 +42,7 @@ export class HomeComponent implements OnInit {
 
   initializeUserState(): void {
     const token = localStorage.getItem('token');
-    if (token && !this.jwtDecoder.isTokenExpired(token)) {
+    if (token ) {
       this.isLoggedIn = true;
       this.isAdmin = this.jwtDecoder.getIsAdminFromToken(token);
       this.isUser = this.jwtDecoder.getUserIdFromToken(token)!;

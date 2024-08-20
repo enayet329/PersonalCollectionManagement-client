@@ -73,7 +73,7 @@ export class ItemDetailComponent implements OnInit {
 
   private initializeUserState() {
     this.token = localStorage.getItem('token');
-    if (this.token && !this.jwtDecode.isTokenExpired(this.token)) {
+    if (this.token) {
       this.userId = this.jwtDecode.getUserIdFromToken(this.token);
       this.isAdmin = this.jwtDecode.getIsAdminFromToken(this.token);
       this.isBlocked = this.jwtDecode.getIsBlockedFromToken(this.token);

@@ -69,7 +69,7 @@ export class ProfileViewComponent implements OnInit {
 
   private initializeUserState() {
     this.token = localStorage.getItem('token');
-    if (this.token && !this.jwtDecoder.isTokenExpired(this.token)) {
+    if (this.token) {
       this.userId = this.jwtDecoder.getUserIdFromToken(this.token);
       this.isAdmin = this.jwtDecoder.getIsAdminFromToken(this.token);
       this.isBlocked = this.jwtDecoder.getIsBlockedFromToken(this.token);

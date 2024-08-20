@@ -82,7 +82,6 @@ export class EditItemComponent implements OnInit {
     this.loadItemData();
   }
 
-  // Initialize the form structure
   initializeForm() {
     this.updateItemForm = this.fb.group({
       id: [''],

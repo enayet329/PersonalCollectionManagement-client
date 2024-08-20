@@ -72,7 +72,7 @@ export class EditCollectionComponent implements OnInit {
 
   private initializeUserState(): void {
     const token = localStorage.getItem('token');
-    if (token && !this.jwtDecoderService.isTokenExpired(token)) {
+    if (token) {
       this.isAdmin = this.jwtDecoderService.getIsAdminFromToken(token);
       this.currentUser = this.jwtDecoderService.getUserIdFromToken(token);
     } else {

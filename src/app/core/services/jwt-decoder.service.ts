@@ -57,9 +57,4 @@ export class JwtDecoderService {
     return decodedToken ? decodedToken['exp'] || null : null;
   }
 
-  isTokenExpired(token: string): boolean {
-    const expiration = this.getExpirationFromToken(token);
-    if (!expiration) return true;
-    return (Math.floor((new Date).getTime() / 1000)) >= expiration;
-  }
 }
