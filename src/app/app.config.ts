@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { CommonModule, NgForOf } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -14,6 +14,7 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { ToastrModule } from 'ngx-toastr';
 import { NgbDropdown, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,6 +22,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(NgForOf),
     provideRouter(routes),
     importProvidersFrom(HttpClientModule),
+    provideHttpClient(withInterceptors([authInterceptor])),
     importProvidersFrom(
       CommonModule,
       NgModel,
