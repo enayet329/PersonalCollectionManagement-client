@@ -1,42 +1,33 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { UserConstants } from '../constants/constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = '';
-  private authToken = new BehaviorSubject<string | null>(null);
+ 
+  private apiUrl = UserConstants.API_ENDPOINTS.REFRESH_TOKEN;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  http = inject(HttpClient);
 
-  get token() {
-    return this.authToken.asObservable();
+  getRefreshToken(): Observable<any> {
+    const refreshToken = localStorage.getItem('refreshToken');
+    const accessToken = localStorage.getItem('token');
+  
+    const refreshRequest = {
+      accessToken,
+      refreshToken
+    };
+  
+    return this.http.post<any>(this.apiUrl, refreshRequest).pipe(
+      tap(response => {
+        localStorage.setItem('token', response.accessToken);
+        localStorage.setItem('refreshToken', response.refreshToken);
+      })
+    );
   }
-
-  login(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, { username, password })
-      .pipe(tap((response: any) => {
-        this.authToken.next(response.token);
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('refreshtoken', response.refreshtoken)
-      }));
-  }
-
-  register(username: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/register`, { username, password });
-  }
-
-  logout() {
-    this.authToken.next(null);
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']);
-  }
-
-  getHeaders() {
-    return new HttpHeaders().set('Authorization', `Bearer ${this.authToken.getValue()}`);
-  }
+  
 }
