@@ -165,7 +165,7 @@
                 (keydown.enter)="onEnter($event)"
               ></textarea>
             </div>
-            <div class="d-grid gap-2"><button type="submit" class="btn btn-primary ">Submit</button></div>
+            <div class="d-grid gap-2"><button type="submit" class="btn btn-primary " [disabled]="isClicked">Submit</button></div>
           </form>
         </ng-container>
         <ng-template #loginToComment>

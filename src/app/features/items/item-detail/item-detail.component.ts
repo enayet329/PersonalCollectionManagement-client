@@ -37,6 +37,7 @@ export class ItemDetailComponent implements OnInit {
   likeCount: number = 0;
   isLoadingComments: boolean = true;
   isItemLoading: boolean = true;
+  isClicked: boolean = false;
 
   // User state
   user: any = null;
@@ -147,12 +148,15 @@ export class ItemDetailComponent implements OnInit {
   }
 
   addComment(): void {
+    this.isClicked = true;
+    
     this.newComment.itemId = this.itemId;
     this.newComment.userId = this.userId!;
     this.newComment.createdAt = new Date();
 
     this.commentService.createComment(this.newComment).subscribe(
       (response) => {
+        this.isClicked = false;
         if (response.success) {
           this.getComments();
           this.newComment = {} as AddComment;
