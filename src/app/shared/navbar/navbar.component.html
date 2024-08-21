@@ -146,8 +146,10 @@
               class="dropdown-menu"
               [ngClass]="{
                 show: isProfileDropdownOpen,
-                'dropdown-menu-dark':
-                  darkModeService.darkModeSignal() === 'dark'
+                'bg-dark text-light':
+                  darkModeService.darkModeSignal() === 'dark',
+                'bg-white text-text-dark':
+                  darkModeService.darkModeSignal() !== 'dark'
               }"
             >
               <a
@@ -277,7 +279,6 @@
     </form>
   </div>
 </ng-template>
-
 
 <!-- Sign Up Modal -->
 <!-- Sign Up Modal -->
