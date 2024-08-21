@@ -284,6 +284,7 @@ export class NavbarComponent implements OnInit {
           this.initializeUserState();
           this.toastr.success('Login Successful', 'Welcome back!');
           this.modalService.dismissAll();
+          this.router.navigate(['/']);
           window.location.reload();
         } else {
           this.toastr.error(
