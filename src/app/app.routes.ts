@@ -11,11 +11,12 @@ import { AddItemComponent } from './features/items/add-item/add-item.component';
 import { ItemListComponent } from './features/items/item-list/item-list.component';
 import { EditCollectionComponent } from './features/collections/edit-collection/edit-collection.component';
 import { EditItemComponent } from './features/items/edit-item/edit-item.component';
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'collection-list', component: CollectionListComponent },
-  { path: 'dashboard', component: AdminDashboardComponent },
+  { path: 'dashboard', component: AdminDashboardComponent, canActivate: [AuthGuard] },
   { path: 'search-results', component: SearchResultsComponent },
   { path: 'collection-detail/:id', component: CollectionDetailComponent },
   { path: 'add-collection/:id', component: AddCollectionComponent },
