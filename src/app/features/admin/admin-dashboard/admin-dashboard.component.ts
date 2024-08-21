@@ -2,31 +2,42 @@ import { Component, OnInit } from '@angular/core';
 import { UserModel } from '../../../core/model/user.model';
 import { ToastrService } from 'ngx-toastr';
 import { JwtDecoderService } from '../../../core/services/jwt-decoder.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AdminService } from '../../../core/services/admin.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbDropdownModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { environment2 } from '../../../../environment/environment';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgbDropdownModule, NgbModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NgbDropdownModule,
+    NgbModule,
+    RouterLink,
+  ],
   templateUrl: './admin-dashboard.component.html',
-  styleUrls: ['./admin-dashboard.component.css']
+  styleUrls: ['./admin-dashboard.component.css'],
 })
 export class AdminDashboardComponent implements OnInit {
   users: UserModel[] = [];
   paginatedUsers: UserModel[] = [];
+  filteredUsers: UserModel[] = [];
   searchTerm: string = '';
+  isLoading: boolean = true;
+  hoveredRow: number | null = null;
 
   currentPage: number = 1;
-  itemsPerPage: number = 10;
+  userPerPage: number = environment2.itemsPerPage ? environment2.itemsPerPage : 5;
   totalPages: number = 0;
 
   // user state
   isAdmin: boolean = false;
   isLoggedIn: boolean = false;
+  userId: string = '';
 
   constructor(
     private toaster: ToastrService,
@@ -46,6 +57,13 @@ export class AdminDashboardComponent implements OnInit {
     if (token && token !== 'null' && token !== 'undefined') {
       this.isLoggedIn = true;
       this.isAdmin = this.jwtService.getIsAdminFromToken(token);
+      this.userId = this.jwtService.getUserIdFromToken(token)!;
+    }
+    else {
+      this.isLoggedIn = false;
+      this.isAdmin = false;
+      this.userId = '';
+      this.router.navigate(['/']);
     }
   }
 
@@ -53,48 +71,60 @@ export class AdminDashboardComponent implements OnInit {
     this.adminService.getUsers().subscribe(
       (response: UserModel[]) => {
         this.users = response;
-        this.totalPages = Math.ceil(this.users.length / this.itemsPerPage);
+        this.isLoading = false;
         this.filterUsers();
       },
       (error) => {
         console.log(error);
+        this.toaster.error('Error getting users');
       }
     );
   }
 
   filterUsers() {
     if (this.searchTerm.trim() === '') {
-      this.paginatedUsers = this.users;
+      this.filteredUsers = this.users;
     } else {
-      this.paginatedUsers = this.users.filter(
+      this.filteredUsers = this.users.filter(
         (user) =>
           user.username.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
           user.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          (user.isAdmin ? 'Admin' : 'User').toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          (user.isBlocked ? 'Blocked' : 'Active').toLowerCase().includes(this.searchTerm.toLowerCase())
+          (user.isAdmin ? 'Admin' : 'User')
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase()) ||
+          (user.isBlocked ? 'blocked' : 'active')
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase())
       );
     }
+
+    this.totalPages = Math.ceil(this.filteredUsers.length / this.userPerPage);
     this.currentPage = 1;
-    this.propaginateUser();
+    this.applyPagination();
   }
 
-  propaginateUser() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedUsers = this.paginatedUsers.slice(startIndex, endIndex);
+  applyPagination() {
+    const startIndex = (this.currentPage - 1) * this.userPerPage;
+    const endIndex = startIndex + this.userPerPage;
+    this.paginatedUsers = this.filteredUsers.slice(startIndex, endIndex);
   }
 
   goToPage(page: number) {
     if (page > 0 && page <= this.totalPages) {
       this.currentPage = page;
-      this.propaginateUser();
+      this.applyPagination();
     }
   }
-
   deleteUser(id: string) {
     this.adminService.deleteUser(id).subscribe(
       (response) => {
         if (response.success) {
+          if(this.userId == id)
+          {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            this.router.navigate(['/']);
+          }
           this.getUsers();
           this.toaster.success('User deleted successfully');
         }
@@ -140,6 +170,10 @@ export class AdminDashboardComponent implements OnInit {
     this.adminService.blockUser(id).subscribe(
       (response) => {
         if (response.success) {
+          if(this.userId == id)
+          {
+            this.router.navigate(['/']);
+          }
           this.getUsers();
           this.toaster.success('User blocked successfully');
         }
