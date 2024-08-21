@@ -20,14 +20,13 @@ export class CustomFieldService {
     return this.httpClient.post<any>(this.apiUrl.ADD_CUSTOM_FIELD, customField, { headers });
   }
 
-  updateCustomField(customField: updateCustomFieldRequest[]): Observable<any> {
-    
+  updateCustomField(collectionId: string, customField: updateCustomFieldRequest[]): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': '*/*',
     });
-
-    return this.httpClient.put<any>(this.apiUrl.UPDATE_CUSTOM_FIELD, customField, { headers });
+    const url = `${this.apiUrl.UPDATE_CUSTOM_FIELD}/${collectionId}`;
+    return this.httpClient.put<any>(url, customField, { headers });
   }
 
   getCustomFieldsByCollectionId(collectionId: string): Observable<CustomFieldResponse[]> {

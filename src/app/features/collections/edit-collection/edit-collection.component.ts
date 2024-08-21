@@ -302,7 +302,7 @@ export class EditCollectionComponent implements OnInit {
 
     this.updateCustomFieldModel = customFieldData;
     this.customFieldService
-      .updateCustomField(this.updateCustomFieldModel)
+      .updateCustomField(this.collection.id,this.updateCustomFieldModel)
       .subscribe(
         () => {
           this.isClicked = false;
