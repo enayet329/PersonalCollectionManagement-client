@@ -277,7 +277,6 @@ export class NavbarComponent implements OnInit {
             );
             return;
           }
-          console.log(response)
           localStorage.setItem('token', token);
           localStorage.setItem('refreshToken', response.refreshToken!)
           localStorage.setItem('theme',preferredThemeDark == true ? 'dark' : 'null')
@@ -285,7 +284,7 @@ export class NavbarComponent implements OnInit {
           this.toastr.success('Login Successful', 'Welcome back!');
           this.modalService.dismissAll();
           this.router.navigate(['/']);
-          window.location.reload();
+
         } else {
           this.toastr.error(
             'Login Failed',
