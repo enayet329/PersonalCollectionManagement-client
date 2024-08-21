@@ -147,6 +147,7 @@ export class NavbarComponent implements OnInit {
   
   toggleLanguage() {
     this.currentLanguage = this.currentLanguage === 'en' ? 'bn' : 'en';
+    this.toastr.info('Language update feauture is not available yet', 'Info');
     localStorage.setItem('prefferedLanguage', this.currentLanguage);
   }
 
