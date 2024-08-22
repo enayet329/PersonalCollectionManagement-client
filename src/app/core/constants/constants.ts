@@ -3,10 +3,10 @@
 //const apiUrl = 'https://localhost:7138/api/v1/';
 
 // apiurl for production environment
-const apiUrl = 'https://collectionapp.somee.com/api/v1/';
+//const apiUrl = 'https://collectionapp.somee.com/api/v1/';
 
 // apiUrl for development environment
- //const apiUrl = 'https://localhost:7138/api/v1/';
+ const apiUrl = 'https://localhost:7138/api/v1/';
 
 // Collection Constants
 export const CollectionConstants = {
@@ -22,10 +22,14 @@ export const CollectionConstants = {
   },
 };
 
+export const SearchConstants ={
+  API_ENDPOINTS: {
+    FULL_TEXT_SEARCH: apiUrl + 'search/full-text-search',
+  },
+}
 // Item Constants
 export const ItemConstants = {
   API_ENDPOINTS: {
-    SEARCH_ITEMS: apiUrl + 'items/search/query',
     GET_ALL_ITEMS: apiUrl + 'items/all',
     GET_ITEMS_BY_TAG: apiUrl + 'items/get/tagName',
     GET_ITEM_BY_ID: apiUrl + 'items/get/id',
