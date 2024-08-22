@@ -23,13 +23,13 @@
             <div class="card h-100 shadow-sm border-0 rounded-3 position-relative">
               <div class="position-absolute top-0 end-0 m-2">
                 <div class="dropdown">
-                  <button class="btn btn-sm btn-light rounded-circle shadow-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                  <button *ngIf="isAdmin || item.userId === userId" class="btn btn-sm btn-light rounded-circle shadow-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="bi bi-three-dots-vertical"></i>
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item" (click)="updateItem(item.id)"><i class="bi bi-pencil-square me-2"></i>Update</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger" (click)="deleteItem(item.id)"><i class="bi bi-trash me-2"></i>Delete</a></li>
+                    <li><a class="dropdown-item text-danger" (click)="deleteItem(item)"><i class="bi bi-trash me-2"></i>Delete</a></li>
                   </ul>
                 </div>
               </div>

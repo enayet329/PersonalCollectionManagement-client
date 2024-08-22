@@ -35,10 +35,7 @@ export class CollectionListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.collectionService.getCollections().subscribe((data) => {
-      this.isLoading = false;
-      this.collections = data;
-    });
+    this.getAllCollections();
     this.initializeUserState();
   }
 
@@ -49,6 +46,16 @@ export class CollectionListComponent implements OnInit {
       this.isAdmin = this.jwtDecoder.getIsAdminFromToken(token);
     }
   }
+
+  getAllCollections() {
+    this.collectionService.getCollections().subscribe((data) => {
+      this.isLoading = false;
+      this.collections = data;
+    },(error) => { 
+      console.error('Error getting collections:', error);
+    }
+  );
+}
 
   updateCollection(collectionId: string): void {
     this.router.navigate(['/edit-collection', collectionId]);
@@ -68,7 +75,7 @@ export class CollectionListComponent implements OnInit {
           (response: ResponseModel) => {
             if (response.success) {
               this.toaster.success('Collection deleted successfully');
-              this.router.navigate(['/profile-view', this.currentUser]);
+              this.getAllCollections();
             } else {
               this.toaster.error('Error deleting collection');
             }
