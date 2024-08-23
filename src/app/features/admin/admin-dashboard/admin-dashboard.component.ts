@@ -147,7 +147,7 @@ export class AdminDashboardComponent implements OnInit {
       },
       (error) => {
         console.log(error);
-        this.toaster.error('Error upgrading user to admin');
+        this.toaster.error('Internal server error');
       }
     );
   }
@@ -162,7 +162,7 @@ export class AdminDashboardComponent implements OnInit {
       },
       (error) => {
         console.log(error);
-        this.toaster.error('Error downgrading user to user');
+        this.toaster.error('Internal server error');
       }
     );
   }
@@ -181,7 +181,7 @@ export class AdminDashboardComponent implements OnInit {
       },
       (error) => {
         console.log(error);
-        this.toaster.error('Error blocking user');
+        this.toaster.error('Internal server error');
       }
     );
   }
@@ -196,7 +196,7 @@ export class AdminDashboardComponent implements OnInit {
       },
       (error) => {
         console.log(error);
-        this.toaster.error('Error unblocking user');
+        this.toaster.error('Internal server error');
       }
     );
   }

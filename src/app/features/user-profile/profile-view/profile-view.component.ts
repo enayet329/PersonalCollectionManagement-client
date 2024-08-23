@@ -173,7 +173,7 @@ export class ProfileViewComponent implements OnInit {
 
     this.userService.updateUser(user).subscribe(
       (response) => {
-        console.log('Profile updated successfully:', response);
+        console.log('Profile updated successfully');
         this.toaster.success('Profile updated successfully', 'Success');
         localStorage.setItem('theme', formValue.preferredThemeDark == true?'dark':'null');
         this.getUserProfile();

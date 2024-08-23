@@ -94,7 +94,9 @@ export class AddCollectionComponent implements OnInit {
     this.adminService.getUsers().subscribe(
       (response)=> {
         this.users = response;
-        console.log('Users:', response);
+      },
+      (error) => {
+        console.error('Error getting users:', error);
       }
     )
   }
@@ -218,7 +220,6 @@ export class AddCollectionComponent implements OnInit {
       }
     } else {
       this.toastr.error('Form is invalid', 'Please fill all required fields.', this.addCollectionForm.value);
-      console.log('Form is invalid', this.addCollectionForm.value)
     }
   }
 
@@ -249,14 +250,14 @@ export class AddCollectionComponent implements OnInit {
     this.collectionService.addCollection(collection).subscribe(
       (response) => {
         this.collection = response;
-        console.log('Collection created:', response);
+        console.log('Collection create successfully');
 
         const customFields: CustomField[] = formValue.customFields.map((cf: any) => ({
           name: cf.label,
           fieldType: cf.type,
           collectionId: response.id,
         }));
-        console.log('Custom fields:', customFields);
+
         this.createCustomFields(customFields);
 
         this.toastr.success('Collection created successfully');

@@ -58,7 +58,6 @@ export class HomeComponent implements OnInit {
       (collections) => {
         this.isLoadingCollections = false;
         this.collections = collections;
-        console.log(this.collections);
       },
       (error) => {
         console.error('Error fetching collections', error);
@@ -71,7 +70,6 @@ export class HomeComponent implements OnInit {
     this.itemService.getRecentItems().subscribe(
       (items) => {
         this.recentItems = items;
-        console.log('Recent Items:', this.recentItems);
         this.isLoadingItems = false;
       },
       (error) => {

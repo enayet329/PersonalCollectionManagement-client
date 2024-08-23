@@ -134,7 +134,6 @@ export class AddItemComponent implements OnInit {
       .subscribe(
         (response: CustomFieldResponse[]) => {
           this.customFields = response;
-          console.log('customFields', this.customFields);
           this.addCustomFieldsToForm();
         },
         (error: any) => {
@@ -148,7 +147,6 @@ export class AddItemComponent implements OnInit {
     this.tagService.getAllTags().subscribe(
       (response: AddTagResponse[]) => {
         this.tags = response;
-        console.log('tags', this.tags);
       },
       (error: any) => {
         console.error(error);

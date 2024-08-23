@@ -170,7 +170,6 @@ export class EditItemComponent implements OnInit {
       .getCustomFieldValueByItemId(itemId)
       .subscribe((customFields: CustomFieldValueResponse[]) => {
         this.selectedCustomFields = customFields;
-        console.log('Custom fields loaded', customFields);
         this.populateCustomFields(customFields);
       }),
       (error: any) => {
@@ -301,7 +300,7 @@ export class EditItemComponent implements OnInit {
     console.log('image url', this.updateItemForm.value.imgUrl);
     this.itemService.updateItem(updateItem).subscribe(
       (response: any) => {
-        console.log('Item updated successfully', response);
+        console.log('Item updated successfully');
         this.updateCustomFieldValue();
         this.updateTags();
         this.toaster.success('Item updated successfully');
@@ -327,7 +326,7 @@ export class EditItemComponent implements OnInit {
     this.custmFieldServiceValues
       .updateCustomFieldValue(customFieldValues)
       .subscribe((response: any) => {
-        console.log('Custom field values updated successfully', response);
+        console.log('Custom field values updated successfully');
       }),
       (error: any) => {
         console.log('Failed to update custom field values', error);

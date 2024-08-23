@@ -129,7 +129,7 @@ export class NavbarComponent implements OnInit {
       (response: ResponseModel) => {
         if (response.message !== 'Error') {
           this.toastr.success('Theme updated successfully');
-          console.log('Theme updated', response.message);
+          console.log('Theme updated');
         } else {
           this.preferredThemeDark = !this.preferredThemeDark;
           this.toastr.error(

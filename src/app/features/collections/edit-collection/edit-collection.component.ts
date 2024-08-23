@@ -101,7 +101,6 @@ export class EditCollectionComponent implements OnInit {
           this.collection = response;
           this.patchFormWithCollectionData();
           this.loadCustomFields();
-          console.log(this.collection);
         },
         (error) => this.toastr.error('Failed to load collection data.')
       );
@@ -131,7 +130,6 @@ export class EditCollectionComponent implements OnInit {
         (response: CustomFieldResponse[]) => {
           this.customFields = response;
           this.patchFormWithCustomFields();
-          console.log(this.customFields);
         },
         (error) => this.toastr.error('Failed to load custom fields.')
       );
@@ -320,7 +318,6 @@ export class EditCollectionComponent implements OnInit {
       .getCategories()
       .subscribe((response: Categories[]) => {
         this.categories = response;
-        console.log('categories', this.categories);
       });
   }
 }

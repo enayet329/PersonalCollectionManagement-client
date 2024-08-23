@@ -274,7 +274,6 @@ export class ItemDetailComponent implements OnInit {
   }
 
   editComment(commentId: string): void {
-    console.log('Edit comment', commentId);
     this.toaster.info('Edit comment functionality not implemented yet', 'Info');
   }
 
