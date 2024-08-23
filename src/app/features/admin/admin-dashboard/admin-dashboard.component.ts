@@ -124,6 +124,7 @@ export class AdminDashboardComponent implements OnInit {
             localStorage.removeItem('token');
             localStorage.removeItem('refreshToken');
             this.router.navigate(['/']);
+            window.location.reload();
           }
           this.getUsers();
           this.toaster.success('User deleted successfully');
