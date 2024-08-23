@@ -109,7 +109,7 @@
                 </p>
                 <p class="card-text">
                   <small><i class="bi bi-collection me-2"></i>Collection: 
-                    <a href="#" class="text-decoration-none">{{ item.collectionName }}</a>
+                    <a routerLink="/collection-detail/{{ item.collectionId }}" class="text-decoration-none">{{ item.collectionName }}</a>
                   </small><br />
                   <small><i class="bi bi-calendar-event me-2"></i>Date: {{ item.dateAdded | date : "dd/MM/yyyy" }}</small>
                 </p>
