@@ -117,14 +117,13 @@
   </div>
 </ng-template>
 
-<!-- Tags Template -->
 <ng-template #tagsSection>
   <div class="mb-4">
     <h4 class="h6 text-uppercase mb-2 d-flex align-items-center">
       <span class="me-2">Tags:</span>
       <ng-container *ngIf="tags.length > 0; else noTags">
         <div class="d-flex flex-wrap gap-1">
-          <span class="badge  border border-secondary px-2 py-1 small" *ngFor="let tag of tags">
+          <span class="badge border border-secondary px-2 py-1 small text-body" *ngFor="let tag of tags">
             {{ tag.name }}
           </span>
         </div>
@@ -132,7 +131,6 @@
     </h4>
   </div>
 </ng-template>
-
 <!-- No Tags Template -->
 <ng-template #noTags>
   <span class="text-muted">No tags yet.</span>
