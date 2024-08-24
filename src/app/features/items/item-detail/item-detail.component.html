@@ -51,7 +51,36 @@
     <!-- Comments Section -->
     <div class="mt-5 row">
       <div class="col-md-8">
-        <ng-container *ngTemplateOutlet="commentsSection"></ng-container>
+        <h3 class="h4">Comments</h3>
+        <ng-container *ngIf="!isLoadingComments; else loadingComments">
+          <ng-container *ngIf="comments.length > 0; else noComments">
+            <div *ngFor="let comment of comments" class="card shadow-sm mb-4">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <div class="d-flex align-items-center">
+                    <img [src]="comment.userProfileImgeUrl || 'assets/user.svg'" [alt]="comment.userName" class="rounded-circle me-3" style="width: 48px; height: 48px; object-fit: cover" onerror="this.src='assets/user.svg'">
+                    <div>
+                      <a routerLink="/profile-view/{{ comment.userId }}" class="text-decoration-none"><h5 class="card-title fw-bold mb-0">{{ comment.userName }}</h5></a>
+                      <small class="text-muted">{{ comment.createdAt | date : "medium" }}</small>
+                    </div>
+                  </div>
+                  <ng-container *ngIf="isLoggedIn && (isAdmin || comment.userId === userId)">
+                    <div ngbDropdown class="d-inline-block">
+                      <button class="btn btn-light btn-sm rounded-circle shadow-sm" type="button" id="commentDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="commentDropdownButton">
+                        <li><a class="dropdown-item" (click)="handleCommentAction('edit', comment.id)"><i class="bi bi-pencil-square me-2"></i>Edit</a></li>
+                        <li><a class="dropdown-item text-danger" (click)="handleCommentAction('delete', comment.id)"><i class="bi bi-trash me-2"></i>Delete</a></li>
+                      </ul>
+                    </div>
+                  </ng-container>
+                </div>
+                <p class="card-text">{{ comment.content }}</p>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
       </div>
       <div class="col-md-4">
         <ng-container *ngTemplateOutlet="commentBox"></ng-container>
@@ -88,7 +117,6 @@
   </div>
 </ng-template>
 
-
 <!-- Tags Template -->
 <ng-template #tagsSection>
   <div class="mb-4">
@@ -121,32 +149,6 @@
     </button>
     <span class="ms-2 fw-bold">{{ like.likeCount }}</span>
   </div>
-</ng-template>
-
-<!-- Comments Section Template -->
-<ng-template #commentsSection>
-  <h3 class="h4">Comments</h3>
-  <ng-container *ngIf="!isLoadingComments; else loadingComments">
-    <ng-container *ngIf="comments.length > 0; else noComments">
-      <div *ngFor="let comment of comments" class="card shadow-sm mb-4">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="d-flex align-items-center">
-              <img [src]="comment.userProfileImgeUrl || 'assets/user.svg'" [alt]="comment.userName" class="rounded-circle me-3" style="width: 48px; height: 48px; object-fit: cover" onerror="this.src='assets/user.svg'">
-              <div>
-                <a routerLink="/profile-view/{{ comment.userId }}" class="text-decoration-none"><h5 class="card-title fw-bold mb-0">{{ comment.userName }}</h5></a>
-                <small class="text-muted">{{ comment.createdAt | date : "medium" }}</small>
-              </div>
-            </div>
-            <ng-container *ngIf="isLoggedIn && (isAdmin || comment.userId === userId)">
-              <ng-container *ngTemplateOutlet="dropdownMenu"></ng-container>
-            </ng-container>
-          </div>
-          <p class="card-text">{{ comment.content }}</p>
-        </div>
-      </div>
-    </ng-container>
-  </ng-container>
 </ng-template>
 
 <!-- No Comments Template -->

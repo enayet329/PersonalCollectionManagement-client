@@ -245,7 +245,7 @@ export class ItemDetailComponent implements OnInit {
     }
   }
 
-  handleCommentDropdownClick(action: string, commentId: string): void {
+  handleCommentAction(action: string, commentId: string): void {
     if (action === 'edit') {
       this.editComment(commentId);
     } else if (action === 'delete') {
