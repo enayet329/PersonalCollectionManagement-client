@@ -1,68 +1,36 @@
+<!-- Main Container -->
 <div class="container my-5" *ngIf="isLoggedIn; else notLoggedInTemplate">
   <ng-container *ngIf="!isItemLoading; else loadingTemplate">
+    <!-- Item Details Card -->
     <div class="card shadow-sm hover-shadow-lg transition-all duration-300">
       <div class="row g-0">
+        <!-- Item Image -->
         <ng-container *ngIf="item.imgUrl">
           <div class="col-md-4 position-relative">
-            <img
-              [src]="item.imgUrl"
-              [alt]="item.name"
-              class="img-fluid rounded-start"
-              onerror="this.src='assets/logo.png'"
-            />
+            <img [src]="item.imgUrl" [alt]="item.name" class="img-fluid rounded-start" onerror="this.src='assets/logo.png'">
           </div>
         </ng-container>
+        
+        <!-- Item Details -->
         <div [ngClass]="{'col-md-8': item.imgUrl, 'col-md-12': !item.imgUrl}">
           <div class="card-body p-4">
+            <!-- Header -->
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h2 class="h3 fw-bold">{{ item.name }}</h2>
-              <div *ngIf="isAdmin || isUser" ngbDropdown class="d-inline-block">
-                <button
-                class="btn btn-light btn-sm rounded-circle shadow-sm"
-                type="button"
-                id="dropdownMenuButton"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <i class="bi bi-three-dots"></i>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" (click)="handleDropdownClick('edit')"><i class="bi bi-pencil-square me-2"></i>Edit</a></li>
-                <li><a class="dropdown-item text-danger" (click)="handleDropdownClick('delete')"><i class="bi bi-trash me-2"></i>Delete</a></li>
-              </ul>
-              </div>
+              <ng-container *ngIf="isAdmin || isUser">
+                <ng-container *ngTemplateOutlet="dropdownMenu"></ng-container>
+              </ng-container>
             </div>
+            
             <p class="lead mb-4">{{ item.description }}</p>
             
-            <!-- Custom Fields section -->
-            <div class="mb-4">
-              <h4 class="h5 text-uppercase mb-3">Custom Fields</h4>
-              <div class="row g-3">
-                <ng-container *ngFor="let customField of customFieldValues">
-                  <div class="col-md-6">
-                    <div class="custom-field p-3 rounded-3 shadow-sm">
-                      <h5 class="h6 text-primary mb-2">{{ customField.customFieldName }}</h5>
-                      <p class="mb-0 fw-bold">{{ customField.value }}</p>
-                    </div>
-                  </div>
-                </ng-container>
-              </div>
-            </div>
+            <!-- Custom Fields -->
+            <ng-container *ngTemplateOutlet="customFieldsSection"></ng-container>
             
-            <div class="mb-4">
-              <!-- Tags section -->
-              <h4 class="h6 text-uppercase mb-2">Tags</h4>
-              <div class="d-flex flex-wrap gap-2" *ngIf="tags.length > 0; else noTags">
-                <span class="badge text-muted border border-secondary rounded-pill px-3 py-2" *ngFor="let tag of tags">
-                  {{ tag.name }}
-                </span>
-              </div>
-            </div>
-
-            <ng-template #noTags>
-              <div class="alert alert-light border mb-4">No tags yet.</div>
-            </ng-template>
+            <!-- Tags -->
+            <ng-container *ngTemplateOutlet="tagsSection"></ng-container>
             
+            <!-- Collection Info -->
             <p class="mb-2">
               <strong>Collection:</strong>
               <a (click)="goToCollection(item.collectionId)" class="text-decoration-none">
@@ -72,111 +40,148 @@
             <p class="text-muted small mb-4">
               Added on {{ item.dateAdded | date : "longDate" }}
             </p>
-            <div class="d-flex align-items-center">
-              <button
-                class="btn"
-                [ngClass]="{
-                  'btn-outline-secondary': !hasLiked,
-                  'btn-danger': hasLiked
-                }"
-                (click)="toggleLike()"
-              >
-                <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-                </svg>
-                <span>{{ hasLiked ? "Liked" : "Like" }}</span>
-              </button>
-              <span class="ms-2 fw-bold">{{ like.likeCount }}</span>
-            </div>
+            
+            <!-- Like Button -->
+            <ng-container *ngTemplateOutlet="likeButton"></ng-container>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Comments Section -->
     <div class="mt-5 row">
-      <!-- Comments section (left side) -->
       <div class="col-md-8">
-        <h3 class="h4">Comments</h3>
-        <ng-container *ngIf="!isLoadingComments; else loadingComments">
-          <ng-container *ngIf="comments.length > 0; else noComments">
-            <div *ngFor="let comment of comments" class="card shadow-sm mb-4">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <div class="d-flex align-items-center">
-                    <img
-                      [src]="comment.userProfileImgeUrl || 'assets/user.svg'"
-                      [alt]="comment.userName"
-                      class="rounded-circle me-3"
-                      style="width: 48px; height: 48px; object-fit: cover"
-                      onerror="this.src='assets/user.svg'"
-                    />
-                    <div>
-                      <a routerLink="/profile-view/{{ comment.userId }}" class="text-decoration-none"><h5 class="card-title fw-bold mb-0">{{ comment.userName }}</h5></a>
-                      <small class="text-muted">{{ comment.createdAt | date : "medium" }}</small>
-                    </div>
-                  </div>
-                  <div *ngIf="isLoggedIn && (isAdmin || comment.userId === userId)" ngbDropdown class="d-inline-block">
-                    <button
-                    class="btn btn-light btn-sm rounded-circle shadow-sm"
-                    type="button"
-                    id="dropdownMenuButton"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <i class="bi bi-three-dots"></i>
-                  </button>
-                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" (click)="editComment(comment.id)"><i class="bi bi-pencil-square me-2"></i>Edit</a></li>
-                    <li><a class="dropdown-item text-danger" (click)="deleteComment(comment.id)"><i class="bi bi-trash me-2"></i>Delete</a></li>
-                  </ul>
-                  </div>
-                </div>
-                <p class="card-text">{{ comment.content }}</p>
-              </div>
-            </div>
-          </ng-container>
-          <ng-template #noComments>
-            <div class="alert alert-light border mb-4">No comments yet.</div>
-          </ng-template>
-        </ng-container>
-
-        <ng-template #loadingComments>
-          <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>
-        </ng-template>
+        <ng-container *ngTemplateOutlet="commentsSection"></ng-container>
       </div>
-      <!-- Comment box (right side) -->
       <div class="col-md-4">
-        <ng-container *ngIf="isLoggedIn; else loginToComment">
-          <h4 class="h5 mb-3">Add a comment</h4>
-          <form (ngSubmit)="addComment()" class="mb-5">
-            <div class="mb-3">
-              <textarea
-                [(ngModel)]="newComment.content"
-                name="comment"
-                id="comment"
-                rows="5"
-                class="form-control"
-                placeholder="Write a comment..."
-                required
-                (keydown.enter)="onEnter($event)"
-              ></textarea>
-            </div>
-            <div class="d-grid gap-2"><button type="submit" class="btn btn-primary " [disabled]="isClicked">Submit</button></div>
-          </form>
-        </ng-container>
-        <ng-template #loginToComment>
-          <div class="alert alert-light border mb-4">
-            You must be logged in to comment.
-          </div>
-        </ng-template>
+        <ng-container *ngTemplateOutlet="commentBox"></ng-container>
       </div>
     </div>
   </ng-container>
 </div>
+
+<!-- Dropdown Menu Template -->
+<ng-template #dropdownMenu>
+  <div ngbDropdown class="d-inline-block">
+    <button class="btn btn-light btn-sm rounded-circle shadow-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-three-dots"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+      <li><a class="dropdown-item" (click)="handleDropdownClick('edit')"><i class="bi bi-pencil-square me-2"></i>Edit</a></li>
+      <li><a class="dropdown-item text-danger" (click)="handleDropdownClick('delete')"><i class="bi bi-trash me-2"></i>Delete</a></li>
+    </ul>
+  </div>
+</ng-template>
+
+<!-- Custom Fields Template -->
+<ng-template #customFieldsSection>
+  <div class="mb-4">
+    <div class="d-flex flex-column">
+      <ng-container *ngFor="let customField of customFieldValues">
+        <div class="custom-field mb-2 rounded-3" *ngIf="customField.value">
+          <h5 class="h6 mb-1">
+            {{ customField.customFieldName }} <span class="text-muted">: {{customField.value}}</span>
+          </h5>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+
+<!-- Tags Template -->
+<ng-template #tagsSection>
+  <div class="mb-4">
+    <h4 class="h6 text-uppercase mb-2 d-flex align-items-center">
+      <span class="me-2">Tags:</span>
+      <ng-container *ngIf="tags.length > 0; else noTags">
+        <div class="d-flex flex-wrap gap-1">
+          <span class="badge  border border-secondary px-2 py-1 small" *ngFor="let tag of tags">
+            {{ tag.name }}
+          </span>
+        </div>
+      </ng-container>
+    </h4>
+  </div>
+</ng-template>
+
+<!-- No Tags Template -->
+<ng-template #noTags>
+  <span class="text-muted">No tags yet.</span>
+</ng-template>
+
+<!-- Like Button Template -->
+<ng-template #likeButton>
+  <div class="d-flex align-items-center">
+    <button class="btn" [ngClass]="{'btn-outline-secondary': !hasLiked, 'btn-danger': hasLiked}" (click)="toggleLike()">
+      <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+      </svg>
+      <span>{{ hasLiked ? "Liked" : "Like" }}</span>
+    </button>
+    <span class="ms-2 fw-bold">{{ like.likeCount }}</span>
+  </div>
+</ng-template>
+
+<!-- Comments Section Template -->
+<ng-template #commentsSection>
+  <h3 class="h4">Comments</h3>
+  <ng-container *ngIf="!isLoadingComments; else loadingComments">
+    <ng-container *ngIf="comments.length > 0; else noComments">
+      <div *ngFor="let comment of comments" class="card shadow-sm mb-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex align-items-center">
+              <img [src]="comment.userProfileImgeUrl || 'assets/user.svg'" [alt]="comment.userName" class="rounded-circle me-3" style="width: 48px; height: 48px; object-fit: cover" onerror="this.src='assets/user.svg'">
+              <div>
+                <a routerLink="/profile-view/{{ comment.userId }}" class="text-decoration-none"><h5 class="card-title fw-bold mb-0">{{ comment.userName }}</h5></a>
+                <small class="text-muted">{{ comment.createdAt | date : "medium" }}</small>
+              </div>
+            </div>
+            <ng-container *ngIf="isLoggedIn && (isAdmin || comment.userId === userId)">
+              <ng-container *ngTemplateOutlet="dropdownMenu"></ng-container>
+            </ng-container>
+          </div>
+          <p class="card-text">{{ comment.content }}</p>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-template>
+
+<!-- No Comments Template -->
+<ng-template #noComments>
+  <div class="alert alert-light border mb-4">No comments yet.</div>
+</ng-template>
+
+<!-- Loading Comments Template -->
+<ng-template #loadingComments>
+  <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Comment Box Template -->
+<ng-template #commentBox>
+  <ng-container *ngIf="isLoggedIn; else loginToComment">
+    <h4 class="h5 mb-3">Add a comment</h4>
+    <form (ngSubmit)="addComment()" class="mb-5">
+      <div class="mb-3">
+        <textarea [(ngModel)]="newComment.content" name="comment" id="comment" rows="5" class="form-control" placeholder="Write a comment..." required (keydown.enter)="onEnter($event)"></textarea>
+      </div>
+      <div class="d-grid gap-2"><button type="submit" class="btn btn-primary" [disabled]="isClicked">Submit</button></div>
+    </form>
+  </ng-container>
+</ng-template>
+
+<!-- Login To Comment Template -->
+<ng-template #loginToComment>
+  <div class="alert alert-light border mb-4">
+    You must be logged in to comment.
+  </div>
+</ng-template>
 
 <!-- Loading Template -->
 <ng-template #loadingTemplate>

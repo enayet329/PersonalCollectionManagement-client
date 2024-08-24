@@ -27,12 +27,8 @@ export class CustomFieldValueService {
     return this.http.get<CustomFieldValueResponse[]>(this.apiurl.GET_CUSTOM_FIELD_VALUES_BY_ITEM_ID, { params });
   }
 
-  updateCustomFieldValue(customFieldValue: updateCustomFieldValueRequest[]): Observable<any>{
-    const headers = {
-      'Content-Type': 'application/json'
-    };
-    
-    return this.http.put(this.apiurl.UPDATE_CUSTOM_FIELD_VALUE, customFieldValue, {headers});
+  updateCustomFieldValues(itemId: string, customFieldValues: any[]): Observable<any> {
+    return this.http.put<any>(`${this.apiurl.UPDATE_CUSTOM_FIELD_VALUE}/${itemId}`, customFieldValues);
   }
 
   deleteCustomFieldValue(customFieldValueId: string): Observable<any>{

@@ -13,9 +13,9 @@ export interface CustomFieldValueResponse {
     fieldType: string;
 }
 
-export interface updateCustomFieldValueRequest {
-    id: string,
-    value: any | null,
-    customFieldId: string,
-    itemId: string
+export interface updateCustomFieldValueRequest   {
+    "id": string,
+    "value": any | null,
+    "customFieldId": string,
+    "itemId": string
   }

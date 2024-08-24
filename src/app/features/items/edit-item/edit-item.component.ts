@@ -47,7 +47,7 @@ export class EditItemComponent implements OnInit {
   collectionId: string = '';
   customFields: CustomFieldResponse[] = [];
   tags: AddTagResponse[] = [];
-  updateCustomFieldValues: updateCustomFieldValueRequest[] = [];
+  UpdateCustomFieldValueRequest: updateCustomFieldValueRequest[] = [];
   item: Item = {} as Item;
   updateItemEntity: UpdateItem = {} as UpdateItem;
   private itemImageFile: File | null = null;
@@ -71,7 +71,7 @@ export class EditItemComponent implements OnInit {
     private location: Location,
     private itemService: ItemService,
     private tagService: TagService,
-    private custmFieldServiceValues: CustomFieldValueService,
+    private customFieldValueService: CustomFieldValueService,
     private themeService: ThemeService,
     private cloudinaryService: CloudinaryUploadService
   ) {}
@@ -166,7 +166,7 @@ export class EditItemComponent implements OnInit {
 
   // Load custom fields for the item
   loadCustomFields(itemId: string) {
-    this.custmFieldServiceValues
+    this.customFieldValueService
       .getCustomFieldValueByItemId(itemId)
       .subscribe((customFields: CustomFieldValueResponse[]) => {
         this.selectedCustomFields = customFields;
@@ -317,21 +317,30 @@ export class EditItemComponent implements OnInit {
       this.updateItemForm.value.customFields.map((field: any) => {
         return {
           id: field.id,
-          value: field.value,
+          value: field.value ? field.value.toString() : null,
           customFieldId: field.customFieldId,
-          itemId: field.itemId,
+          itemId: this.itemId,
         };
       });
-    console.log('Custom field values', customFieldValues);
-    this.custmFieldServiceValues
-      .updateCustomFieldValue(customFieldValues)
-      .subscribe((response: any) => {
-        console.log('Custom field values updated successfully');
-      }),
-      (error: any) => {
-        console.log('Failed to update custom field values', error);
-      };
+
+    console.log('Payload being sent:', customFieldValues); // Debugging
+
+    if (this.itemId) {
+      this.customFieldValueService
+        .updateCustomFieldValues(this.itemId, customFieldValues)
+        .subscribe({
+          next: (response: any) => {
+            console.log('Custom field values updated successfully', response);
+          },
+          error: (error: any) => {
+            console.error('Failed to update custom field values', error);
+          }
+        });
+    } else {
+      console.error('Item ID is missing');
+    }
   }
+
 
   updateTags() {
     this.tags = this.selectedTags;
