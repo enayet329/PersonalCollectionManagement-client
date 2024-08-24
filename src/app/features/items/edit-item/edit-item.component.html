@@ -10,11 +10,9 @@
             <div class="col-md-6 mb-3">
               <label for="name" class="form-label">Name</label>
               <input id="name" type="text" class="form-control" formControlName="name">
-              <ng-container *ngIf="updateItemForm.get('name')?.invalid && (updateItemForm.get('name')?.dirty || updateItemForm.get('name')?.touched)">
-                <div class="alert alert-danger" *ngIf="updateItemForm.get('name')?.errors?.['required']">
-                  Name is required
-                </div>
-              </ng-container>
+              <div *ngIf="updateItemForm.get('name')?.invalid && (updateItemForm.get('name')?.touched || updateItemForm.get('name')?.dirty)" class="text-danger">
+                Collection name is required.
+              </div>
             </div>
             <div class="col-md-6 mb-3">
               <label for="description" class="form-label">Description</label>

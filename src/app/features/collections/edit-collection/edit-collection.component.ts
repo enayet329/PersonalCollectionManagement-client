@@ -102,7 +102,7 @@ export class EditCollectionComponent implements OnInit {
           this.patchFormWithCollectionData();
           this.loadCustomFields();
         },
-        (error) => this.toastr.error('Failed to load collection data.')
+        (error) => this.toastr.error('Failed to load collection data.',error)
       );
     }
   }
@@ -131,7 +131,7 @@ export class EditCollectionComponent implements OnInit {
           this.customFields = response;
           this.patchFormWithCustomFields();
         },
-        (error) => this.toastr.error('Failed to load custom fields.')
+        (error) => this.toastr.error('Failed to load custom fields.',error)
       );
   }
 
@@ -235,32 +235,29 @@ export class EditCollectionComponent implements OnInit {
   }
 
   cancel(): void {
-    this.location.back();
+    this.router.navigate(['/collection-detail', this.collection.id]);
   }
-
   onSubmit(): void {
     if (this.editCollectionForm.invalid) {
-      this.toastr.error('Please fill in all required fields.');
-      return;
+        this.toastr.error('Please fill in all required fields.');
+        return;
     }
 
     this.isClicked = true;
 
     if (this.collectionImageFile) {
-      this.cloudinaryService
-        .uploadImage(this.collectionImageFile)
-        .then((url: string) => {
-          this.collectionUrlImageUrl = url;
-          this.updateCollection();
-        })
-        .catch((error) => {
-          console.error('Image upload failed:', error);
+        this.cloudinaryService.uploadImage(this.collectionImageFile).then((url: string) => {
+            this.collectionUrlImageUrl = url;
+            this.updateCollection();
+        }).catch((error) => {
+            console.error('Image upload failed:', error);
+            this.isClicked = false;
         });
     } else {
-      this.updateCollection();
+        this.collectionUrlImageUrl = this.collection.imageUrl;
+        this.updateCollection();
     }
-  }
-
+}
   private updateCollection(): void {
     this.updateCollectionModel = {
       id: this.collection.id,
@@ -272,21 +269,17 @@ export class EditCollectionComponent implements OnInit {
         : this.collection.imageUrl,
       userId: this.collection.userId,
     };
-
-    console.log('updateCollectionModel', this.updateCollectionModel);
-    this.collectionService
-      .updateCollection(this.updateCollectionModel)
-      .subscribe(
+    this.collectionService.updateCollection(this.updateCollectionModel).subscribe(
         () => {
           this.toastr.success('Collection updated successfully.');
           this.updateCustomFields();
         },
         (error) => {
-          this.toastr.error('Failed to update the collection.');
+          this.toastr.error('Failed to update the collection.',error);
           this.isClicked = false;
         }
-      );
-  }
+    );
+}
 
   updateCustomFields(): void {
     const customFieldData: updateCustomFieldRequest[] =

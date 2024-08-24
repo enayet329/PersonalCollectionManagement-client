@@ -1,153 +1,164 @@
 <div class="container my-5">
-    <div class="card shadow">
-      <div class="card-body">
-        <form
-          [formGroup]="editCollectionForm"
-          (ngSubmit)="onSubmit()"
-          *ngIf="isAdmin || isUser"
-        >
-          <h2 class="mb-4 text-center">Edit Collection</h2>
-  
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label for="name" class="form-label">Name</label>
-              <input
-                id="name"
-                type="text"
-                class="form-control"
-                formControlName="name"
-                placeholder="Enter collection name"
-              />
-            </div>
-  
-            <div class="col-md-6">
-              <label for="topic" class="form-label">Select Collection Topic</label>
-              <select id="topic" class="form-select" formControlName="topic">
-                <option value="" [selected]="true">Select a topic</option>
-                <option *ngFor="let category of categories" [value]="category.name">
-                  {{ category.name }}
-                </option>
-              </select>
-            </div>
-          </div>
-  
-          <div class="my-4">
-            <label for="collection-image" class="form-label">Collection URL Image</label>
-            <div
-              class="profile-image-container stylish-border p-2 text-center d-flex justify-content-center align-items-center"
-              (dragover)="onDragOver($event)"
-              (drop)="onDrop($event)"
-              style="width: 100%; height: 150px"
-            >
-              <img
-                [src]="collectionUrlImageUrl"
-                alt="Collection Image"
-                class="img-fluid rounded"
-                *ngIf="collectionUrlImageUrl"
-                style="max-width: 100%; max-height: 100%"
-              />
-              <div *ngIf="!collectionUrlImageUrl" class="placeholder-content">
-                <i class="fas fa-cloud-upload-alt fa-3x mb-2"></i>
-                <p class="text-muted m-0">Drag and drop your image here</p>
-              </div>
-            </div>
+  <div class="card shadow">
+    <div class="card-body">
+      <form
+        [formGroup]="editCollectionForm"
+        (ngSubmit)="onSubmit()"
+        *ngIf="isAdmin || isUser"
+      >
+        <h2 class="mb-4 text-center">Edit Collection</h2>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="name" class="form-label">Name</label>
             <input
-              type="file"
-              class="form-control mt-2"
-              id="collection-image"
-              (change)="onFileSelected($event)"
-              accept="image/*"
-            />
-          </div>
-  
-          <div class="mb-4">
-            <label for="description" class="form-label">Description</label>
-            <textarea
-              id="description"
+              id="name"
+              type="text"
               class="form-control"
-              formControlName="description"
-              placeholder="Write a description..."
-              rows="4"
-            ></textarea>
-          </div>
-  
-          <div class="mb-4">
-            <label class="form-label d-block">Custom fields</label>
-            <div class="mb-2">
-              <label for="fieldTypeSelector" class="form-label">Select Field Type</label>
-              <select id="fieldTypeSelector" class="form-select" formControlName="newFieldType">
-                <option value="" [selected]="true">Select a field type</option>
-                <option value="string">String</option>
-                <option value="multiline-text">Multiline-text</option>
-                <option value="integer">Integer</option>
-                <option value="date">Date</option>
-                <option value="boolean">Boolean</option>
-              </select>
+              formControlName="name"
+              placeholder="Enter collection name"
+            />
+            <div *ngIf="editCollectionForm.get('name')?.invalid && (editCollectionForm.get('name')?.touched || editCollectionForm.get('name')?.dirty)" class="text-danger">
+              Collection name is required.
             </div>
-  
-            <button
-              type="button"
-              class="btn btn-outline-primary mb-2"
-              (click)="addCustomField()"
+          </div>
+
+          <div class="col-md-6">
+            <label for="topic" class="form-label">Select Collection Topic</label>
+            <select id="topic" class="form-select" formControlName="topic">
+              <option value="" [selected]="true">Select a topic</option>
+              <option *ngFor="let category of categories" [value]="category.name">
+                {{ category.name }}
+              </option>
+            </select>
+            <div *ngIf="editCollectionForm.get('topic')?.invalid && (editCollectionForm.get('topic')?.touched || editCollectionForm.get('topic')?.dirty)" class="text-danger">
+              Collection topic is required.
+            </div>
+          </div>
+        </div>
+
+        <div class="my-4">
+          <label for="collection-image" class="form-label">Collection URL Image</label>
+          <div
+            class="profile-image-container stylish-border p-2 text-center d-flex justify-content-center align-items-center"
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop($event)"
+            style="width: 100%; height: 150px"
+          >
+            <img
+              [src]="collectionUrlImageUrl"
+              alt="Collection Image"
+              class="img-fluid rounded"
+              *ngIf="collectionUrlImageUrl"
+              style="max-width: 100%; max-height: 100%"
+            />
+            <div *ngIf="!collectionUrlImageUrl" class="placeholder-content">
+              <i class="fas fa-cloud-upload-alt fa-3x mb-2"></i>
+              <p class="text-muted m-0">Drag and drop your image here</p>
+            </div>
+          </div>
+          <input
+            type="file"
+            class="form-control mt-2"
+            id="collection-image"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="description" class="form-label">Description</label>
+          <textarea
+            id="description"
+            class="form-control"
+            formControlName="description"
+            placeholder="Write a description..."
+            rows="4"
+          ></textarea>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label d-block">Custom fields</label>
+          <div class="mb-2">
+            <label for="fieldTypeSelector" class="form-label">Select Field Type</label>
+            <select id="fieldTypeSelector" class="form-select" formControlName="newFieldType">
+              <option value="" [selected]="true">Select a field type</option>
+              <option value="string">String</option>
+              <option value="multiline-text">Multiline-text</option>
+              <option value="integer">Integer</option>
+              <option value="date">Date</option>
+              <option value="boolean">Boolean</option>
+            </select>
+            <div *ngIf="editCollectionForm.get('newFieldType')?.invalid && (editCollectionForm.get('newFieldType')?.touched || editCollectionForm.get('newFieldType')?.dirty)" class="text-danger">
+              Field type is required.
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-outline-primary mb-2"
+            (click)="addCustomField()"
+          >
+            + Add field
+          </button>
+
+          <!-- Custom fields form array -->
+          <div formArrayName="customFields">
+            <div
+              *ngFor="let field of customFieldsControls; let i = index"
+              [formGroupName]="i"
+              class="row g-2 mb-2"
             >
-              + Add field
-            </button>
-  
-            <!-- Custom fields form array -->
-            <div formArrayName="customFields">
-              <div
-                *ngFor="let field of customFieldsControls; let i = index"
-                [formGroupName]="i"
-                class="row g-2 mb-2"
-              >
-                <div class="col-md-5">
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="label"
-                    placeholder="Custom field's label"
-                  />
+              <div class="col-md-5">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="label"
+                  placeholder="Custom field's label"
+                />
+                <div *ngIf="field.get('label')?.invalid && (field.get('label')?.touched || field.get('label')?.dirty)" class="text-danger">
+                  Custom field's label is required.
                 </div>
-                <div class="col-md-5">
-                  <input
-                    type="text"
-                    class="form-control"
-                    formControlName="fieldType"
-                    readonly
-                  />
-                </div>
-                <div class="col-md-2">
-                  <button
-                    type="button"
-                    class="btn btn-outline-danger w-100"
-                    (click)="removeCustomField(i)"
-                  >
-                    Remove
-                  </button>
-                </div>
+              </div>
+              <div class="col-md-5">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="fieldType"
+                  readonly
+                />
+              </div>
+              <div class="col-md-2">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger w-100"
+                  (click)="removeCustomField(i)"
+                >
+                  Remove
+                </button>
               </div>
             </div>
           </div>
-  
-          <!-- Submit and Cancel buttons -->
-          <div class="d-flex justify-content-end gap-2">
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              (click)="cancel()"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              [disabled]="!editCollectionForm.valid || isClicked"
-            >
-              Confirm
-            </button>
-          </div>
-        </form>
-      </div>
+        </div>
+
+        <!-- Submit and Cancel buttons -->
+        <div class="d-flex justify-content-end gap-2">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="cancel()"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!editCollectionForm.valid || isClicked"
+          >
+            Confirm
+          </button>
+        </div>
+      </form>
     </div>
   </div>
-  
+</div>

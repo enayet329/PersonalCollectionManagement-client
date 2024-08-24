@@ -8,6 +8,9 @@
           <div class="col-md-6 mb-3">
             <label for="name" class="form-label">Name</label>
             <input id="name" formControlName="name" type="text" class="form-control" />
+            <div *ngIf="addItemForm.get('name')?.invalid && (addItemForm.get('name')?.touched || addItemForm.get('name')?.dirty)" class="text-danger">
+              Collection name is required.
+            </div>
           </div>
           
           <div class="col-md-6 mb-3">

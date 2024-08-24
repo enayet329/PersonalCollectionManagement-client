@@ -18,6 +18,9 @@
               formControlName="title"
               placeholder="Enter collection title"
             />
+            <div *ngIf="addCollectionForm.get('title')?.invalid && (addCollectionForm.get('title')?.touched || addCollectionForm.get('title')?.dirty)" class="text-danger">
+              Collection name is required.
+            </div>
           </div>
 
           <!-- User Dropdown (Admin only) -->
@@ -31,15 +34,13 @@
           </div>
 
           <div class="col-md-6">
-            <label for="category" class="form-label"
-              >Select Collection Topic</label
-            >
+            <label for="category" class="form-label">Select Collection Topic</label>
             <select
               id="category"
               class="form-select"
               formControlName="category"
             >
-              <option value="" [selected]="true">Select a category</option>
+              <option value="">Select a category</option>
               <option
                 *ngFor="let category of categories"
                 [value]="category.name"
@@ -82,17 +83,7 @@
             hidden
           />
         </div>
-        <div class="mb-4">
-          <label for="description" class="form-label">Description</label>
-          <textarea
-            id="description"
-            class="form-control"
-            formControlName="description"
-            placeholder="Write a description..."
-            rows="4"
-          ></textarea>
-        </div>
-
+        
         <div class="mb-4">
           <label class="form-label d-block">Custom fields</label>
         
@@ -103,12 +94,16 @@
               class="form-select"
               formControlName="newFieldType"
             >
-              <option value="string" [selected]="true">String</option>
+              <option value="" [selected]="true">Select a field type</option>
+              <option value="string">String</option>
               <option value="multiline-text">Multiline-text</option>
               <option value="integer">Integer</option>
               <option value="date">Date</option>
               <option value="boolean">Boolean</option>
             </select>
+            <div *ngIf="addCollectionForm.get('newFieldType')?.invalid && (addCollectionForm.get('newFieldType')?.touched || addCollectionForm.get('newFieldType')?.dirty)" class="text-danger">
+              Field type is required.
+            </div>
           </div>
         
           <button
@@ -133,6 +128,9 @@
                   formControlName="label"
                   placeholder="Custom field's label"
                 />
+                <div *ngIf="field.get('label')?.invalid && (field.get('label')?.touched || field.get('label')?.dirty)" class="text-danger">
+                  Custom field's label is required.
+                </div>
               </div>
               <div class="col-md-5">
                 <input
