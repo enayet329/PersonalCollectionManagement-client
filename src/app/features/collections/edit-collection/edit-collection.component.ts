@@ -43,6 +43,7 @@ export class EditCollectionComponent implements OnInit {
     {} as UpdateCollectionRequest;
   updateCustomFieldModel: updateCustomFieldRequest[] = [];
   isClicked = false;
+  isLoadings = true;
 
   // User state
   isAdmin: boolean = false;
@@ -101,6 +102,7 @@ export class EditCollectionComponent implements OnInit {
           this.collection = response;
           this.patchFormWithCollectionData();
           this.loadCustomFields();
+          this.isLoadings = false;
         },
         (error) => this.toastr.error('Failed to load collection data.',error)
       );

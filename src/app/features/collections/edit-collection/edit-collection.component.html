@@ -1,4 +1,4 @@
-<div class="container my-5">
+<div class="container my-5" *ngIf="!isLoadings && collection else loading">
   <div class="card shadow">
     <div class="card-body">
       <form
@@ -146,3 +146,11 @@
     </div>
   </div>
 </div>
+
+<ng-template #loading>
+  <div class="d-flex flex-column align-items-center justify-content-center" style="height: 60vh;">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</ng-template>
