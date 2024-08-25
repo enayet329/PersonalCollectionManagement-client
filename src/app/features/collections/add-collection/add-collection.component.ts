@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Collection, AddCollectionRequest } from '../../../core/model/collection.mode.';
+import {
+  Collection,
+  AddCollectionRequest,
+} from '../../../core/model/collection.mode.';
 import { CustomField } from '../../../core/model/customField.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -51,13 +54,12 @@ export class AddCollectionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userId = this.route.snapshot.paramMap.get('id') || ''; 
+    this.userId = this.route.snapshot.paramMap.get('id') || '';
     this.getCollectionCategories();
     this.initializeForm();
     this.initializeUserState();
 
-    if(this.isAdmin)
-    {
+    if (this.isAdmin) {
       this.getUsers();
     }
   }
@@ -70,20 +72,18 @@ export class AddCollectionComponent implements OnInit {
       image: [null],
       description: [''],
       customFields: this.fb.array([]),
-      newFieldType: ['string']
+      newFieldType: ['string'],
     });
   }
-  
-  private initializeUserState(){
+
+  private initializeUserState() {
     const token = localStorage.getItem('token');
 
-    if(token && token !== 'null')
-    {
+    if (token && token !== 'null') {
       this.isAdmin = this.jwtDecoder.getIsAdminFromToken(token);
       this.isLoggedIn = true;
       this.isUser = this.jwtDecoder.getUserIdFromToken(token) === this.userId;
-    }
-    else{
+    } else {
       this.isLoggedIn = false;
       this.isAdmin = false;
       this.isUser = false;
@@ -92,13 +92,13 @@ export class AddCollectionComponent implements OnInit {
 
   getUsers(): void {
     this.adminService.getUsers().subscribe(
-      (response)=> {
+      (response) => {
         this.users = response;
       },
       (error) => {
         console.error('Error getting users:', error);
       }
-    )
+    );
   }
 
   get customFieldsControls() {
@@ -106,22 +106,34 @@ export class AddCollectionComponent implements OnInit {
   }
 
   addCustomField() {
-    const customFields = this.addCollectionForm.get('customFields') as FormArray;
+    const customFields = this.addCollectionForm.get(
+      'customFields'
+    ) as FormArray;
     const fieldTypeControl = this.addCollectionForm.get('newFieldType');
-  
+
     const fieldType = fieldTypeControl?.value || 'string';
-  
+
     if (!fieldType) {
       this.toastr.error('Please select a field type before adding.');
       return;
     }
-  
-    const integerFieldsCount = customFields.controls.filter(control => control.get('fieldType')?.value === 'integer').length;
-    const stringFieldsCount = customFields.controls.filter(control => control.get('fieldType')?.value === 'string').length;
-    const multilineTextFieldsCount = customFields.controls.filter(control => control.get('fieldType')?.value === 'multiline-text').length;
-    const booleanFieldsCount = customFields.controls.filter(control => control.get('fieldType')?.value === 'boolean').length;
-    const dateFieldsCount = customFields.controls.filter(control => control.get('fieldType')?.value === 'date').length;
-  
+
+    const integerFieldsCount = customFields.controls.filter(
+      (control) => control.get('fieldType')?.value === 'integer'
+    ).length;
+    const stringFieldsCount = customFields.controls.filter(
+      (control) => control.get('fieldType')?.value === 'string'
+    ).length;
+    const multilineTextFieldsCount = customFields.controls.filter(
+      (control) => control.get('fieldType')?.value === 'multiline-text'
+    ).length;
+    const booleanFieldsCount = customFields.controls.filter(
+      (control) => control.get('fieldType')?.value === 'boolean'
+    ).length;
+    const dateFieldsCount = customFields.controls.filter(
+      (control) => control.get('fieldType')?.value === 'date'
+    ).length;
+
     if (fieldType === 'integer' && integerFieldsCount >= 3) {
       this.toastr.error('You can only add up to 3 integer fields.');
       return;
@@ -150,10 +162,11 @@ export class AddCollectionComponent implements OnInit {
       })
     );
   }
-  
-  
+
   removeCustomField(index: number) {
-    const customFields = this.addCollectionForm.get('customFields') as FormArray;
+    const customFields = this.addCollectionForm.get(
+      'customFields'
+    ) as FormArray;
     customFields.removeAt(index);
   }
 
@@ -193,13 +206,13 @@ export class AddCollectionComponent implements OnInit {
 
   getCollectionCategories(): void {
     this.collectionService.getCategories().subscribe(
-      (resopnse: Categories[]) => {
-        this.categories = resopnse;
+      (response: Categories[]) => {
+        this.categories = response;
       },
       (error) => {
         console.error('Error getting categories:', error);
       }
-    )
+    );
   }
 
   onSubmit() {
@@ -213,22 +226,26 @@ export class AddCollectionComponent implements OnInit {
           })
           .catch((error: Error) => {
             this.toastr.error('Error uploading image', 'Please try again.');
+            this.isClicked = false;
           });
       } else {
         this.createCollection('');
       }
     } else {
-      this.toastr.error('Form is invalid', 'Please fill all required fields.', this.addCollectionForm.value);
+      this.toastr.error('Form is invalid', 'Please fill all required fields.');
+      this.isClicked = false;
     }
   }
 
   createCustomFields(customFields: CustomField[]): void {
     this.customFieldService.addCustomField(customFields).subscribe(
       (response) => {
-        console.log('Custom fields created:', response);
+        console.log('Custom fields added successfully');
+        this.toastr.success('Custom fields added successfully');
       },
       (error) => {
         console.error('Error creating custom fields:', error);
+        this.toastr.error('Error adding custom fields', 'Please try again.');
         if (error.error && error.error.errors) {
           console.error('Validation errors:', error.error.errors);
         }
@@ -249,15 +266,19 @@ export class AddCollectionComponent implements OnInit {
     this.collectionService.addCollection(collection).subscribe(
       (response) => {
         this.collection = response;
-        console.log('Collection create successfully');
+        console.log('Collection created successfully');
 
-        const customFields: CustomField[] = formValue.customFields.map((cf: any) => ({
-          name: cf.label,
-          fieldType: cf.type,
-          collectionId: response.id,
-        }));
+        const customFields: CustomField[] = formValue.customFields.map(
+          (cf: any) => ({
+            name: cf.label,
+            fieldType: cf.fieldType,
+            collectionId: response.id,
+          })
+        );
 
-        this.createCustomFields(customFields);
+        if (customFields.length > 0) {
+          this.createCustomFields(customFields);
+        }
 
         this.toastr.success('Collection created successfully');
         this.router.navigate(['/collection-detail', response.id]);
@@ -265,11 +286,12 @@ export class AddCollectionComponent implements OnInit {
       (error) => {
         console.error('Error creating collection:', error);
         this.toastr.error('Error creating collection', 'Please try again.');
+        this.isClicked = false;
       }
     );
   }
 
-  cancel():void{
-    this.router.navigate(['/profile-view',this.userId]);
+  cancel(): void {
+    this.router.navigate(['/profile-view', this.userId]);
   }
 }
