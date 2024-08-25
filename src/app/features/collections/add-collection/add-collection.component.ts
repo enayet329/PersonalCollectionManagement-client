@@ -241,7 +241,6 @@ export class AddCollectionComponent implements OnInit {
     this.customFieldService.addCustomField(customFields).subscribe(
       (response) => {
         console.log('Custom fields added successfully');
-        this.toastr.success('Custom fields added successfully');
       },
       (error) => {
         console.error('Error creating custom fields:', error);
