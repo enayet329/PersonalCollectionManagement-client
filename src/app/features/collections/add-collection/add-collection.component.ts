@@ -109,29 +109,28 @@ export class AddCollectionComponent implements OnInit {
     const customFields = this.addCollectionForm.get('customFields') as FormArray;
     const fieldTypeControl = this.addCollectionForm.get('newFieldType');
   
-    const fieldType = fieldTypeControl?.value;
+    const fieldType = fieldTypeControl?.value || 'string';
   
     if (!fieldType) {
       this.toastr.error('Please select a field type before adding.');
       return;
     }
   
-    const integerFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'integer').length;
-    const stringFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'string').length;
-    const multilineTextFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'multiline-text').length;
-    const booleanFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'boolean').length;
-    const dateFieldsCount = customFields.controls.filter(control => control.get('type')?.value === 'date').length;
+    const integerFieldsCount = customFields.controls.filter(control => control.get('fieldType')?.value === 'integer').length;
+    const stringFieldsCount = customFields.controls.filter(control => control.get('fieldType')?.value === 'string').length;
+    const multilineTextFieldsCount = customFields.controls.filter(control => control.get('fieldType')?.value === 'multiline-text').length;
+    const booleanFieldsCount = customFields.controls.filter(control => control.get('fieldType')?.value === 'boolean').length;
+    const dateFieldsCount = customFields.controls.filter(control => control.get('fieldType')?.value === 'date').length;
   
-
     if (fieldType === 'integer' && integerFieldsCount >= 3) {
       this.toastr.error('You can only add up to 3 integer fields.');
       return;
     }
-    if (fieldType ==='string' && stringFieldsCount >= 3) {
+    if (fieldType === 'string' && stringFieldsCount >= 3) {
       this.toastr.error('You can only add up to 3 string fields.');
       return;
     }
-    if (fieldType ==='multiline-text' && multilineTextFieldsCount >= 3) {
+    if (fieldType === 'multiline-text' && multilineTextFieldsCount >= 3) {
       this.toastr.error('You can only add up to 3 multiline-text fields.');
       return;
     }
@@ -147,11 +146,11 @@ export class AddCollectionComponent implements OnInit {
     customFields.push(
       this.fb.group({
         label: ['', Validators.required],
-        type: [fieldType, Validators.required],
+        fieldType: [fieldType, Validators.required],
       })
     );
-  
   }
+  
   
   removeCustomField(index: number) {
     const customFields = this.addCollectionForm.get('customFields') as FormArray;

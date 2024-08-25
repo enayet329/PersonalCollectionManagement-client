@@ -97,41 +97,15 @@
         
         <div class="mb-4">
           <label class="form-label d-block">Custom fields</label>
-        
-          <div class="mb-2">
-            <label for="fieldTypeSelector" class="form-label">Select Field Type</label>
-            <select
-              id="fieldTypeSelector"
-              class="form-select"
-              formControlName="newFieldType"
-            >
-              <option value="" [selected]="true">Select a field type</option>
-              <option value="string">String</option>
-              <option value="multiline-text">Multiline-text</option>
-              <option value="integer">Integer</option>
-              <option value="date">Date</option>
-              <option value="boolean">Boolean</option>
-            </select>
-            <div *ngIf="addCollectionForm.get('newFieldType')?.invalid && (addCollectionForm.get('newFieldType')?.touched || addCollectionForm.get('newFieldType')?.dirty)" class="text-danger">
-              Field type is required.
-            </div>
-          </div>
-        
-          <button
-            type="button"
-            class="btn btn-outline-primary mb-2"
-            (click)="addCustomField()"
-          >
+          
+          <button type="button" class="btn btn-outline-primary mb-2" (click)="addCustomField()">
             + Add field
           </button>
-
+        
           <!-- Custom fields form array -->
           <div formArrayName="customFields">
-            <div
-              *ngFor="let field of customFieldsControls; let i = index"
-              [formGroupName]="i"
-              class="row g-2 mb-2"
-            >
+            <div *ngFor="let field of customFieldsControls; let i = index" [formGroupName]="i" class="row g-2 mb-2">
+              <!-- Label input -->
               <div class="col-md-5">
                 <input
                   type="text"
@@ -143,26 +117,31 @@
                   Custom field's label is required.
                 </div>
               </div>
+        
+              <!-- Field type selector -->
               <div class="col-md-5">
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="type"
-                  readonly
-                />
+                <select class="form-select" formControlName="fieldType">
+                  <option value="string">String</option>
+                  <option value="multiline-text">Multiline-text</option>
+                  <option value="integer">Integer</option>
+                  <option value="date">Date</option>
+                  <option value="boolean">Boolean</option>
+                </select>
+                <div *ngIf="field.get('fieldType')?.invalid && (field.get('fieldType')?.touched || field.get('fieldType')?.dirty)" class="text-danger">
+                  Field type is required.
+                </div>
               </div>
+        
+              <!-- Remove button -->
               <div class="col-md-2">
-                <button
-                  type="button"
-                  class="btn btn-outline-danger w-100"
-                  (click)="removeCustomField(i)"
-                >
+                <button type="button" class="btn btn-outline-danger w-100" (click)="removeCustomField(i)">
                   Remove
                 </button>
               </div>
             </div>
           </div>
         </div>
+        
         
         <!-- Submit and Cancel buttons -->
         <div class="d-flex justify-content-end gap-2">

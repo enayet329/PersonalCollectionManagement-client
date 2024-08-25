@@ -89,7 +89,7 @@ export class EditCollectionComponent implements OnInit {
       imageUrl: [null],
       description: [''],
       customFields: this.fb.array([]),
-      newFieldType: [''],
+      newFieldType: ['string'],
     });
   }
 
