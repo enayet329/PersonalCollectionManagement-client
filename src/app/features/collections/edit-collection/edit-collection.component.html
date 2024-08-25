@@ -4,7 +4,7 @@
       <form
         [formGroup]="editCollectionForm"
         (ngSubmit)="onSubmit()"
-        *ngIf="isAdmin || isUser"
+        *ngIf="isAdmin || currentUser === collection.userId"
       >
         <h2 class="mb-4 text-center">Edit Collection</h2>
 
