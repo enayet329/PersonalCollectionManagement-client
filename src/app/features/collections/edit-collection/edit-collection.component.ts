@@ -146,6 +146,7 @@ export class EditCollectionComponent implements OnInit {
     this.customFields.forEach((field) => {
       customFieldsFormArray.push(
         this.fb.group({
+          id: [field.id],
           label: [field.name, Validators.required],
           fieldType: [field.fieldType, Validators.required],
           value: [field.customFieldValues || ''],
