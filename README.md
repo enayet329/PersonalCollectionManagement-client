@@ -1,4 +1,5 @@
 # PersonalCollectionManagementClient
+![{6160760F-A169-4400-A96F-6B65630958D1}](https://github.com/user-attachments/assets/4eedbb52-5724-4535-8651-03390831dda2)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.1.3.
 
