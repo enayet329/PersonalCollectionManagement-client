@@ -11,9 +11,21 @@ The back-end of the application can be found here: [personalCollectionManagement
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.1.3.
 
-## Development Server
+## Getting Started
 
-To start the development server, run the following command:
+To get the application up and running, follow these steps:
 
-```bash
-ng serve
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/enayet329/PersonalCollectionManagement-client.git
+2. **Navigate to the Project Directory**:
+   ```bash
+   cd PersonalCollectionManagement-client
+3. **Install Dependencies**:
+   ```bash
+   npm install
+3. **Run**:
+   ```bash
+   ng serve
+
+
