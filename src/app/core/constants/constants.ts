@@ -3,7 +3,7 @@
 //const apiUrl = 'https://localhost:7138/api/v1/';
 
 // apiurl for production environment
- const apiUrl = 'https://collectionapp.somee.com/api/v1/';
+ const apiUrl = 'https://collectionmanagement.somee.com/api/v1/';
 
 // apiUrl for development environment
  //const apiUrl = 'https://localhost:7138/api/v1/';
